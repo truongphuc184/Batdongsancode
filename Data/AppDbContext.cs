@@ -32,6 +32,25 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<Lead>()
             .Property(ld => ld.Status)
             .HasConversion<string>();
+
+        // Tránh lỗi Multiple Cascade Paths trong SQL Server
+        modelBuilder.Entity<Lead>()
+            .HasOne(ld => ld.Owner)
+            .WithMany()
+            .HasForeignKey(ld => ld.OwnerId)
+            .OnDelete(DeleteBehavior.NoAction);
+
+        modelBuilder.Entity<Lead>()
+            .HasOne(ld => ld.Listing)
+            .WithMany()
+            .HasForeignKey(ld => ld.ListingId)
+            .OnDelete(DeleteBehavior.NoAction);
+
+        modelBuilder.Entity<Report>()
+            .HasOne(r => r.Listing)
+            .WithMany()
+            .HasForeignKey(r => r.ListingId)
+            .OnDelete(DeleteBehavior.NoAction);
     }
 }
 

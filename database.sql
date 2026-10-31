@@ -77,8 +77,8 @@ BEGIN
         Notes NVARCHAR(500) NULL,
         Status NVARCHAR(50) NOT NULL DEFAULT 'NEW',
         CreatedAt DATETIME2 NOT NULL DEFAULT GETDATE(),
-        CONSTRAINT FK_Leads_Listings FOREIGN KEY (ListingId) REFERENCES Listings(Id),
-        CONSTRAINT FK_Leads_Users FOREIGN KEY (OwnerId) REFERENCES Users(Id)
+        CONSTRAINT FK_Leads_Listings FOREIGN KEY (ListingId) REFERENCES Listings(Id) ON DELETE NO ACTION,
+        CONSTRAINT FK_Leads_Users FOREIGN KEY (OwnerId) REFERENCES Users(Id) ON DELETE NO ACTION
     );
     PRINT N'>>> Đã tạo bảng Leads (CRM)';
 END
