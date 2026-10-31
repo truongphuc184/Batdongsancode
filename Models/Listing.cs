@@ -37,11 +37,25 @@ public class Listing
 
     public int Bathrooms { get; set; }
 
+    [MaxLength(50)]
+    public string Direction { get; set; } = string.Empty; // Đông, Tây, Nam, Bắc...
+
     [MaxLength(1000)]
     public string ImageUrls { get; set; } = string.Empty; // comma-separated
 
     [Required]
     public ListingStatus Status { get; set; } = ListingStatus.Pending;
+
+    public int ViewCount { get; set; } = 0;
+
+    public bool IsVip { get; set; } = false;
+
+    public bool IsVerified { get; set; } = false;
+
+    public DateTime? PriorityTime { get; set; }
+
+    [MaxLength(500)]
+    public string RejectReason { get; set; } = string.Empty;
 
     public int OwnerId { get; set; }
 

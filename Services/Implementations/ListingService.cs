@@ -48,6 +48,7 @@ public class ListingService : IListingService
         existing.Area = listing.Area;
         existing.Bedrooms = listing.Bedrooms;
         existing.Bathrooms = listing.Bathrooms;
+        existing.Direction = listing.Direction;
         existing.ImageUrls = listing.ImageUrls;
         existing.Status = listing.Status;
         existing.UpdatedAt = DateTime.UtcNow;

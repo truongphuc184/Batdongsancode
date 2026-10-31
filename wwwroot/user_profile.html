@@ -75,7 +75,15 @@
     const token = localStorage.getItem('accessToken');
     if (!token) window.location.href = 'signin.html';
 
-    const roleMap = { Admin: 'Quản trị viên', Buyer: 'Người mua', Seller: 'Người bán', Broker: 'Môi giới', Agency: 'Đại lý' };
+    const roleMap = { 
+      Admin: 'Quản trị viên Hệ thống', 
+      Seller: 'Người bán (Chủ nhà)', 
+      Landlord: 'Người cho thuê', 
+      Agent: 'Môi giới Bất động sản', 
+      Broker: 'Môi giới Bất động sản', 
+      Buyer: 'Người mua BĐS', 
+      Tenant: 'Người thuê nhà' 
+    };
 
     fetch('/api/auth/me', { headers: { 'Authorization': 'Bearer ' + token } })
       .then(r => { if (!r.ok) throw new Error(); return r.json(); })
@@ -84,6 +92,14 @@
         document.getElementById('email').textContent = u.email;
         document.getElementById('role').textContent = roleMap[u.role] || u.role;
         document.getElementById('avatar').textContent = u.fullName ? u.fullName[0].toUpperCase() : 'U';
+
+        if (u.role === 'Admin') {
+          const adminBtn = document.createElement('a');
+          adminBtn.href = 'admin.html';
+          adminBtn.className = 'w-full mt-3 py-3.5 bg-amber-500 hover:bg-amber-600 text-gray-900 font-bold rounded-2xl shadow-sm flex items-center justify-center gap-2 transition-colors';
+          adminBtn.innerHTML = '<span class="material-symbols-outlined">admin_panel_settings</span> Trang Quản Trị & Kiểm Duyệt Tin';
+          document.querySelector('.max-w-3xl').insertBefore(adminBtn, document.querySelector('button[onclick="logout()"]'));
+        }
       })
       .catch(() => {
         localStorage.removeItem('accessToken');

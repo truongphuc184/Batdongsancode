@@ -2,28 +2,32 @@ namespace Batdongsancode.Models
 {
     public enum Role
     {
-        Buyer,
-        Seller,
-        Broker,
+        Buyer,      // Người mua
+        Tenant,     // Người thuê
+        Seller,     // Người bán
+        Landlord,   // Người cho thuê
+        Agent,      // Môi giới
+        Broker = Agent, // Tương thích ngược
         Agency,
-        Admin
+        Admin       // Quản trị viên
     }
 
     public enum PropertyType
     {
-        Sale,
-        Rent
+        Sale,       // Mua bán
+        Rent        // Cho thuê
     }
 
     public enum ListingStatus
     {
-        Pending,
-        Active,
-        Rejected,
-        Expired,
-        Sold,
-        Rented,
-        Hidden
+        Pending,    // Chờ duyệt
+        Approved,   // Đã duyệt (đang hiển thị)
+        Active = Approved, // Tương thích ngược
+        Rejected,   // Bị từ chối
+        Expired,    // Hết hạn
+        Sold,       // Đã bán
+        Rented,     // Đã cho thuê
+        Hidden      // Ẩn tin
     }
 }
 
