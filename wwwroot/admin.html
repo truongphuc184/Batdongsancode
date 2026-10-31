@@ -34,38 +34,59 @@
   </header>
 
   <main class="max-w-5xl mx-auto px-4 mt-6">
-    <!-- Thống kê nhanh -->
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+    <!-- Thống kê nhanh 4 cột -->
+    <div class="grid grid-cols-1 sm:grid-cols-4 gap-4 mb-6">
       <div class="bg-white p-5 rounded-2xl shadow-sm border border-amber-200">
         <div class="flex items-center justify-between">
-          <span class="text-xs font-bold text-amber-600 uppercase">Tin chờ kiểm duyệt</span>
+          <span class="text-xs font-bold text-amber-600 uppercase">Tin chờ duyệt</span>
           <span class="material-symbols-outlined text-amber-500">pending_actions</span>
         </div>
         <div class="text-3xl font-black text-gray-900 mt-2" id="stat-pending">0</div>
-        <p class="text-xs text-gray-500 mt-1">Cần Admin phê duyệt để hiển thị</p>
+        <p class="text-[11px] text-gray-500 mt-1">Cần Admin phê duyệt</p>
       </div>
 
       <div class="bg-white p-5 rounded-2xl shadow-sm border border-emerald-200">
         <div class="flex items-center justify-between">
-          <span class="text-xs font-bold text-emerald-600 uppercase">Tin đã duyệt / Công khai</span>
+          <span class="text-xs font-bold text-emerald-600 uppercase">Tin đã duyệt</span>
           <span class="material-symbols-outlined text-emerald-500">verified</span>
         </div>
         <div class="text-3xl font-black text-gray-900 mt-2" id="stat-approved">0</div>
-        <p class="text-xs text-gray-500 mt-1">Đang hiển thị cho người mua/thuê</p>
+        <p class="text-[11px] text-gray-500 mt-1">Đang hiển thị công khai</p>
+      </div>
+
+      <div class="bg-white p-5 rounded-2xl shadow-sm border border-red-200">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-bold text-red-600 uppercase">Báo cáo vi phạm</span>
+          <span class="material-symbols-outlined text-red-500">report</span>
+        </div>
+        <div class="text-3xl font-black text-red-600 mt-2" id="stat-reports">0</div>
+        <p class="text-[11px] text-gray-500 mt-1">Người dùng tố cáo</p>
       </div>
 
       <div class="bg-white p-5 rounded-2xl shadow-sm border border-indigo-200">
         <div class="flex items-center justify-between">
-          <span class="text-xs font-bold text-indigo-600 uppercase">Vai trò quản trị</span>
+          <span class="text-xs font-bold text-indigo-600 uppercase">Admin phụ trách</span>
           <span class="material-symbols-outlined text-indigo-500">admin_panel_settings</span>
         </div>
-        <div class="text-xl font-bold text-gray-900 mt-2 truncate" id="admin-name">Admin</div>
-        <p class="text-xs text-gray-500 mt-1">admin@batdongsan.vn</p>
+        <div class="text-base font-bold text-gray-900 mt-2 truncate" id="admin-name">Admin</div>
+        <p class="text-[11px] text-gray-500 mt-1">admin@batdongsan.vn</p>
       </div>
     </div>
 
-    <!-- Danh sách tin chờ duyệt -->
-    <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
+    <!-- Thanh chuyển tab nghiệp vụ Admin -->
+    <div class="flex items-center gap-2 mb-4">
+      <button onclick="switchAdminTab('pending')" id="tabBtnPending" 
+        class="px-5 py-2.5 rounded-xl font-bold text-xs bg-indigo-600 text-white shadow-sm flex items-center gap-1.5 transition-all">
+        <span class="material-symbols-outlined text-base">checklist</span> Kiểm duyệt tin đăng
+      </button>
+      <button onclick="switchAdminTab('reports')" id="tabBtnReports" 
+        class="px-5 py-2.5 rounded-xl font-semibold text-xs bg-white text-gray-600 hover:bg-gray-50 border border-gray-200 flex items-center gap-1.5 transition-all">
+        <span class="material-symbols-outlined text-base text-red-500">flag</span> Xử lý báo cáo vi phạm
+      </button>
+    </div>
+
+    <!-- Phân hệ 1: Danh sách tin chờ duyệt -->
+    <div id="sectionPending" class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
       <div class="flex items-center justify-between pb-4 border-b border-gray-100 mb-4">
         <div>
           <h2 class="text-base font-bold text-gray-900 flex items-center gap-2">
@@ -80,6 +101,25 @@
 
       <div id="pendingList" class="flex flex-col gap-4">
         <div class="text-center py-10 text-gray-400">Đang tải danh sách chờ duyệt...</div>
+      </div>
+    </div>
+
+    <!-- Phân hệ 2: Danh sách báo cáo vi phạm (Sơ đồ Use Case 4: Xử lý báo cáo vi phạm) -->
+    <div id="sectionReports" class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 hidden">
+      <div class="flex items-center justify-between pb-4 border-b border-gray-100 mb-4">
+        <div>
+          <h2 class="text-base font-bold text-gray-900 flex items-center gap-2">
+            Danh sách báo cáo vi phạm từ người dùng
+          </h2>
+          <p class="text-xs text-gray-500">Xử lý tố cáo về tin giả, sai giá, lừa đảo hoặc vi phạm điều khoản</p>
+        </div>
+        <button onclick="loadReports()" class="px-3.5 py-1.5 bg-gray-100 hover:bg-gray-200 rounded-xl text-xs font-semibold text-gray-700 flex items-center gap-1">
+          <span class="material-symbols-outlined text-sm">refresh</span> Làm mới
+        </button>
+      </div>
+
+      <div id="reportsList" class="flex flex-col gap-4">
+        <div class="text-center py-10 text-gray-400">Đang tải danh sách báo cáo...</div>
       </div>
     </div>
   </main>
@@ -206,7 +246,115 @@
       }
     }
 
+    function switchAdminTab(tab) {
+      const btnP = document.getElementById('tabBtnPending');
+      const btnR = document.getElementById('tabBtnReports');
+      const secP = document.getElementById('sectionPending');
+      const secR = document.getElementById('sectionReports');
+
+      if (tab === 'pending') {
+        btnP.className = 'px-5 py-2.5 rounded-xl font-bold text-xs bg-indigo-600 text-white shadow-sm flex items-center gap-1.5 transition-all';
+        btnR.className = 'px-5 py-2.5 rounded-xl font-semibold text-xs bg-white text-gray-600 hover:bg-gray-50 border border-gray-200 flex items-center gap-1.5 transition-all';
+        secP.classList.remove('hidden');
+        secR.classList.add('hidden');
+        loadPendingListings();
+      } else {
+        btnR.className = 'px-5 py-2.5 rounded-xl font-bold text-xs bg-indigo-600 text-white shadow-sm flex items-center gap-1.5 transition-all';
+        btnP.className = 'px-5 py-2.5 rounded-xl font-semibold text-xs bg-white text-gray-600 hover:bg-gray-50 border border-gray-200 flex items-center gap-1.5 transition-all';
+        secR.classList.remove('hidden');
+        secP.classList.add('hidden');
+        loadReports();
+      }
+    }
+
+    async function loadReports() {
+      const container = document.getElementById('reportsList');
+      container.innerHTML = '<div class="text-center py-10 text-gray-400">Đang tải danh sách báo cáo vi phạm...</div>';
+
+      try {
+        const res = await fetch('/api/reports', {
+          headers: { 'Authorization': 'Bearer ' + token }
+        });
+        const data = await res.json();
+        
+        const pendingReports = data.filter(r => r.status === 'Pending');
+        document.getElementById('stat-reports').textContent = pendingReports.length || 0;
+
+        if (!data || data.length === 0) {
+          container.innerHTML = `
+            <div class="text-center py-12 text-gray-400">
+              <div class="text-4xl mb-2">🛡️</div>
+              <p class="font-bold text-gray-700">Không có báo cáo vi phạm nào!</p>
+              <p class="text-xs text-gray-400 mt-1">Hệ thống đang hoạt động ổn định và an toàn.</p>
+            </div>
+          `;
+          return;
+        }
+
+        container.innerHTML = data.map(r => {
+          let statusBadge = '';
+          if (r.status === 'Pending') statusBadge = '<span class="px-2 py-0.5 bg-amber-100 text-amber-800 rounded font-bold text-[11px]">Chờ xử lý</span>';
+          else if (r.status === 'Resolved') statusBadge = '<span class="px-2 py-0.5 bg-red-100 text-red-800 rounded font-bold text-[11px]">Đã gỡ tin</span>';
+          else statusBadge = '<span class="px-2 py-0.5 bg-gray-100 text-gray-600 rounded font-bold text-[11px]">Đã bác bỏ</span>';
+
+          return `
+            <div class="border border-gray-200 rounded-xl p-4 bg-white hover:border-red-300 transition-all flex flex-col md:flex-row gap-4 items-start justify-between">
+              <div class="flex-1">
+                <div class="flex items-center gap-2 mb-1">
+                  <span class="text-xs font-black text-red-600 bg-red-50 border border-red-200 px-2 py-0.5 rounded">🚨 ${r.reason}</span>
+                  ${statusBadge}
+                </div>
+                <h4 class="font-bold text-gray-900 text-sm mt-1">
+                  Tin BĐS: <a href="property_detail.html?id=${r.listingId}" target="_blank" class="text-indigo-600 hover:underline">${r.listingTitle} (Xem chi tiết ↗)</a>
+                </h4>
+                ${r.details ? `<p class="text-xs text-gray-600 mt-1.5 bg-gray-50 p-2 rounded border">Ghi chú của người báo cáo: "${r.details}"</p>` : ''}
+                <div class="text-xs text-gray-400 mt-2">
+                  Người báo cáo: <strong class="text-gray-700">${r.reporterName || 'Khách vãng lai'}</strong> 
+                  ${r.reporterPhone ? `(${r.reporterPhone})` : ''} 
+                  • Gửi lúc: ${new Date(r.createdAt).toLocaleString('vi-VN')}
+                </div>
+              </div>
+
+              ${r.status === 'Pending' ? `
+              <div class="flex md:flex-col gap-2 shrink-0 w-full md:w-auto">
+                <button onclick="resolveReport(${r.id}, 'HideListing')" class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-xl text-xs font-bold transition-colors shadow-sm flex items-center justify-center gap-1">
+                  <span class="material-symbols-outlined text-base">block</span> Gỡ tin ngay
+                </button>
+                <button onclick="resolveReport(${r.id}, 'Dismiss')" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl text-xs font-semibold transition-colors flex items-center justify-center gap-1">
+                  <span class="material-symbols-outlined text-base">close</span> Bác bỏ
+                </button>
+              </div>
+              ` : ''}
+            </div>
+          `;
+        }).join('');
+      } catch (err) {
+        container.innerHTML = '<p class="text-red-500 text-center py-6">Lỗi tải danh sách báo cáo vi phạm</p>';
+      }
+    }
+
+    async function resolveReport(reportId, action) {
+      const confirmMsg = action === 'HideListing' 
+        ? 'Bạn có chắc chắn muốn gỡ bỏ và ẩn tin đăng vi phạm này khỏi hệ thống?' 
+        : 'Bạn có chắc chắn muốn bác bỏ báo cáo này không?';
+      if (!confirm(confirmMsg)) return;
+
+      try {
+        const res = await fetch('/api/reports/' + reportId + '/resolve', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+          body: JSON.stringify({ action: action })
+        });
+        const data = await res.json();
+        alert(data.message || 'Đã xử lý báo cáo!');
+        loadReports();
+      } catch (err) {
+        alert('Lỗi xử lý');
+      }
+    }
+
     loadPendingListings();
+    loadReports();
   </script>
 </body>
 </html>

@@ -29,5 +29,16 @@ namespace Batdongsancode.Models
         Rented,     // Đã cho thuê
         Hidden      // Ẩn tin
     }
+
+    // Trạng thái khách hàng trong phân hệ CRM (Class Diagram)
+    public enum LeadStatus
+    {
+        NEW,          // Mới tiếp nhận
+        CONSULTING,   // Đang tư vấn
+        VIEWING,      // Hẹn xem nhà
+        NEGOTIATING,  // Đang đàm phán
+        DEALT,        // Đã chốt giao dịch
+        CANCELED      // Đã hủy / không phù hợp
+    }
 }
 

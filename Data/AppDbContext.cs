@@ -11,6 +11,8 @@ public class AppDbContext : DbContext
 
     public DbSet<User> Users => Set<User>();
     public DbSet<Listing> Listings => Set<Listing>();
+    public DbSet<Lead> Leads => Set<Lead>();
+    public DbSet<Report> Reports => Set<Report>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -25,6 +27,10 @@ public class AppDbContext : DbContext
             .HasConversion<string>();
         modelBuilder.Entity<Listing>()
             .Property(l => l.Status)
+            .HasConversion<string>();
+
+        modelBuilder.Entity<Lead>()
+            .Property(ld => ld.Status)
             .HasConversion<string>();
     }
 }

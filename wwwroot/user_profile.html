@@ -55,15 +55,35 @@
         <span class="material-symbols-outlined text-gray-400 ml-auto">chevron_right</span>
       </a>
       <a href="home_property_search.html" class="flex items-center gap-4 px-6 py-4 hover:bg-gray-50 border-b border-gray-100">
-        <span class="material-symbols-outlined text-indigo-600">favorite</span>
-        <span class="font-medium text-gray-800">Đã lưu</span>
+        <span class="material-symbols-outlined text-red-500">favorite</span>
+        <span class="font-medium text-gray-800">Tin đã lưu yêu thích</span>
         <span class="material-symbols-outlined text-gray-400 ml-auto">chevron_right</span>
       </a>
-      <a href="home_property_search.html" class="flex items-center gap-4 px-6 py-4 hover:bg-gray-50">
-        <span class="material-symbols-outlined text-indigo-600">history</span>
-        <span class="font-medium text-gray-800">Lịch sử xem</span>
+      <a href="packages.html" class="flex items-center gap-4 px-6 py-4 hover:bg-gray-50 border-b border-gray-100">
+        <span class="material-symbols-outlined text-amber-500">workspace_premium</span>
+        <span class="font-medium text-gray-800">Gói dịch vụ & Lượt đẩy tin</span>
         <span class="material-symbols-outlined text-gray-400 ml-auto">chevron_right</span>
       </a>
+    </div>
+
+    <!-- KHÁCH HÀNG QUAN TÂM / CRM (Sơ đồ Use case 3 & Sơ đồ CRM: Tiếp nhận thông tin khách quan tâm) -->
+    <div id="crmSection" class="bg-white rounded-2xl shadow-sm mt-4 p-6 hidden border border-indigo-100">
+      <div class="flex items-center justify-between pb-3 border-b mb-4">
+        <div>
+          <h3 class="text-base font-bold text-gray-900 flex items-center gap-2">
+            <span class="material-symbols-outlined text-indigo-600">contact_phone</span>
+            Quản lý khách hàng tiềm năng (CRM Mini)
+          </h3>
+          <p class="text-xs text-gray-500 mt-0.5">Khách hàng để lại thông tin tư vấn & đặt lịch hẹn xem BĐS của bạn</p>
+        </div>
+        <button onclick="loadMyLeads()" class="px-3 py-1.5 bg-gray-100 hover:bg-gray-200 rounded-xl text-xs font-semibold text-gray-700 flex items-center gap-1">
+          <span class="material-symbols-outlined text-sm">refresh</span> Làm mới
+        </button>
+      </div>
+
+      <div id="leadsList" class="space-y-3">
+        <div class="text-center py-6 text-gray-400 text-xs">Đang tải danh sách khách hàng...</div>
+      </div>
     </div>
 
     <!-- Logout -->
@@ -108,12 +128,20 @@
         document.getElementById('userPushesCount').textContent = (s.remainingPushes || 0) + ' lượt';
       })
       .catch(() => {});
+
+    fetch('/api/auth/me', { headers: { 'Authorization': 'Bearer ' + token } })
       .then(r => { if (!r.ok) throw new Error(); return r.json(); })
       .then(u => {
         document.getElementById('fullName').textContent = u.fullName;
         document.getElementById('email').textContent = u.email;
         document.getElementById('role').textContent = roleMap[u.role] || u.role;
         document.getElementById('avatar').textContent = u.fullName ? u.fullName[0].toUpperCase() : 'U';
+
+        // Nếu là Seller, Landlord hoặc Agent -> Hiển thị CRM
+        if (['Seller', 'Landlord', 'Agent', 'Broker', 'Admin'].includes(u.role)) {
+          document.getElementById('crmSection').classList.remove('hidden');
+          loadMyLeads();
+        }
 
         if (u.role === 'Admin') {
           const adminBtn = document.createElement('a');
@@ -127,6 +155,83 @@
         localStorage.removeItem('accessToken');
         window.location.href = 'signin.html';
       });
+
+    // CRM: Tải danh sách khách hàng liên hệ
+    async function loadMyLeads() {
+      const container = document.getElementById('leadsList');
+      try {
+        const res = await fetch('/api/leads/my-leads', {
+          headers: { 'Authorization': 'Bearer ' + token }
+        });
+        const data = await res.json();
+
+        if (!data || data.length === 0) {
+          container.innerHTML = `
+            <div class="text-center py-8 text-gray-400">
+              <span class="text-3xl block mb-1">📭</span>
+              <p class="font-bold text-gray-700">Chưa có khách hàng liên hệ</p>
+              <p class="text-xs text-gray-400 mt-0.5">Khi người xem gửi yêu cầu tư vấn trên tin đăng của bạn, thông tin sẽ xuất hiện ở đây.</p>
+            </div>
+          `;
+          return;
+        }
+
+        container.innerHTML = data.map(ld => {
+          return `
+            <div class="p-4 rounded-xl border border-gray-200 bg-gray-50/50 hover:bg-white hover:border-indigo-300 transition-all">
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                <div>
+                  <div class="flex items-center gap-2">
+                    <strong class="text-sm font-bold text-gray-900">${ld.customerName}</strong>
+                    <a href="tel:${ld.customerPhone}" class="inline-flex items-center gap-1 text-xs font-black text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded hover:bg-indigo-100">
+                      📞 ${ld.customerPhone}
+                    </a>
+                  </div>
+                  <p class="text-xs text-gray-500 mt-1">
+                    Quan tâm tin: <strong class="text-gray-800">${ld.listingTitle}</strong>
+                  </p>
+                  ${ld.customerEmail ? `<p class="text-[11px] text-gray-400">Email: ${ld.customerEmail}</p>` : ''}
+                  ${ld.notes ? `<p class="text-xs text-gray-700 mt-1.5 bg-white p-2 rounded border">💬 Lời nhắn: "${ld.notes}"</p>` : ''}
+                </div>
+
+                <!-- Phân loại trạng thái khách hàng (Sơ đồ CRM: NEW, CONSULTING, VIEWING, NEGOTIATING, DEALT, CANCELED) -->
+                <div class="flex items-center gap-1.5 shrink-0">
+                  <span class="text-[11px] text-gray-400">Trạng thái:</span>
+                  <select onchange="updateLeadStatus(${ld.id}, this.value)" 
+                    class="px-2.5 py-1.5 bg-white border border-gray-300 rounded-lg text-xs font-bold outline-none cursor-pointer">
+                    <option value="NEW" ${ld.status === 'NEW' ? 'selected' : ''}>🟡 Mới tiếp nhận</option>
+                    <option value="CONSULTING" ${ld.status === 'CONSULTING' ? 'selected' : ''}>🔵 Đang tư vấn</option>
+                    <option value="VIEWING" ${ld.status === 'VIEWING' ? 'selected' : ''}>🟣 Hẹn xem nhà</option>
+                    <option value="NEGOTIATING" ${ld.status === 'NEGOTIATING' ? 'selected' : ''}>🟠 Đang đàm phán</option>
+                    <option value="DEALT" ${ld.status === 'DEALT' ? 'selected' : ''}>🟢 Đã chốt cọc</option>
+                    <option value="CANCELED" ${ld.status === 'CANCELED' ? 'selected' : ''}>⚪ Đã hủy</option>
+                  </select>
+                </div>
+              </div>
+              <div class="text-[11px] text-gray-400 mt-2 text-right">
+                Ngày gửi: ${new Date(ld.createdAt).toLocaleString('vi-VN')}
+              </div>
+            </div>
+          `;
+        }).join('');
+      } catch (err) {
+        container.innerHTML = '<p class="text-red-500 text-xs text-center py-4">Lỗi tải danh sách khách hàng</p>';
+      }
+    }
+
+    async function updateLeadStatus(id, newStatus) {
+      try {
+        const res = await fetch('/api/leads/' + id + '/status', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+          body: JSON.stringify({ status: newStatus })
+        });
+        const data = await res.json();
+        alert(data.message || 'Đã cập nhật trạng thái khách hàng!');
+      } catch {
+        alert('Lỗi cập nhật trạng thái');
+      }
+    }
 
     function logout() {
       localStorage.removeItem('accessToken');

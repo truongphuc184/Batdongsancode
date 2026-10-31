@@ -73,8 +73,14 @@
           <button onclick="quickFilterType(null)" class="filter-type-chip px-3.5 py-1.5 rounded-full text-xs font-bold bg-indigo-600 text-white shadow-sm">Tất cả</button>
           <button onclick="quickFilterType('Sale')" class="filter-type-chip px-3.5 py-1.5 rounded-full text-xs font-semibold bg-gray-100 text-gray-600 hover:bg-gray-200">Mua bán</button>
           <button onclick="quickFilterType('Rent')" class="filter-type-chip px-3.5 py-1.5 rounded-full text-xs font-semibold bg-gray-100 text-gray-600 hover:bg-gray-200">Cho thuê</button>
+          <button onclick="loadSavedListingsTab()" class="px-3.5 py-1.5 rounded-full text-xs font-semibold bg-red-50 text-red-700 hover:bg-red-100 flex items-center gap-1 border border-red-200">
+            <span class="material-symbols-outlined text-sm text-red-500">favorite</span> Tin đã lưu
+          </button>
           <button onclick="loadMyListingsTab()" class="px-3.5 py-1.5 rounded-full text-xs font-semibold bg-amber-100 text-amber-800 hover:bg-amber-200 flex items-center gap-1 border border-amber-300">
             <span class="material-symbols-outlined text-sm">inventory_2</span> Tin của tôi
+          </button>
+          <button onclick="openCompareModal()" id="btnCompareBadge" class="hidden px-3.5 py-1.5 rounded-full text-xs font-bold bg-purple-600 hover:bg-purple-700 text-white flex items-center gap-1 shadow-sm animate-pulse">
+            <span class="material-symbols-outlined text-sm">balance</span> So sánh (<span id="compareCount">0</span>)
           </button>
         </div>
 
@@ -502,10 +508,15 @@
     }
 
     // RENDER DANH SÁCH: MỖI TIN NẰM DƯỚI NHAU
+    let allCurrentListings = [];
+    let compareList = [];
+
     function renderListings(data) {
+      allCurrentListings = data || [];
       const container = document.getElementById('listings');
       const emptyState = document.getElementById('empty-state');
       const countEl = document.getElementById('listings-count');
+      const savedIds = JSON.parse(localStorage.getItem('fav_listings') || '[]');
 
       if (!data || data.length === 0) {
         container.innerHTML = '';
@@ -518,19 +529,29 @@
       countEl.textContent = `${data.length} tin đăng`;
 
       container.innerHTML = data.map(l => {
+        const isFav = savedIds.includes(l.id);
+        const isCompared = compareList.includes(l.id);
+
         // Ảnh đại diện
         const imgHtml = (l.imageUrls && l.imageUrls.trim().length > 0)
           ? `<img src="${l.imageUrls.split(',')[0].trim()}" alt="${l.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" onerror="this.onerror=null;this.parentElement.innerHTML='<div class=\\'flex items-center justify-center w-full h-full bg-gradient-to-br from-indigo-100 to-blue-50 text-4xl\\'>🏡</div>'"/>`
           : `<div class="flex items-center justify-center w-full h-full bg-gradient-to-br from-indigo-100 to-blue-50 text-4xl">${l.type === 'Sale' ? '🏠' : '🏢'}</div>`;
 
         return `
-          <article class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-md hover:border-indigo-200 transition-all cursor-pointer group flex flex-col md:flex-row" onclick="viewDetail(${l.id})">
+          <article class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-md hover:border-indigo-200 transition-all cursor-pointer group flex flex-col md:flex-row relative" onclick="viewDetail(${l.id})">
             <!-- Cột ảnh (Bên trái trên PC, trên cùng trên Mobile) -->
             <div class="relative w-full md:w-64 h-48 md:h-auto shrink-0 overflow-hidden bg-gray-100">
               ${imgHtml}
               <span class="absolute top-3 left-3 px-3 py-1 rounded-full text-xs font-bold shadow-md ${l.type === 'Sale' ? 'bg-emerald-600 text-white' : 'bg-blue-600 text-white'}">
                 ${l.type === 'Sale' ? 'Cần bán' : 'Cho thuê'}
               </span>
+              <!-- Nút Lưu yêu thích nhanh -->
+              <button onclick="event.stopPropagation(); toggleCardFavorite(${l.id})" 
+                class="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/90 hover:bg-white flex items-center justify-center shadow transition-transform active:scale-90" title="Lưu tin yêu thích">
+                <span class="material-symbols-outlined text-base ${isFav ? 'text-red-500 font-bold' : 'text-gray-500'}">
+                  ${isFav ? 'favorite' : 'favorite_border'}
+                </span>
+              </button>
             </div>
 
             <!-- Cột thông tin chi tiết (Bên phải) -->
@@ -560,20 +581,180 @@
                 </div>
               </div>
 
-              <!-- Chân thẻ: Ngày đăng & Nút -->
+              <!-- Chân thẻ: Nút so sánh & Ngày đăng -->
               <div class="flex items-center justify-between mt-4 pt-3 border-t border-gray-100 text-xs">
-                <span class="text-gray-400 flex items-center gap-1">
-                  <span class="material-symbols-outlined text-xs">schedule</span>
-                  ${new Date(l.createdAt).toLocaleDateString('vi-VN')}
-                </span>
+                <div class="flex items-center gap-3">
+                  <span class="text-gray-400 flex items-center gap-1">
+                    <span class="material-symbols-outlined text-xs">schedule</span>
+                    ${new Date(l.createdAt).toLocaleDateString('vi-VN')}
+                  </span>
+                  <!-- Nút thêm vào so sánh -->
+                  <button onclick="event.stopPropagation(); toggleCompare(${l.id})" 
+                    class="inline-flex items-center gap-1 text-[11px] font-semibold px-2 py-0.5 rounded border transition-colors ${isCompared ? 'bg-purple-100 text-purple-700 border-purple-300' : 'bg-gray-50 text-gray-500 hover:text-purple-600 border-gray-200'}">
+                    <span class="material-symbols-outlined text-xs">balance</span> ${isCompared ? 'Đã chọn so sánh' : '+ So sánh'}
+                  </button>
+                </div>
                 <span class="text-indigo-600 font-bold flex items-center gap-0.5 group-hover:translate-x-1 transition-transform">
-                  Xem chi tiết <span class="material-symbols-outlined text-sm">arrow_forward</span>
+                  Chi tiết <span class="material-symbols-outlined text-sm">arrow_forward</span>
                 </span>
               </div>
             </div>
           </article>
         `;
       }).join('');
+    }
+
+    // Toggle Favorite từ danh sách thẻ
+    function toggleCardFavorite(id) {
+      let favs = JSON.parse(localStorage.getItem('fav_listings') || '[]');
+      if (favs.includes(id)) {
+        favs = favs.filter(x => x !== id);
+      } else {
+        favs.push(id);
+      }
+      localStorage.setItem('fav_listings', JSON.stringify(favs));
+      renderListings(allCurrentListings);
+    }
+
+    // Tab xem các tin đã lưu yêu thích (Use Case: Lưu BĐS yêu thích)
+    async function loadSavedListingsTab() {
+      const favs = JSON.parse(localStorage.getItem('fav_listings') || '[]');
+      const titleEl = document.getElementById('section-title');
+      const countEl = document.getElementById('listings-count');
+      const container = document.getElementById('listings');
+
+      titleEl.textContent = 'Danh sách BĐS đã lưu yêu thích';
+
+      if (favs.length === 0) {
+        container.innerHTML = `
+          <div class="text-center py-12 bg-white rounded-2xl border p-6">
+            <span class="text-4xl block mb-2">💔</span>
+            <p class="font-bold text-gray-700">Bạn chưa lưu bất động sản nào.</p>
+            <p class="text-xs text-gray-400 mt-1">Bấm vào biểu tượng trái tim ❤️ trên các tin để lưu và xem lại tại đây.</p>
+            <button onclick="resetFilters()" class="mt-4 px-4 py-2 bg-indigo-600 text-white rounded-xl text-xs font-bold">
+              Khám phá tin đăng ngay
+            </button>
+          </div>
+        `;
+        countEl.textContent = '0 tin';
+        return;
+      }
+
+      try {
+        const res = await fetch('/api/listings');
+        const data = await res.json();
+        const savedData = data.filter(l => favs.includes(l.id));
+        renderListings(savedData);
+        countEl.textContent = `${savedData.length} tin đã lưu`;
+      } catch {
+        container.innerHTML = '<p class="text-red-500 text-center py-6">Lỗi tải tin đã lưu</p>';
+      }
+    }
+
+    // So sánh BĐS (Use Case: So sánh BĐS)
+    function toggleCompare(id) {
+      if (compareList.includes(id)) {
+        compareList = compareList.filter(x => x !== id);
+      } else {
+        if (compareList.length >= 3) {
+          alert('Chỉ có thể so sánh tối đa 3 bất động sản cùng lúc!');
+          return;
+        }
+        compareList.push(id);
+      }
+
+      const badge = document.getElementById('btnCompareBadge');
+      const countEl = document.getElementById('compareCount');
+      if (compareList.length > 0) {
+        badge.classList.remove('hidden');
+        countEl.textContent = compareList.length;
+      } else {
+        badge.classList.add('hidden');
+      }
+
+      renderListings(allCurrentListings);
+    }
+
+    async function openCompareModal() {
+      if (compareList.length < 2) {
+        alert('Vui lòng chọn ít nhất 2 bất động sản để so sánh!');
+        return;
+      }
+
+      const modal = document.getElementById('compareModal');
+      const content = document.getElementById('compareTableContent');
+      modal.classList.remove('hidden');
+      content.innerHTML = '<div class="text-center py-8 text-gray-400">Đang tải dữ liệu so sánh...</div>';
+
+      try {
+        const res = await fetch('/api/listings');
+        const all = await res.json();
+        const items = all.filter(l => compareList.includes(l.id));
+
+        content.innerHTML = `
+          <div class="overflow-x-auto">
+            <table class="w-full text-xs text-left border-collapse border border-gray-200">
+              <thead>
+                <tr class="bg-gray-100 text-gray-700">
+                  <th class="p-3 border font-bold">Tiêu chí so sánh</th>
+                  ${items.map(it => `
+                    <th class="p-3 border font-bold text-center max-w-[200px]">
+                      <div class="font-extrabold text-sm text-gray-900 line-clamp-2">${it.title}</div>
+                      <a href="property_detail.html?id=${it.id}" target="_blank" class="text-indigo-600 hover:underline block mt-1 font-normal">Xem chi tiết ↗</a>
+                    </th>
+                  `).join('')}
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-200">
+                <tr>
+                  <td class="p-3 border font-bold bg-gray-50">💰 Mức giá</td>
+                  ${items.map(it => `<td class="p-3 border text-center font-black text-red-600 text-sm">${formatPrice(it.price)}</td>`).join('')}
+                </tr>
+                <tr>
+                  <td class="p-3 border font-bold bg-gray-50">📐 Diện tích</td>
+                  ${items.map(it => `<td class="p-3 border text-center font-bold">${it.area ? it.area + ' m²' : '--'}</td>`).join('')}
+                </tr>
+                <tr>
+                  <td class="p-3 border font-bold bg-gray-50">🏷️ Đơn giá / m²</td>
+                  ${items.map(it => {
+                    const unitPrice = (it.price && it.area && it.area > 0) ? (it.price / it.area / 1000000).toFixed(1) + ' tr/m²' : '--';
+                    return `<td class="p-3 border text-center font-bold text-indigo-700">${unitPrice}</td>`;
+                  }).join('')}
+                </tr>
+                <tr>
+                  <td class="p-3 border font-bold bg-gray-50">🧭 Hướng nhà</td>
+                  ${items.map(it => `<td class="p-3 border text-center">${it.direction ? 'Hướng ' + it.direction : 'Chưa rõ'}</td>`).join('')}
+                </tr>
+                <tr>
+                  <td class="p-3 border font-bold bg-gray-50">🛏️ Phòng ngủ</td>
+                  ${items.map(it => `<td class="p-3 border text-center">${it.bedrooms || '--'} PN</td>`).join('')}
+                </tr>
+                <tr>
+                  <td class="p-3 border font-bold bg-gray-50">🛁 Phòng tắm</td>
+                  ${items.map(it => `<td class="p-3 border text-center">${it.bathrooms || '--'} PT</td>`).join('')}
+                </tr>
+                <tr>
+                  <td class="p-3 border font-bold bg-gray-50">📍 Vị trí</td>
+                  ${items.map(it => `<td class="p-3 border text-center">${it.district ? it.district + ', ' : ''}${it.city || ''}</td>`).join('')}
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        `;
+      } catch {
+        content.innerHTML = '<p class="text-red-500 text-center py-6">Lỗi tải dữ liệu so sánh</p>';
+      }
+    }
+
+    function closeCompareModal() {
+      document.getElementById('compareModal').classList.add('hidden');
+    }
+
+    function clearCompare() {
+      compareList = [];
+      document.getElementById('btnCompareBadge').classList.add('hidden');
+      closeCompareModal();
+      renderListings(allCurrentListings);
     }
 
     // Xem danh sách tin của chính mình (Ad1, Ad2, Sequence Diagram 3)
@@ -1006,5 +1187,34 @@
 
     loadListings();
   </script>
+
+  <!-- MODAL SO SÁNH BẤT ĐỘNG SẢN (Use Case: So sánh BĐS) -->
+  <div id="compareModal" class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 hidden backdrop-blur-sm">
+    <div class="bg-white rounded-3xl max-w-4xl w-full p-6 shadow-2xl max-h-[90vh] flex flex-col">
+      <div class="flex items-center justify-between pb-4 border-b">
+        <div class="flex items-center gap-2">
+          <span class="material-symbols-outlined text-purple-600 text-2xl">balance</span>
+          <div>
+            <h3 class="font-extrabold text-gray-900 text-lg">Bảng So Sánh Bất Động Sản</h3>
+            <p class="text-xs text-gray-500">Đối chiếu mức giá, diện tích, đơn giá m² và tiện ích giữa các BĐS</p>
+          </div>
+        </div>
+        <button onclick="closeCompareModal()" class="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-gray-600 font-bold">✕</button>
+      </div>
+
+      <div id="compareTableContent" class="py-4 overflow-y-auto flex-1">
+        <!-- Render động -->
+      </div>
+
+      <div class="flex items-center justify-between pt-4 border-t">
+        <button onclick="clearCompare()" class="px-4 py-2 text-xs font-bold text-red-600 hover:bg-red-50 rounded-xl transition-colors">
+          Xóa danh sách so sánh
+        </button>
+        <button onclick="closeCompareModal()" class="px-6 py-2.5 bg-gray-900 hover:bg-black text-white text-xs font-bold rounded-xl shadow">
+          Đóng lại
+        </button>
+      </div>
+    </div>
+  </div>
 </body>
 </html>
