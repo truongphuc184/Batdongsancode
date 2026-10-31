@@ -77,7 +77,7 @@
         <input type="number" id="c_bath" placeholder="Số phòng tắm" class="px-4 py-3 bg-gray-100 rounded-xl outline-none"/>
       </div>
       <div class="flex gap-3 mt-4">
-        <button onclick="createListing()" class="px-6 py-3 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 font-medium">Đăng tin</button>
+        <button id="btnSubmitListing" onclick="createListing()" class="px-6 py-3 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 font-medium">Đăng tin</button>
         <button onclick="hideCreateForm()" class="px-6 py-3 bg-gray-100 text-gray-600 rounded-xl hover:bg-gray-200 font-medium">Hủy</button>
       </div>
       <div id="create-msg" class="mt-3 text-sm hidden"></div>
@@ -222,31 +222,35 @@
 
     async function createListing() {
       const msgEl = document.getElementById('create-msg');
-      const submitBtn = event?.target || document.querySelector('#createForm button[onclick="createListing()"]');
+      const submitBtn = document.getElementById('btnSubmitListing');
       
       const title = document.getElementById('c_title').value.trim();
       const city = document.getElementById('c_city').value.trim();
-      const price = parseFloat(document.getElementById('c_price').value);
+      const priceRaw = document.getElementById('c_price').value.trim();
+      const price = parseFloat(priceRaw);
 
       if (!title) {
-        msgEl.textContent = '⚠️ Vui lòng nhập tiêu đề tin đăng!';
-        msgEl.className = 'mt-3 text-sm text-red-500 font-medium';
+        alert('Vui lòng nhập Tiêu đề tin đăng!');
+        document.getElementById('c_title').focus();
         return;
       }
-      if (!price || price <= 0) {
-        msgEl.textContent = '⚠️ Vui lòng nhập giá bất động sản!';
-        msgEl.className = 'mt-3 text-sm text-red-500 font-medium';
+      if (!priceRaw || isNaN(price) || price <= 0) {
+        alert('Vui lòng nhập Giá bất động sản hợp lệ (chỉ nhập số)!');
+        document.getElementById('c_price').focus();
         return;
       }
 
-      msgEl.textContent = '⏳ Đang đăng tin...';
+      msgEl.textContent = '⏳ Đang lưu tin đăng...';
       msgEl.className = 'mt-3 text-sm text-indigo-600 font-medium';
-      if (submitBtn) submitBtn.disabled = true;
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Đang lưu...';
+      }
 
       try {
         const currentToken = localStorage.getItem('accessToken');
         if (!currentToken) {
-          alert('Bạn chưa đăng nhập hoặc phiên đã hết hạn!');
+          alert('Phiên đăng nhập đã hết hạn hoặc chưa đăng nhập. Vui lòng đăng nhập lại!');
           window.location.href = 'signin.html';
           return;
         }
@@ -274,8 +278,7 @@
         const data = await res.json().catch(() => ({}));
 
         if (res.ok) {
-          msgEl.textContent = '✅ ' + (data.message || 'Đăng tin thành công!');
-          msgEl.className = 'mt-3 text-sm text-green-600 font-bold';
+          alert('🎉 ' + (data.message || 'Đăng tin thành công!'));
           
           // Reset form fields
           document.getElementById('c_title').value = '';
@@ -288,25 +291,27 @@
           document.getElementById('c_bed').value = '';
           document.getElementById('c_bath').value = '';
 
-          setTimeout(() => { 
-            hideCreateForm(); 
-            msgEl.textContent = '';
-            loadListings(); 
-          }, 1200);
+          hideCreateForm(); 
+          msgEl.textContent = '';
+          loadListings(); 
         } else if (res.status === 401) {
-          msgEl.textContent = '❌ Phiên đăng nhập đã hết hạn. Đang chuyển về trang đăng nhập...';
-          msgEl.className = 'mt-3 text-sm text-red-500 font-medium';
+          alert('Phiên đăng nhập đã hết hạn. Đang chuyển về trang đăng nhập...');
           localStorage.removeItem('accessToken');
-          setTimeout(() => { window.location.href = 'signin.html'; }, 1500);
+          window.location.href = 'signin.html';
         } else {
+          alert('Lỗi khi đăng tin: ' + (data.message || JSON.stringify(data)));
           msgEl.textContent = '❌ Lỗi: ' + (data.message || 'Không thể đăng tin');
           msgEl.className = 'mt-3 text-sm text-red-500 font-medium';
         }
       } catch (err) {
-        msgEl.textContent = '❌ Lỗi kết nối tới máy chủ: ' + err.message;
+        alert('Lỗi kết nối tới máy chủ: ' + err.message);
+        msgEl.textContent = '❌ Lỗi kết nối: ' + err.message;
         msgEl.className = 'mt-3 text-sm text-red-500 font-medium';
       } finally {
-        if (submitBtn) submitBtn.disabled = false;
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Đăng tin';
+        }
       }
     }
 
