@@ -17,8 +17,9 @@ builder.Services.AddSwaggerGen();
 // Configuration
 var configuration = builder.Configuration;
 
-// DB Context (MySQL)
-var connectionString = configuration.GetConnectionString("DefaultConnection");
+// Tự động nhận diện SQL Server Instance khả dụng trên máy (SQL Server chuẩn '.', 'localhost', 'SQLEXPRESS' hoặc 'LocalDB')
+string connectionString = ResolveSqlConnectionString(configuration);
+
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(connectionString));
 
@@ -66,11 +67,32 @@ builder.Services.AddScoped<IListingService, ListingService>();
 
 var app = builder.Build();
 
-// Seed database
+// Tự động khởi tạo Database và nạp dữ liệu mẫu
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    await DbSeeder.SeedAsync(db);
+    try
+    {
+        // Tự động tạo Database và các bảng (Users, Listings, Leads, Reports...) nếu chưa tồn tại
+        await db.Database.EnsureCreatedAsync();
+        await DbSeeder.SeedAsync(db);
+        Console.ForegroundColor = ConsoleColor.Green;
+        Console.WriteLine(">>> [DATABASE OK] Đã kết nối cơ sở dữ liệu và nạp dữ liệu mẫu thành công!");
+        Console.ResetColor();
+    }
+    catch (Exception ex)
+    {
+        Console.ForegroundColor = ConsoleColor.Red;
+        Console.WriteLine("==================================================================");
+        Console.WriteLine(">>> [LỖI KẾT NỐI DATABASE]");
+        Console.WriteLine($">>> Chi tiết lỗi: {ex.Message}");
+        Console.WriteLine(">>> HƯỚNG DẪN KHẮC PHỤC TRÊN MÁY BẠN:");
+        Console.WriteLine("    1. Mở file 'appsettings.json' kiểm tra dòng 'DefaultConnection'.");
+        Console.WriteLine("    2. Kiểm tra tên SQL Server trong SSMS (thường là '.' hoặc 'localhost' hoặc 'localhost\\SQLEXPRESS').");
+        Console.WriteLine("    3. Đảm bảo dịch vụ SQL Server (MSSQLSERVER hoặc SQLEXPRESS) trong Services.msc đang Chạy (Running).");
+        Console.WriteLine("==================================================================");
+        Console.ResetColor();
+    }
 }
 
 // Configure the HTTP request pipeline.
@@ -99,4 +121,48 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+// ====================================================================
+// HÀM TỰ ĐỘNG PHÁT HIỆN SQL SERVER ĐANG CHẠY TRÊN MÁY TÍNH
+// ====================================================================
+static string ResolveSqlConnectionString(IConfiguration config)
+{
+    var configured = config.GetConnectionString("DefaultConnection") ?? "";
+    var candidateServers = new List<string>();
+
+    // 1. Lấy server chỉ định trong appsettings.json nếu có
+    if (!string.IsNullOrWhiteSpace(configured))
+    {
+        var match = System.Text.RegularExpressions.Regex.Match(configured, @"Server=([^;]+)", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+        if (match.Success) candidateServers.Add(match.Groups[1].Value.Trim());
+    }
+
+    // 2. Danh sách các instance SQL Server chuẩn & phổ biến
+    candidateServers.AddRange(new[] { ".", "localhost", "localhost\\SQLEXPRESS", "(localdb)\\mssqllocaldb" });
+
+    foreach (var server in candidateServers.Distinct(StringComparer.OrdinalIgnoreCase))
+    {
+        // Thử kết nối tới instance đang chạy với timeout 1.5 giây
+        var testStr = $"Server={server};Database=master;Trusted_Connection=True;TrustServerCertificate=True;Connect Timeout=2;";
+        try
+        {
+            using var conn = new Microsoft.Data.SqlClient.SqlConnection(testStr);
+            conn.Open();
+            var finalConn = $"Server={server};Database=batdongsan;Trusted_Connection=True;TrustServerCertificate=True;";
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.WriteLine($">>> [SQL SERVER TỰ ĐỘNG NHẬN DIỆN] Đang kết nối tới SQL Server: '{server}'");
+            Console.ResetColor();
+            return finalConn;
+        }
+        catch
+        {
+            // Bỏ qua nếu server này không chạy trên máy, tiếp tục tìm server khác
+        }
+    }
+
+    // Nếu không ping được instance nào thì dùng cấu hình mặc định
+    return string.IsNullOrWhiteSpace(configured) 
+        ? "Server=.;Database=batdongsan;Trusted_Connection=True;TrustServerCertificate=True;" 
+        : configured;
+}
 
