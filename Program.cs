@@ -80,7 +80,14 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+// CORS - allow frontend to call API (phải đặt trước Auth)
+app.UseCors(policy => policy
+    .AllowAnyOrigin()
+    .AllowAnyMethod()
+    .AllowAnyHeader());
+
+// Tắt HttpsRedirection ở local dev để không làm rơi rớt header Authorization khi gọi fetch giữa http/https
+// app.UseHttpsRedirection();
 
 // Serve static files from wwwroot (frontend HTML)
 app.UseDefaultFiles(); // serves index.html as default page
@@ -88,12 +95,6 @@ app.UseStaticFiles();
 
 app.UseAuthentication();
 app.UseAuthorization();
-
-// CORS - allow frontend to call API
-app.UseCors(policy => policy
-    .AllowAnyOrigin()
-    .AllowAnyMethod()
-    .AllowAnyHeader());
 
 app.MapControllers();
 

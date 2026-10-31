@@ -23,6 +23,15 @@
   <div class="absolute inset-0 bg-gradient-to-tr from-black/60 via-black/40 to-indigo-950/40 backdrop-blur-[2px]"></div>
 
   <div class="relative z-10 w-full max-w-md">
+    <!-- Thông báo nếu đang có phiên đăng nhập cũ -->
+    <div id="alreadyLoggedInBanner" class="hidden mb-4 p-3 bg-indigo-50/90 border border-indigo-200 rounded-2xl flex items-center justify-between text-xs">
+      <span class="text-indigo-900 font-medium">Bạn đã đăng nhập phiên trước đó</span>
+      <div class="flex items-center gap-2">
+        <a href="home_property_search.html" class="px-2.5 py-1 bg-indigo-600 text-white rounded-lg font-bold hover:bg-indigo-700">Vào trang chủ ↗</a>
+        <button type="button" onclick="clearOldSession()" class="text-gray-500 hover:text-red-500 font-semibold underline">Đăng xuất</button>
+      </div>
+    </div>
+
     <!-- Khung đăng nhập Glassmorphism cao cấp -->
     <div class="bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl p-8 sm:p-10 border border-white/50">
       <div class="text-center mb-7">
@@ -101,8 +110,16 @@
   </div>
 
   <script>
+    // Kiểm tra nếu có phiên cũ thì hiện banner tùy chọn, KHÔNG tự ý redirect
     if (localStorage.getItem('accessToken')) {
-      window.location.href = 'home_property_search.html';
+      const banner = document.getElementById('alreadyLoggedInBanner');
+      if (banner) banner.classList.remove('hidden');
+    }
+
+    function clearOldSession() {
+      localStorage.removeItem('accessToken');
+      const banner = document.getElementById('alreadyLoggedInBanner');
+      if (banner) banner.classList.add('hidden');
     }
 
     function fillAccount(email) {
