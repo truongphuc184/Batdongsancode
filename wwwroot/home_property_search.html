@@ -40,25 +40,171 @@
     </div>
   </header>
 
-  <!-- Thanh tìm kiếm & Lọc -->
+  <!-- Thanh tìm kiếm & Lọc nâng cao (Theo Sơ đồ Use Case: Tìm kiếm & Tra cứu) -->
   <div class="max-w-4xl mx-auto px-4 mt-5">
     <div class="bg-white rounded-2xl shadow-sm p-4 border border-gray-200">
+      <!-- Hàng tìm kiếm chính -->
       <div class="flex gap-2">
-        <input type="text" id="searchInput" placeholder="Tìm kiếm theo tiêu đề, địa chỉ, quận, huyện..."
-          class="flex-1 px-4 py-3 bg-gray-50 border border-gray-300 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white text-sm transition-all"/>
-        <button onclick="searchListings()" class="px-6 py-3 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 font-semibold text-sm transition-colors flex items-center gap-1.5 shrink-0 shadow-sm">
-          <span class="material-symbols-outlined text-lg">search</span> Tìm kiếm
+        <div class="relative flex-1">
+          <span class="material-symbols-outlined absolute left-3.5 top-3.5 text-gray-400">search</span>
+          <input type="text" id="searchInput" 
+            placeholder="Tìm theo tiêu đề, địa chỉ, quận huyện, dự án... (Nhấn Enter hoặc gõ để tìm)"
+            onkeydown="if(event.key === 'Enter') executeSearch()"
+            oninput="handleSearchInputDebounced()"
+            class="w-full pl-10 pr-9 py-3 bg-gray-50 border border-gray-300 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white text-sm transition-all font-medium"/>
+          <button id="btnClearSearch" onclick="clearSearchInput()" class="absolute right-3 top-3 text-gray-400 hover:text-gray-600 hidden">
+            <span class="material-symbols-outlined text-lg">cancel</span>
+          </button>
+        </div>
+        <button onclick="toggleAdvancedFilter()" id="btnToggleFilter" 
+          class="px-4 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold text-xs rounded-xl transition-colors flex items-center gap-1.5 shrink-0 border border-gray-200">
+          <span class="material-symbols-outlined text-base">tune</span>
+          <span class="hidden sm:inline">Bộ lọc</span>
+          <span id="filterCountBadge" class="hidden px-1.5 py-0.2 bg-indigo-600 text-white rounded-full text-[10px] font-bold"></span>
+        </button>
+        <button onclick="executeSearch()" class="px-6 py-3 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 font-semibold text-sm transition-colors flex items-center gap-1.5 shrink-0 shadow-sm">
+          <span>Tìm kiếm</span>
         </button>
       </div>
-      <div class="flex gap-2 mt-3 flex-wrap items-center">
-        <span class="text-xs text-gray-500 font-medium">Lọc nhu cầu:</span>
-        <button onclick="filterType(null)" class="filter-chip px-4 py-1.5 rounded-full text-xs font-semibold bg-indigo-600 text-white shadow-sm">Tất cả</button>
-        <button onclick="filterType('Sale')" class="filter-chip px-4 py-1.5 rounded-full text-xs font-semibold bg-gray-100 text-gray-600 hover:bg-gray-200">Nhà đất bán</button>
-        <button onclick="filterType('Rent')" class="filter-chip px-4 py-1.5 rounded-full text-xs font-semibold bg-gray-100 text-gray-600 hover:bg-gray-200">Nhà đất cho thuê</button>
-        <button onclick="loadMyListingsTab()" class="filter-chip px-4 py-1.5 rounded-full text-xs font-semibold bg-amber-100 text-amber-800 hover:bg-amber-200 flex items-center gap-1 border border-amber-300">
-          <span class="material-symbols-outlined text-sm">inventory_2</span> Tin đăng của tôi
-        </button>
+
+      <!-- Thanh chọn nhanh nhu cầu & Sắp xếp -->
+      <div class="flex flex-wrap items-center justify-between gap-2 mt-3 pt-3 border-t border-gray-100">
+        <div class="flex items-center gap-2 flex-wrap">
+          <button onclick="quickFilterType(null)" class="filter-type-chip px-3.5 py-1.5 rounded-full text-xs font-bold bg-indigo-600 text-white shadow-sm">Tất cả</button>
+          <button onclick="quickFilterType('Sale')" class="filter-type-chip px-3.5 py-1.5 rounded-full text-xs font-semibold bg-gray-100 text-gray-600 hover:bg-gray-200">Mua bán</button>
+          <button onclick="quickFilterType('Rent')" class="filter-type-chip px-3.5 py-1.5 rounded-full text-xs font-semibold bg-gray-100 text-gray-600 hover:bg-gray-200">Cho thuê</button>
+          <button onclick="loadMyListingsTab()" class="px-3.5 py-1.5 rounded-full text-xs font-semibold bg-amber-100 text-amber-800 hover:bg-amber-200 flex items-center gap-1 border border-amber-300">
+            <span class="material-symbols-outlined text-sm">inventory_2</span> Tin của tôi
+          </button>
+        </div>
+
+        <div class="flex items-center gap-1.5 text-xs">
+          <span class="text-gray-400 font-medium">Sắp xếp:</span>
+          <select id="sortBy" onchange="executeSearch()" class="bg-gray-50 border border-gray-200 rounded-lg py-1 px-2.5 text-xs font-semibold outline-none cursor-pointer">
+            <option value="priority">Tin ưu tiên (VIP/Đẩy)</option>
+            <option value="newest">Mới nhất</option>
+            <option value="price_asc">Giá: Thấp đến Cao</option>
+            <option value="price_desc">Giá: Cao đến Thấp</option>
+            <option value="area_desc">Diện tích: Lớn nhất</option>
+          </select>
+        </div>
       </div>
+
+      <!-- Tag hiển thị các tiêu chí đang lọc -->
+      <div id="activeFiltersContainer" class="flex flex-wrap items-center gap-2 mt-3 pt-2 border-t border-gray-100 hidden text-xs">
+        <span class="text-gray-400 font-medium">Đang lọc theo:</span>
+        <div id="activeFilterTags" class="flex flex-wrap items-center gap-1.5"></div>
+        <button onclick="resetFilters()" class="text-indigo-600 hover:underline font-bold text-[11px] ml-1">Xóa tất cả</button>
+      </div>
+
+      <!-- BẢNG BỘ LỌC NÂNG CAO (Sơ đồ Use Case: Lọc BĐS nâng cao) -->
+      <div id="advancedFilterBox" class="mt-4 pt-4 border-t border-gray-100 hidden">
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
+          <!-- 1. Tỉnh thành -->
+          <div>
+            <label class="block text-[11px] font-bold text-gray-700 uppercase mb-1">📍 Khu vực / Tỉnh thành</label>
+            <select id="f_city" onchange="executeSearch()" class="w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-xl text-xs font-medium outline-none cursor-pointer">
+              <option value="">Toàn quốc (Tất cả)</option>
+              <option value="Hà Nội">Hà Nội</option>
+              <option value="Hồ Chí Minh">TP. Hồ Chí Minh</option>
+              <option value="Đà Nẵng">Đà Nẵng</option>
+              <option value="Bình Dương">Bình Dương</option>
+              <option value="Đồng Nai">Đồng Nai</option>
+              <option value="Hải Phòng">Hải Phòng</option>
+              <option value="Cần Thơ">Cần Thơ</option>
+            </select>
+          </div>
+
+          <!-- 2. Khoảng giá -->
+          <div>
+            <label class="block text-[11px] font-bold text-gray-700 uppercase mb-1">💰 Mức giá</label>
+            <select id="f_priceRange" onchange="handlePriceRangeSelect(this.value)" class="w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-xl text-xs font-medium outline-none cursor-pointer">
+              <option value="">Tất cả mức giá</option>
+              <option value="0-1000000000">Dưới 1 tỷ</option>
+              <option value="1000000000-2000000000">1 - 2 tỷ</option>
+              <option value="2000000000-3000000000">2 - 3 tỷ</option>
+              <option value="3000000000-5000000000">3 - 5 tỷ</option>
+              <option value="5000000000-10000000000">5 - 10 tỷ</option>
+              <option value="10000000000-20000000000">10 - 20 tỷ</option>
+              <option value="20000000000-999999999999">Trên 20 tỷ</option>
+            </select>
+          </div>
+
+          <!-- 3. Khoảng diện tích -->
+          <div>
+            <label class="block text-[11px] font-bold text-gray-700 uppercase mb-1">📐 Diện tích</label>
+            <select id="f_areaRange" onchange="handleAreaRangeSelect(this.value)" class="w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-xl text-xs font-medium outline-none cursor-pointer">
+              <option value="">Tất cả diện tích</option>
+              <option value="0-30">Dưới 30 m²</option>
+              <option value="30-50">30 - 50 m²</option>
+              <option value="50-80">50 - 80 m²</option>
+              <option value="80-120">80 - 120 m²</option>
+              <option value="120-200">120 - 200 m²</option>
+              <option value="200-99999">Trên 200 m²</option>
+            </select>
+          </div>
+
+          <!-- 4. Hướng nhà phong thủy -->
+          <div>
+            <label class="block text-[11px] font-bold text-gray-700 uppercase mb-1">🧭 Hướng nhà</label>
+            <select id="f_direction" onchange="executeSearch()" class="w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-xl text-xs font-medium outline-none cursor-pointer">
+              <option value="">Tất cả các hướng</option>
+              <option value="Đông">Hướng Đông</option>
+              <option value="Tây">Hướng Tây</option>
+              <option value="Nam">Hướng Nam</option>
+              <option value="Bắc">Hướng Bắc</option>
+              <option value="Đông Nam">Hướng Đông Nam</option>
+              <option value="Đông Bắc">Hướng Đông Bắc</option>
+              <option value="Tây Nam">Hướng Tây Nam</option>
+              <option value="Tây Bắc">Hướng Tây Bắc</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="flex items-center justify-between gap-2 mt-4 pt-3 border-t border-gray-100 flex-wrap">
+          <div class="flex items-center gap-2">
+            <span class="text-xs text-gray-500 font-medium">Số phòng ngủ:</span>
+            <div class="inline-flex rounded-lg border border-gray-200 bg-gray-50 p-0.5 text-xs" id="bedRadioGroup">
+              <button onclick="setFilterBeds(0)" class="bed-chip px-2.5 py-1 rounded-md font-bold bg-white text-indigo-600 shadow-sm">Bất kỳ</button>
+              <button onclick="setFilterBeds(1)" class="bed-chip px-2.5 py-1 rounded-md text-gray-600 hover:text-gray-900">1+</button>
+              <button onclick="setFilterBeds(2)" class="bed-chip px-2.5 py-1 rounded-md text-gray-600 hover:text-gray-900">2+</button>
+              <button onclick="setFilterBeds(3)" class="bed-chip px-2.5 py-1 rounded-md text-gray-600 hover:text-gray-900">3+</button>
+              <button onclick="setFilterBeds(4)" class="bed-chip px-2.5 py-1 rounded-md text-gray-600 hover:text-gray-900">4+</button>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <button onclick="resetFilters()" class="px-3 py-1.5 text-xs text-gray-500 hover:text-gray-800 font-semibold transition-colors">
+              Xóa bộ lọc
+            </button>
+            <button onclick="executeSearch()" class="px-4 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold transition-colors shadow-sm flex items-center gap-1">
+              <span class="material-symbols-outlined text-sm">filter_alt</span> Áp dụng
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Banner Giới thiệu Gói Hội viên (Theo mẫu 3 gói mới) -->
+  <div class="max-w-4xl mx-auto px-4 mt-4">
+    <div class="bg-gradient-to-r from-red-600 via-purple-600 to-indigo-700 rounded-2xl p-4 sm:p-5 text-white flex flex-col sm:flex-row items-center justify-between gap-4 shadow-md">
+      <div class="flex items-center gap-3.5">
+        <div class="w-12 h-12 rounded-xl bg-white/20 backdrop-blur-md flex items-center justify-center text-2xl shrink-0">
+          👑
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="font-extrabold text-sm sm:text-base">Gói Hội Viên Bất Động Sản</span>
+            <span class="bg-amber-400 text-gray-900 text-[10px] font-black px-2 py-0.5 rounded-full uppercase">Tiết kiệm đến 39%</span>
+          </div>
+          <p class="text-xs text-white/90 mt-0.5">3 gói từ Cơ bản (467K), Tiêu chuẩn (1.267K) đến Cao cấp (2.200K) • Tối ưu từng tin đăng & lượt đẩy</p>
+        </div>
+      </div>
+      <a href="packages.html" class="shrink-0 px-4 py-2 bg-white text-gray-900 hover:bg-gray-100 rounded-xl text-xs font-bold transition-all shadow flex items-center gap-1">
+        <span>Xem các gói</span>
+        <span class="material-symbols-outlined text-sm">arrow_forward</span>
+      </a>
     </div>
   </div>
 
@@ -213,12 +359,17 @@
 
     <!-- Empty State -->
     <div id="empty-state" class="hidden text-center py-16 bg-white rounded-2xl shadow-sm border border-gray-200 mt-2">
-      <div class="text-5xl mb-3">🏡</div>
-      <h3 class="text-lg font-bold text-gray-800">Chưa có tin đăng nào phù hợp</h3>
-      <p class="text-xs text-gray-500 mt-1 max-w-sm mx-auto">Hãy là người đầu tiên đăng tin hoặc thay đổi từ khóa tìm kiếm của bạn.</p>
-      <button onclick="showCreateForm()" class="mt-4 px-5 py-2.5 bg-indigo-600 text-white rounded-xl font-semibold text-xs shadow-sm hover:bg-indigo-700">
-        Đăng tin ngay
-      </button>
+      <div class="text-5xl mb-3">🔍</div>
+      <h3 class="text-lg font-bold text-gray-800">Không tìm thấy bất động sản phù hợp</h3>
+      <p class="text-xs text-gray-500 mt-1 max-w-sm mx-auto">Vui lòng thử tìm với từ khóa khác hoặc xóa bớt tiêu chí lọc khu vực, mức giá, diện tích.</p>
+      <div class="flex items-center justify-center gap-2 mt-4">
+        <button onclick="resetFilters()" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-800 rounded-xl font-bold text-xs transition-colors border">
+          🔄 Xóa bộ lọc & Xem tất cả
+        </button>
+        <button onclick="showCreateForm()" class="px-5 py-2 bg-indigo-600 text-white rounded-xl font-bold text-xs shadow-sm hover:bg-indigo-700">
+          + Đăng tin mới
+        </button>
+      </div>
     </div>
   </main>
 
@@ -529,38 +680,203 @@
       }
     }
 
-    // Tải danh sách từ API
-    async function loadListings() {
-      const titleEl = document.getElementById('section-title');
-      if (titleEl) titleEl.textContent = 'Danh sách tin đăng bất động sản';
-      try {
-        const url = currentFilter ? `/api/listings/search?type=${currentFilter === 'Sale' ? 0 : 1}` : '/api/listings';
-        const res = await fetch(url);
-        const data = await res.json();
-        renderListings(data);
-      } catch (err) {
-        document.getElementById('listings').innerHTML = '<p class="text-red-500 text-center py-8">Lỗi tải dữ liệu máy chủ</p>';
+    let selectedBeds = 0;
+    let selectedMinPrice = null;
+    let selectedMaxPrice = null;
+    let selectedMinArea = null;
+    let selectedMaxArea = null;
+    let searchDebounceTimer = null;
+
+    function handleSearchInputDebounced() {
+      const val = document.getElementById('searchInput').value;
+      const clearBtn = document.getElementById('btnClearSearch');
+      if (val.trim().length > 0) {
+        clearBtn.classList.remove('hidden');
+      } else {
+        clearBtn.classList.add('hidden');
+      }
+
+      clearTimeout(searchDebounceTimer);
+      searchDebounceTimer = setTimeout(() => {
+        executeSearch();
+      }, 350);
+    }
+
+    function clearSearchInput() {
+      document.getElementById('searchInput').value = '';
+      document.getElementById('btnClearSearch').classList.add('hidden');
+      executeSearch();
+    }
+
+    function toggleAdvancedFilter() {
+      const box = document.getElementById('advancedFilterBox');
+      const btn = document.getElementById('btnToggleFilter');
+      box.classList.toggle('hidden');
+      if (!box.classList.contains('hidden')) {
+        btn.classList.add('bg-indigo-50', 'text-indigo-600', 'border-indigo-300');
+      } else {
+        btn.classList.remove('bg-indigo-50', 'text-indigo-600', 'border-indigo-300');
       }
     }
 
-    // Tìm kiếm
-    async function searchListings() {
-      const keyword = document.getElementById('searchInput').value.trim();
-      try {
-        const res = await fetch(`/api/listings/search?keyword=${encodeURIComponent(keyword)}`);
-        const data = await res.json();
-        renderListings(data);
-      } catch (err) {}
+    function quickFilterType(type, evt) {
+      currentFilter = type;
+      document.querySelectorAll('.filter-type-chip').forEach(c => {
+        c.className = 'filter-type-chip px-3.5 py-1.5 rounded-full text-xs font-semibold bg-gray-100 text-gray-600 hover:bg-gray-200';
+      });
+      const targetBtn = evt ? evt.currentTarget : window.event?.target;
+      if (targetBtn) {
+        targetBtn.className = 'filter-type-chip px-3.5 py-1.5 rounded-full text-xs font-bold bg-indigo-600 text-white shadow-sm';
+      }
+      executeSearch();
     }
 
-    // Lọc loại
-    function filterType(type) {
-      currentFilter = type;
-      document.querySelectorAll('.filter-chip').forEach(c => {
-        c.className = c.className.replace('bg-indigo-600 text-white shadow-sm', 'bg-gray-100 text-gray-600 hover:bg-gray-200');
+    function handlePriceRangeSelect(range) {
+      if (!range) {
+        selectedMinPrice = null;
+        selectedMaxPrice = null;
+      } else {
+        const parts = range.split('-');
+        selectedMinPrice = parseFloat(parts[0]) || null;
+        selectedMaxPrice = parseFloat(parts[1]) || null;
+      }
+      executeSearch();
+    }
+
+    function handleAreaRangeSelect(range) {
+      if (!range) {
+        selectedMinArea = null;
+        selectedMaxArea = null;
+      } else {
+        const parts = range.split('-');
+        selectedMinArea = parseFloat(parts[0]) || null;
+        selectedMaxArea = parseFloat(parts[1]) || null;
+      }
+      executeSearch();
+    }
+
+    function setFilterBeds(n) {
+      selectedBeds = n;
+      document.querySelectorAll('.bed-chip').forEach((c, idx) => {
+        if (idx === n) {
+          c.className = 'bed-chip px-2.5 py-1 rounded-md font-bold bg-white text-indigo-600 shadow-sm';
+        } else {
+          c.className = 'bed-chip px-2.5 py-1 rounded-md text-gray-600 hover:text-gray-900';
+        }
       });
-      event.target.className = event.target.className.replace('bg-gray-100 text-gray-600 hover:bg-gray-200', 'bg-indigo-600 text-white shadow-sm');
-      loadListings();
+      executeSearch();
+    }
+
+    function updateFilterUI() {
+      const tagsContainer = document.getElementById('activeFiltersContainer');
+      const tagsList = document.getElementById('activeFilterTags');
+      const badge = document.getElementById('filterCountBadge');
+      
+      const tags = [];
+      const keyword = document.getElementById('searchInput')?.value?.trim();
+      const city = document.getElementById('f_city')?.value?.trim();
+      const priceSelect = document.getElementById('f_priceRange');
+      const areaSelect = document.getElementById('f_areaRange');
+      const direction = document.getElementById('f_direction')?.value?.trim();
+
+      if (keyword) tags.push({ label: `Từ khóa: "${keyword}"`, clear: () => clearSearchInput() });
+      if (city) tags.push({ label: `Khu vực: ${city}`, clear: () => { document.getElementById('f_city').value = ''; executeSearch(); } });
+      if (priceSelect && priceSelect.value) {
+        const text = priceSelect.options[priceSelect.selectedIndex].text;
+        tags.push({ label: `Giá: ${text}`, clear: () => { priceSelect.value = ''; handlePriceRangeSelect(''); } });
+      }
+      if (areaSelect && areaSelect.value) {
+        const text = areaSelect.options[areaSelect.selectedIndex].text;
+        tags.push({ label: `Diện tích: ${text}`, clear: () => { areaSelect.value = ''; handleAreaRangeSelect(''); } });
+      }
+      if (direction) tags.push({ label: `Hướng: ${direction}`, clear: () => { document.getElementById('f_direction').value = ''; executeSearch(); } });
+      if (selectedBeds > 0) tags.push({ label: `Phòng ngủ: ${selectedBeds}+ PN`, clear: () => setFilterBeds(0) });
+      if (currentFilter) tags.push({ label: `Nhu cầu: ${currentFilter === 'Sale' ? 'Mua bán' : 'Cho thuê'}`, clear: () => quickFilterType(null) });
+
+      if (tags.length > 0) {
+        tagsContainer.classList.remove('hidden');
+        tagsList.innerHTML = tags.map((t, idx) => `
+          <span class="inline-flex items-center gap-1 bg-indigo-50 text-indigo-700 border border-indigo-200 px-2.5 py-0.5 rounded-full text-xs font-semibold">
+            ${t.label}
+            <button onclick="window.activeFiltersClear[${idx}]()" class="hover:text-red-500 font-bold ml-0.5">✕</button>
+          </span>
+        `).join('');
+        window.activeFiltersClear = tags.map(t => t.clear);
+
+        badge.textContent = tags.length;
+        badge.classList.remove('hidden');
+      } else {
+        tagsContainer.classList.add('hidden');
+        tagsList.innerHTML = '';
+        badge.classList.add('hidden');
+      }
+    }
+
+    function resetFilters() {
+      document.getElementById('searchInput').value = '';
+      document.getElementById('btnClearSearch').classList.add('hidden');
+      document.getElementById('f_city').value = '';
+      document.getElementById('f_priceRange').value = '';
+      document.getElementById('f_areaRange').value = '';
+      document.getElementById('f_direction').value = '';
+      document.getElementById('sortBy').value = 'priority';
+      selectedBeds = 0;
+      selectedMinPrice = null;
+      selectedMaxPrice = null;
+      selectedMinArea = null;
+      selectedMaxArea = null;
+      currentFilter = null;
+      setFilterBeds(0);
+      document.querySelectorAll('.filter-type-chip').forEach((c, idx) => {
+        if (idx === 0) c.className = 'filter-type-chip px-3.5 py-1.5 rounded-full text-xs font-bold bg-indigo-600 text-white shadow-sm';
+        else c.className = 'filter-type-chip px-3.5 py-1.5 rounded-full text-xs font-semibold bg-gray-100 text-gray-600 hover:bg-gray-200';
+      });
+      executeSearch();
+    }
+
+    // TÌM KIẾM & LỌC NÂNG CAO (Theo Sơ đồ Use Case Tìm kiếm & Tra cứu)
+    async function executeSearch() {
+      updateFilterUI();
+      const keyword = document.getElementById('searchInput').value.trim();
+      const city = document.getElementById('f_city')?.value?.trim() || '';
+      const direction = document.getElementById('f_direction')?.value?.trim() || '';
+      const sortBy = document.getElementById('sortBy')?.value || 'priority';
+
+      const titleEl = document.getElementById('section-title');
+      if (titleEl) titleEl.textContent = 'Kết quả tìm kiếm & Lọc bất động sản';
+
+      const params = new URLSearchParams();
+      if (keyword) params.append('keyword', keyword);
+      if (city) params.append('city', city);
+      if (currentFilter) params.append('type', currentFilter === 'Sale' ? 0 : 1);
+      if (selectedMinPrice) params.append('minPrice', selectedMinPrice);
+      if (selectedMaxPrice) params.append('maxPrice', selectedMaxPrice);
+      if (selectedMinArea) params.append('minArea', selectedMinArea);
+      if (selectedMaxArea) params.append('maxArea', selectedMaxArea);
+      if (selectedBeds > 0) params.append('bedrooms', selectedBeds);
+      if (direction) params.append('direction', direction);
+      if (sortBy) params.append('sortBy', sortBy);
+
+      try {
+        const res = await fetch('/api/listings/search?' + params.toString());
+        if (!res.ok) throw new Error('API search error');
+        const data = await res.json();
+        renderListings(data);
+      } catch (err) {
+        // Fallback sang /api/listings nếu endpoint search chưa được VS reload
+        try {
+          const resFallback = await fetch('/api/listings');
+          const dataFallback = await resFallback.json();
+          renderListings(dataFallback);
+        } catch {
+          document.getElementById('listings').innerHTML = '<p class="text-red-500 text-center py-8">Lỗi tìm kiếm dữ liệu. Hãy khởi động lại Backend trong Visual Studio (F5).</p>';
+        }
+      }
+    }
+
+    // Tải danh sách từ API
+    async function loadListings() {
+      executeSearch();
     }
 
     function viewDetail(id) {

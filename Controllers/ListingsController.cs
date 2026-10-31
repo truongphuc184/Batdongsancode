@@ -42,7 +42,7 @@ public class ListingsController : ControllerBase
         return Ok(listings.Select(l => MapToListingDto(l)));
     }
 
-    // 2. Tìm kiếm BĐS nâng cao (Sequence Diagram 2)
+    // 2. Tìm kiếm BĐS nâng cao & Sắp xếp (Theo Sơ đồ Use Case: Tìm kiếm & Tra cứu + Ad3)
     [HttpGet("search")]
     public async Task<IActionResult> Search(
         [FromQuery] string? keyword,
@@ -50,7 +50,11 @@ public class ListingsController : ControllerBase
         [FromQuery] PropertyType? type,
         [FromQuery] decimal? minPrice,
         [FromQuery] decimal? maxPrice,
-        [FromQuery] string? direction)
+        [FromQuery] double? minArea,
+        [FromQuery] double? maxArea,
+        [FromQuery] int? bedrooms,
+        [FromQuery] string? direction,
+        [FromQuery] string? sortBy)
     {
         var query = _context.Listings
             .Include(l => l.Owner)
@@ -71,20 +75,37 @@ public class ListingsController : ControllerBase
         if (type.HasValue)
             query = query.Where(l => l.Type == type.Value);
 
-        if (minPrice.HasValue)
+        if (minPrice.HasValue && minPrice.Value > 0)
             query = query.Where(l => l.Price >= minPrice.Value);
 
-        if (maxPrice.HasValue)
+        if (maxPrice.HasValue && maxPrice.Value > 0)
             query = query.Where(l => l.Price <= maxPrice.Value);
+
+        if (minArea.HasValue && minArea.Value > 0)
+            query = query.Where(l => l.Area >= minArea.Value);
+
+        if (maxArea.HasValue && maxArea.Value > 0)
+            query = query.Where(l => l.Area <= maxArea.Value);
+
+        if (bedrooms.HasValue && bedrooms.Value > 0)
+            query = query.Where(l => l.Bedrooms >= bedrooms.Value);
 
         if (!string.IsNullOrWhiteSpace(direction))
             query = query.Where(l => l.Direction == direction);
 
-        var results = await query
-            .OrderByDescending(l => l.PriorityTime ?? DateTime.MinValue)
-            .ThenByDescending(l => l.CreatedAt)
-            .ToListAsync();
+        // Sắp xếp kết quả tìm kiếm (Use Case: Sắp xếp kết quả tìm kiếm)
+        query = (sortBy?.ToLower()) switch
+        {
+            "price_asc" => query.OrderBy(l => l.Price),
+            "price_desc" => query.OrderByDescending(l => l.Price),
+            "area_desc" => query.OrderByDescending(l => l.Area),
+            "newest" => query.OrderByDescending(l => l.CreatedAt),
+            _ => query.OrderByDescending(l => l.PriorityTime ?? DateTime.MinValue)
+                      .ThenByDescending(l => l.IsVip)
+                      .ThenByDescending(l => l.CreatedAt)
+        };
 
+        var results = await query.ToListAsync();
         return Ok(results.Select(l => MapToListingDto(l)));
     }
 
