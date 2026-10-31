@@ -67,21 +67,57 @@
       fetch('/api/listings/' + id)
         .then(r => { if (!r.ok) throw new Error(); return r.json(); })
         .then(l => {
-          const imgHtml = (l.imageUrls && l.imageUrls.trim().length > 0)
-            ? `<img src="${l.imageUrls.split(',')[0].trim()}" alt="${l.title}" class="w-full h-80 object-cover" onerror="this.onerror=null;this.parentElement.innerHTML='<div class=\\'flex items-center justify-center w-full h-72 bg-gradient-to-br from-indigo-100 to-blue-50 text-6xl\\'>🏡</div>'"/>`
-            : `<div class="flex items-center justify-center w-full h-72 bg-gradient-to-br from-indigo-100 to-blue-50 text-6xl">${l.type === 'Sale' ? '🏠' : '🏢'}</div>`;
+          const rawImages = (l.imageUrls && l.imageUrls.trim().length > 0)
+            ? l.imageUrls.split(',').map(s => s.trim()).filter(s => s.length > 0)
+            : [];
+          window.propertyImages = rawImages.length > 0 ? rawImages : ['https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1200&q=80'];
+          window.currentImageIdx = 0;
 
           document.getElementById('content').innerHTML = `
-            <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden mb-8">
-              <!-- Banner Ảnh -->
-              <div class="relative bg-gray-100">
-                ${imgHtml}
+            <div class="bg-white rounded-3xl shadow-sm border border-gray-200 overflow-hidden mb-8">
+              <!-- BỘ SƯU TẬP ẢNH (GALLERY & SLIDER NHIỀU ẢNH) -->
+              <div class="relative bg-gray-900 group">
+                <!-- Ảnh to chính -->
+                <div class="w-full h-80 sm:h-96 overflow-hidden flex items-center justify-center bg-black/10">
+                  <img id="mainGalleryImage" src="${window.propertyImages[0]}" alt="${l.title}" 
+                    class="w-full h-full object-cover transition-all duration-300"
+                    onerror="this.src='https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1200&q=80'"/>
+                </div>
+
+                <!-- Tag Loại BĐS -->
                 <span class="absolute top-4 left-4 px-3.5 py-1.5 rounded-full text-xs font-bold shadow-md ${l.type === 'Sale' ? 'bg-emerald-600 text-white' : 'bg-blue-600 text-white'}">
                   ${l.type === 'Sale' ? 'Cần bán' : 'Cho thuê'}
                 </span>
+
+                <!-- Đếm số lượng ảnh -->
+                <span id="galleryCounter" class="absolute bottom-4 right-4 bg-black/70 backdrop-blur-md text-white text-xs font-bold px-3 py-1 rounded-full shadow flex items-center gap-1.5">
+                  <span class="material-symbols-outlined text-sm">photo_library</span>
+                  <span id="counterText">1 / ${window.propertyImages.length} ảnh</span>
+                </span>
+
+                <!-- Nút trượt ảnh Trước / Sau nếu có nhiều ảnh -->
+                ${window.propertyImages.length > 1 ? `
+                <button onclick="prevImage()" class="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/40 hover:bg-black/75 text-white flex items-center justify-center backdrop-blur-md transition-all shadow-md">
+                  <span class="material-symbols-outlined">chevron_left</span>
+                </button>
+                <button onclick="nextImage()" class="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/40 hover:bg-black/75 text-white flex items-center justify-center backdrop-blur-md transition-all shadow-md">
+                  <span class="material-symbols-outlined">chevron_right</span>
+                </button>
+                ` : ''}
               </div>
 
-              <!-- Nội dung -->
+              <!-- Hàng ảnh nhỏ Thumbnails phía dưới -->
+              ${window.propertyImages.length > 1 ? `
+              <div class="p-3 bg-gray-50 border-t border-b border-gray-100 flex items-center gap-2.5 overflow-x-auto" id="thumbnailBar">
+                ${window.propertyImages.map((img, i) => `
+                  <button onclick="selectGalleryImage(${i})" class="gallery-thumb relative w-20 h-14 rounded-xl overflow-hidden shrink-0 border-2 transition-all ${i === 0 ? 'border-indigo-600 shadow-md ring-2 ring-indigo-200' : 'border-gray-200 opacity-60 hover:opacity-100'}">
+                    <img src="${img}" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/100x70?text=Anh'"/>
+                  </button>
+                `).join('')}
+              </div>
+              ` : ''}
+
+              <!-- Nội dung chi tiết BĐS -->
               <div class="p-6">
                 <h1 class="text-2xl font-black text-gray-900 leading-snug">${l.title}</h1>
                 <p class="text-sm text-gray-500 mt-2 flex items-center gap-1.5">
@@ -220,6 +256,44 @@
           document.getElementById('content').innerHTML = '<p class="text-center text-red-500 py-12">Không tìm thấy thông tin tin đăng này</p>';
         });
     }
+
+    // HÀM ĐIỀU KHIỂN BỘ SƯU TẬP NHIỀU ẢNH (IMAGE GALLERY)
+    function selectGalleryImage(idx) {
+      if (!window.propertyImages || window.propertyImages.length === 0) return;
+      window.currentImageIdx = idx;
+      const mainImg = document.getElementById('mainGalleryImage');
+      const counterText = document.getElementById('counterText');
+
+      if (mainImg) mainImg.src = window.propertyImages[idx];
+      if (counterText) counterText.textContent = `${idx + 1} / ${window.propertyImages.length} ảnh`;
+
+      // Cập nhật viền active cho thumbnails
+      document.querySelectorAll('.gallery-thumb').forEach((thumb, i) => {
+        if (i === idx) {
+          thumb.className = 'gallery-thumb relative w-20 h-14 rounded-xl overflow-hidden shrink-0 border-2 border-indigo-600 shadow-md ring-2 ring-indigo-200 transition-all';
+        } else {
+          thumb.className = 'gallery-thumb relative w-20 h-14 rounded-xl overflow-hidden shrink-0 border-2 border-gray-200 opacity-60 hover:opacity-100 transition-all';
+        }
+      });
+    }
+
+    function prevImage() {
+      if (!window.propertyImages || window.propertyImages.length <= 1) return;
+      const newIdx = (window.currentImageIdx - 1 + window.propertyImages.length) % window.propertyImages.length;
+      selectGalleryImage(newIdx);
+    }
+
+    function nextImage() {
+      if (!window.propertyImages || window.propertyImages.length <= 1) return;
+      const newIdx = (window.currentImageIdx + 1) % window.propertyImages.length;
+      selectGalleryImage(newIdx);
+    }
+
+    // Bấm phím mũi tên trái / phải trên bàn phím để chuyển ảnh
+    document.addEventListener('keydown', e => {
+      if (e.key === 'ArrowLeft') prevImage();
+      if (e.key === 'ArrowRight') nextImage();
+    });
 
     async function deleteListing(listingId) {
       if (!confirm('Bạn có chắc chắn muốn xóa tin đăng này không?')) return;

@@ -370,32 +370,51 @@ public class ListingsController : ControllerBase
         return Ok(new { message = "Đã xóa tin đăng thành công" });
     }
 
-    // 12. Upload hình ảnh
+    // 12. Upload hình ảnh (Hỗ trợ upload 1 hoặc nhiều ảnh cùng lúc)
     [HttpPost("upload")]
     [Authorize]
-    public async Task<IActionResult> UploadImage(IFormFile file)
+    public async Task<IActionResult> UploadImage([FromForm] List<IFormFile>? files, IFormFile? file)
     {
-        if (file == null || file.Length == 0)
-            return BadRequest(new { message = "Không tìm thấy file" });
+        var allFiles = new List<IFormFile>();
+        if (files != null && files.Count > 0) allFiles.AddRange(files);
+        if (file != null && !allFiles.Contains(file)) allFiles.Add(file);
+
+        if (allFiles.Count == 0)
+            return BadRequest(new { message = "Không tìm thấy file tải lên" });
 
         var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".webp", ".gif" };
-        var ext = Path.GetExtension(file.FileName).ToLowerInvariant();
-        if (!allowedExtensions.Contains(ext))
-            return BadRequest(new { message = "Định dạng ảnh không hỗ trợ (chỉ nhận JPG, PNG, WEBP)" });
-
         var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
         if (!Directory.Exists(uploadsFolder))
             Directory.CreateDirectory(uploadsFolder);
 
-        var uniqueFileName = $"{Guid.NewGuid():N}{ext}";
-        var filePath = Path.Combine(uploadsFolder, uniqueFileName);
-
-        using (var stream = new FileStream(filePath, FileMode.Create))
+        var urls = new List<string>();
+        foreach (var f in allFiles)
         {
-            await file.CopyToAsync(stream);
+            if (f.Length == 0) continue;
+            var ext = Path.GetExtension(f.FileName).ToLowerInvariant();
+            if (!allowedExtensions.Contains(ext)) continue;
+
+            var uniqueFileName = $"{Guid.NewGuid():N}{ext}";
+            var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await f.CopyToAsync(stream);
+            }
+            urls.Add($"/uploads/{uniqueFileName}");
         }
 
-        return Ok(new { url = $"/uploads/{uniqueFileName}", message = "Tải ảnh thành công" });
+        if (urls.Count == 0)
+            return BadRequest(new { message = "Không có ảnh hợp lệ nào được tải lên (chỉ nhận JPG, PNG, WEBP)" });
+
+        return Ok(new 
+        { 
+            url = urls[0], 
+            urls = urls, 
+            joinedUrls = string.Join(",", urls),
+            count = urls.Count,
+            message = $"Đã tải lên {urls.Count} hình ảnh thành công" 
+        });
     }
 
     private int? GetCurrentUserId()

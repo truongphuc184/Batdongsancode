@@ -243,21 +243,34 @@
             class="w-full px-4 py-2.5 bg-gray-50 border border-gray-300 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white text-sm font-medium"/>
         </div>
 
-        <!-- Ảnh bất động sản -->
+        <!-- Ảnh bất động sản (Hỗ trợ nhiều ảnh) -->
         <div class="bg-indigo-50/50 p-4 rounded-xl border border-indigo-100">
-          <label class="block text-xs font-bold text-indigo-900 uppercase mb-1">Hình ảnh bất động sản</label>
-          <div class="flex flex-col sm:flex-row gap-3 items-start sm:items-center">
-            <label class="cursor-pointer px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-xl flex items-center gap-1.5 transition-colors shadow-sm">
-              <span class="material-symbols-outlined text-base">cloud_upload</span> Tải ảnh từ máy tính
-              <input type="file" id="imageFileInput" accept="image/*" class="hidden" onchange="handleFileUpload(event)"/>
-            </label>
-            <span class="text-xs text-gray-400">hoặc dán link ảnh:</span>
-            <input type="url" id="c_image" placeholder="https://domain.com/hinh-anh.jpg" oninput="previewImage(this.value)"
-              class="flex-1 w-full px-3 py-2 bg-white border border-gray-300 rounded-xl text-xs outline-none focus:ring-2 focus:ring-indigo-500"/>
+          <div class="flex items-center justify-between mb-2">
+            <label class="block text-xs font-bold text-indigo-900 uppercase">Hình ảnh bất động sản (Tải lên nhiều ảnh)</label>
+            <span id="imageCountBadge" class="text-xs font-bold text-indigo-600 bg-white px-2 py-0.5 rounded-full border border-indigo-200">0 ảnh</span>
           </div>
-          <div id="imagePreviewContainer" class="mt-3 hidden">
-            <p class="text-xs text-gray-500 mb-1">Xem trước ảnh:</p>
-            <img id="imagePreview" src="" alt="Preview" class="h-32 w-auto max-w-full rounded-xl object-cover border border-gray-300 shadow-sm"/>
+
+          <div class="flex flex-col sm:flex-row gap-3 items-start sm:items-center">
+            <label class="cursor-pointer px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-xl flex items-center gap-1.5 transition-colors shadow-sm shrink-0">
+              <span class="material-symbols-outlined text-base">cloud_upload</span> Chọn nhiều ảnh từ máy tính
+              <input type="file" id="imageFileInput" accept="image/*" multiple class="hidden" onchange="handleMultipleFileUpload(event)"/>
+            </label>
+            <span class="text-xs text-gray-400">hoặc dán thêm link ảnh:</span>
+            <div class="flex gap-2 flex-1 w-full">
+              <input type="url" id="c_image_input" placeholder="https://domain.com/hinh-anh.jpg"
+                class="flex-1 px-3 py-2 bg-white border border-gray-300 rounded-xl text-xs outline-none focus:ring-2 focus:ring-indigo-500"/>
+              <button type="button" onclick="addUrlImage()" class="px-3 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl text-xs font-bold shrink-0">
+                + Thêm
+              </button>
+            </div>
+          </div>
+
+          <!-- Input ẩn lưu chuỗi danh sách ảnh -->
+          <input type="hidden" id="c_image" value=""/>
+
+          <!-- Lưới xem trước danh sách nhiều ảnh -->
+          <div id="imageGalleryPreview" class="mt-3 grid grid-cols-3 sm:grid-cols-5 md:grid-cols-6 gap-2.5 hidden">
+            <!-- Render động các ảnh nhỏ -->
           </div>
         </div>
 
@@ -461,17 +474,20 @@
       }
     }
 
-    // Xử lý upload ảnh từ máy tính
-    async function handleFileUpload(event) {
-      const file = event.target.files[0];
-      if (!file) return;
+    let uploadedImagesList = [];
+
+    // Xử lý upload nhiều ảnh cùng lúc từ máy tính
+    async function handleMultipleFileUpload(event) {
+      const files = event.target.files;
+      if (!files || files.length === 0) return;
 
       const formData = new FormData();
-      formData.append('file', file);
+      for (let i = 0; i < files.length; i++) {
+        formData.append('files', files[i]);
+      }
 
-      const preview = document.getElementById('imagePreview');
-      const container = document.getElementById('imagePreviewContainer');
-      const inputLink = document.getElementById('c_image');
+      const badge = document.getElementById('imageCountBadge');
+      badge.textContent = 'Đang tải lên...';
 
       try {
         const res = await fetch('/api/listings/upload', {
@@ -481,30 +497,64 @@
         });
 
         const data = await res.json();
-        if (res.ok && data.url) {
-          uploadedImageUrl = data.url;
-          inputLink.value = data.url;
-          preview.src = data.url;
-          container.classList.remove('hidden');
+        if (res.ok && data.urls && data.urls.length > 0) {
+          uploadedImagesList.push(...data.urls);
+          updateImageGalleryPreview();
         } else {
           alert('Lỗi tải ảnh: ' + (data.message || 'Không thể tải ảnh'));
         }
       } catch (err) {
         alert('Lỗi khi tải ảnh lên máy chủ');
+      } finally {
+        event.target.value = '';
       }
     }
 
-    // Xem trước ảnh khi dán link URL
-    function previewImage(url) {
-      const container = document.getElementById('imagePreviewContainer');
-      const preview = document.getElementById('imagePreview');
-      if (url && url.trim().length > 5) {
-        preview.src = url.trim();
-        uploadedImageUrl = url.trim();
-        container.classList.remove('hidden');
-      } else {
-        container.classList.add('hidden');
+    // Thêm link ảnh thủ công
+    function addUrlImage() {
+      const input = document.getElementById('c_image_input');
+      const url = input.value.trim();
+      if (!url || url.length < 5) {
+        alert('Vui lòng nhập link ảnh hợp lệ!');
+        return;
       }
+      uploadedImagesList.push(url);
+      input.value = '';
+      updateImageGalleryPreview();
+    }
+
+    // Xóa 1 ảnh trong danh sách xem trước
+    function removeUploadedImage(index) {
+      uploadedImagesList.splice(index, 1);
+      updateImageGalleryPreview();
+    }
+
+    // Render lưới xem trước nhiều ảnh
+    function updateImageGalleryPreview() {
+      const container = document.getElementById('imageGalleryPreview');
+      const countBadge = document.getElementById('imageCountBadge');
+      const hiddenInput = document.getElementById('c_image');
+
+      hiddenInput.value = uploadedImagesList.join(',');
+      countBadge.textContent = `${uploadedImagesList.length} ảnh`;
+
+      if (uploadedImagesList.length === 0) {
+        container.classList.add('hidden');
+        container.innerHTML = '';
+        return;
+      }
+
+      container.classList.remove('hidden');
+      container.innerHTML = uploadedImagesList.map((url, idx) => `
+        <div class="relative group rounded-xl overflow-hidden aspect-square border border-gray-300 bg-gray-100 shadow-sm">
+          <img src="${url}" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/150x150?text=Loi+Anh'"/>
+          <button type="button" onclick="removeUploadedImage(${idx})" 
+            class="absolute top-1 right-1 w-5 h-5 bg-black/70 hover:bg-red-600 text-white rounded-full flex items-center justify-center text-xs font-bold transition-colors shadow">
+            ✕
+          </button>
+          ${idx === 0 ? '<span class="absolute bottom-1 left-1 bg-indigo-600 text-white text-[9px] font-black px-1.5 py-0.2 rounded shadow">Ảnh bìa</span>' : ''}
+        </div>
+      `).join('');
     }
 
     // RENDER DANH SÁCH: MỖI TIN NẰM DƯỚI NHAU
@@ -532,9 +582,12 @@
         const isFav = savedIds.includes(l.id);
         const isCompared = compareList.includes(l.id);
 
+        const imgList = (l.imageUrls && l.imageUrls.trim().length > 0) ? l.imageUrls.split(',').filter(x => x.trim().length > 0) : [];
+        const imgCount = imgList.length;
+
         // Ảnh đại diện
-        const imgHtml = (l.imageUrls && l.imageUrls.trim().length > 0)
-          ? `<img src="${l.imageUrls.split(',')[0].trim()}" alt="${l.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" onerror="this.onerror=null;this.parentElement.innerHTML='<div class=\\'flex items-center justify-center w-full h-full bg-gradient-to-br from-indigo-100 to-blue-50 text-4xl\\'>🏡</div>'"/>`
+        const imgHtml = imgCount > 0
+          ? `<img src="${imgList[0].trim()}" alt="${l.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" onerror="this.onerror=null;this.parentElement.innerHTML='<div class=\\'flex items-center justify-center w-full h-full bg-gradient-to-br from-indigo-100 to-blue-50 text-4xl\\'>🏡</div>'"/>`
           : `<div class="flex items-center justify-center w-full h-full bg-gradient-to-br from-indigo-100 to-blue-50 text-4xl">${l.type === 'Sale' ? '🏠' : '🏢'}</div>`;
 
         return `
@@ -545,6 +598,11 @@
               <span class="absolute top-3 left-3 px-3 py-1 rounded-full text-xs font-bold shadow-md ${l.type === 'Sale' ? 'bg-emerald-600 text-white' : 'bg-blue-600 text-white'}">
                 ${l.type === 'Sale' ? 'Cần bán' : 'Cho thuê'}
               </span>
+              ${imgCount > 1 ? `
+              <span class="absolute bottom-3 right-3 bg-black/60 backdrop-blur-md text-white text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1 shadow">
+                <span class="material-symbols-outlined text-xs">photo_camera</span> ${imgCount} ảnh
+              </span>
+              ` : ''}
               <!-- Nút Lưu yêu thích nhanh -->
               <button onclick="event.stopPropagation(); toggleCardFavorite(${l.id})" 
                 class="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/90 hover:bg-white flex items-center justify-center shadow transition-transform active:scale-90" title="Lưu tin yêu thích">
