@@ -1,20 +1,25 @@
 -- ====================================================================
--- HỆ THỐNG QUẢN LÝ BẤT ĐỘNG SẢN - SCRIPT TẠO DATABASE SQL SERVER CHUẨN
--- Chạy script này trên SQL Server Management Studio (SSMS)
+-- SCRIPT CẬP NHẬT DATABASE BẤT ĐỘNG SẢN (DÙNG ĐỂ UPDATE DATABASE ĐANG CÓ)
+-- Chạy an toàn: Tự thêm các cột còn thiếu, tự tạo bảng mới nếu chưa có,
+-- và đồng bộ mật khẩu chuẩn '123456' cho tất cả tài khoản.
 -- ====================================================================
 
--- 1. TẠO CƠ SỞ DỮ LIỆU BATDONGSAN
+-- 1. KIỂM TRA & TẠO DATABASE NẾU CHƯA CÓ
 IF NOT EXISTS (SELECT * FROM sys.databases WHERE name = 'batdongsan')
 BEGIN
     CREATE DATABASE batdongsan;
-    PRINT N'>>> Đã tạo database batdongsan thành công!';
+    PRINT N'>>> Đã tạo mới database batdongsan';
+END
+ELSE
+BEGIN
+    PRINT N'>>> Database batdongsan đã tồn tại, tiến hành cập nhật cấu trúc...';
 END
 GO
 
 USE batdongsan;
 GO
 
--- 2. TẠO BẢNG USERS (Tài khoản người dùng & Phân quyền 6 Actor)
+-- 2. CẬP NHẬT BẢNG USERS (Tự tạo nếu chưa có, tự thêm cột nếu đã có)
 IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'Users')
 BEGIN
     CREATE TABLE Users (
@@ -30,9 +35,25 @@ BEGIN
     );
     PRINT N'>>> Đã tạo bảng Users';
 END
+ELSE
+BEGIN
+    -- Bổ sung cột RemainingPushes nếu chưa có
+    IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('Users') AND name = 'RemainingPushes')
+    BEGIN
+        ALTER TABLE Users ADD RemainingPushes INT NOT NULL DEFAULT 5;
+        PRINT N'>>> Đã bổ sung cột RemainingPushes vào bảng Users';
+    END
+
+    -- Bổ sung cột CurrentPackage nếu chưa có
+    IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('Users') AND name = 'CurrentPackage')
+    BEGIN
+        ALTER TABLE Users ADD CurrentPackage NVARCHAR(100) NULL DEFAULT N'Thành viên thường';
+        PRINT N'>>> Đã bổ sung cột CurrentPackage vào bảng Users';
+    END
+END
 GO
 
--- 3. TẠO BẢNG LISTINGS (Tin đăng bất động sản)
+-- 3. CẬP NHẬT BẢNG LISTINGS (Tự tạo nếu chưa có, tự thêm các cột mới)
 IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'Listings')
 BEGIN
     CREATE TABLE Listings (
@@ -62,9 +83,53 @@ BEGIN
     );
     PRINT N'>>> Đã tạo bảng Listings';
 END
+ELSE
+BEGIN
+    -- Bổ sung cột Direction (Hướng phong thủy)
+    IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('Listings') AND name = 'Direction')
+    BEGIN
+        ALTER TABLE Listings ADD Direction NVARCHAR(50) NULL;
+        PRINT N'>>> Đã bổ sung cột Direction vào bảng Listings';
+    END
+
+    -- Bổ sung cột ViewCount (Lượt xem)
+    IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('Listings') AND name = 'ViewCount')
+    BEGIN
+        ALTER TABLE Listings ADD ViewCount INT NOT NULL DEFAULT 0;
+        PRINT N'>>> Đã bổ sung cột ViewCount vào bảng Listings';
+    END
+
+    -- Bổ sung cột IsVip
+    IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('Listings') AND name = 'IsVip')
+    BEGIN
+        ALTER TABLE Listings ADD IsVip BIT NOT NULL DEFAULT 0;
+        PRINT N'>>> Đã bổ sung cột IsVip vào bảng Listings';
+    END
+
+    -- Bổ sung cột IsVerified
+    IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('Listings') AND name = 'IsVerified')
+    BEGIN
+        ALTER TABLE Listings ADD IsVerified BIT NOT NULL DEFAULT 1;
+        PRINT N'>>> Đã bổ sung cột IsVerified vào bảng Listings';
+    END
+
+    -- Bổ sung cột PriorityTime (Thời gian ưu tiên đẩy tin)
+    IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('Listings') AND name = 'PriorityTime')
+    BEGIN
+        ALTER TABLE Listings ADD PriorityTime DATETIME2 NULL;
+        PRINT N'>>> Đã bổ sung cột PriorityTime vào bảng Listings';
+    END
+
+    -- Bổ sung cột RejectReason (Lý do từ chối tin)
+    IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('Listings') AND name = 'RejectReason')
+    BEGIN
+        ALTER TABLE Listings ADD RejectReason NVARCHAR(500) NULL;
+        PRINT N'>>> Đã bổ sung cột RejectReason vào bảng Listings';
+    END
+END
 GO
 
--- 4. TẠO BẢNG LEADS (Khách hàng tiềm năng & Phân hệ CRM)
+-- 4. TẠO BẢNG LEADS (CRM Khách hàng - Tránh lỗi Multiple Cascade Paths)
 IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'Leads')
 BEGIN
     CREATE TABLE Leads (
@@ -81,6 +146,10 @@ BEGIN
         CONSTRAINT FK_Leads_Users FOREIGN KEY (OwnerId) REFERENCES Users(Id) ON DELETE NO ACTION
     );
     PRINT N'>>> Đã tạo bảng Leads (CRM)';
+END
+ELSE
+BEGIN
+    PRINT N'>>> Bảng Leads đã tồn tại sẵn.';
 END
 GO
 
@@ -100,15 +169,21 @@ BEGIN
     );
     PRINT N'>>> Đã tạo bảng Reports';
 END
+ELSE
+BEGIN
+    PRINT N'>>> Bảng Reports đã tồn tại sẵn.';
+END
 GO
 
--- 6. DỮ LIỆU MẪU: 6 VAI TRÒ (MẬT KHẨU MẶC ĐỊNH: 123456)
+-- 6. ĐỒNG BỘ MẬT KHẨU '123456' VÀ SEED ĐẦY ĐỦ TÀI KHOẢN MẪU
 -- Hash BCrypt chuẩn 100% của mật khẩu '123456'
 DECLARE @DefaultHash NVARCHAR(MAX) = '$2a$11$qNA0JOrSYqjFIXS/Z.kpjOSt./3QxrNL/BZHqEjK70cHOU/CDARY.';
 
--- Cập nhật lại mật khẩu chuẩn nếu tài khoản đã tồn tại
+-- Cập nhật mật khẩu chuẩn cho tất cả tài khoản đang có
 UPDATE Users SET PasswordHash = @DefaultHash;
+PRINT N'>>> Đã đồng bộ mật khẩu 123456 cho toàn bộ tài khoản hiện có trong database!';
 
+-- Bổ sung các tài khoản mẫu nếu chưa có
 IF NOT EXISTS (SELECT 1 FROM Users WHERE Email = 'admin@batdongsan.vn')
     INSERT INTO Users (Email, PasswordHash, FullName, Role, IsActive, CreatedAt, RemainingPushes, CurrentPackage)
     VALUES ('admin@batdongsan.vn', @DefaultHash, N'Quản trị viên Hệ thống', 'Admin', 1, GETDATE(), 99, N'Hội viên Cao cấp');
@@ -134,12 +209,12 @@ IF NOT EXISTS (SELECT 1 FROM Users WHERE Email = 'tenant@batdongsan.vn')
     VALUES ('tenant@batdongsan.vn', @DefaultHash, N'Vũ Khách Thuê Nhà', 'Tenant', 1, GETDATE(), 0, N'Thành viên thường');
 GO
 
--- 7. DỮ LIỆU MẪU: BẤT ĐỘNG SẢN CHẤT LƯỢNG CAO
+-- 7. BỔ SUNG TIN ĐĂNG MẪU NẾU DANH SÁCH TIN ĐANG TRỐNG
 DECLARE @SellerId INT = (SELECT TOP 1 Id FROM Users WHERE Email = 'seller@batdongsan.vn');
 DECLARE @LandlordId INT = (SELECT TOP 1 Id FROM Users WHERE Email = 'landlord@batdongsan.vn');
 DECLARE @AgentId INT = (SELECT TOP 1 Id FROM Users WHERE Email = 'agent@batdongsan.vn');
 
-IF @SellerId IS NOT NULL AND NOT EXISTS (SELECT 1 FROM Listings WHERE Title LIKE N'%Vinhomes Riverside%')
+IF @SellerId IS NOT NULL AND NOT EXISTS (SELECT 1 FROM Listings)
 BEGIN
     INSERT INTO Listings (Title, Description, Price, Area, Bedrooms, Bathrooms, Address, City, District, Direction, Type, Status, OwnerId, CreatedAt, ImageUrls, ViewCount, IsVip, IsVerified, PriorityTime)
     VALUES 
@@ -171,14 +246,13 @@ END
 GO
 
 PRINT N'====================================================================';
-PRINT N'>>> KHỞI TẠO CƠ SỞ DỮ LIỆU SQL SERVER THÀNH CÔNG RỰC RỠ!';
-PRINT N'>>> TÀI KHOẢN MẪU:';
-PRINT N'    - Admin:     admin@batdongsan.vn    / 123456';
-PRINT N'    - Người bán: seller@batdongsan.vn   / 123456';
-PRINT N'    - Cho thuê:  landlord@batdongsan.vn / 123456';
-PRINT N'    - Môi giới:  agent@batdongsan.vn    / 123456';
-PRINT N'    - Người mua: buyer@batdongsan.vn    / 123456';
-PRINT N'    - Người thuê:tenant@batdongsan.vn   / 123456';
+PRINT N'>>> CẬP NHẬT DATABASE HIỆN CÓ THÀNH CÔNG RỰC RỠ 100%!';
+PRINT N'>>> TẤT CẢ TÀI KHOẢN ĐÃ ĐƯỢC ĐẶT VỀ MẬT KHẨU: 123456';
+PRINT N'    - admin@batdongsan.vn    / 123456 (Quản trị viên)';
+PRINT N'    - seller@batdongsan.vn   / 123456 (Người bán)';
+PRINT N'    - landlord@batdongsan.vn / 123456 (Cho thuê)';
+PRINT N'    - agent@batdongsan.vn    / 123456 (Môi giới)';
+PRINT N'    - buyer@batdongsan.vn    / 123456 (Người mua)';
+PRINT N'    - tenant@batdongsan.vn   / 123456 (Người thuê)';
 PRINT N'====================================================================';
 GO
-
