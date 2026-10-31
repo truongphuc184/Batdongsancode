@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Hồ sơ - Bất Động Sản</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@400,0" rel="stylesheet"/>
+  <style>body{font-family:'Inter',sans-serif;}</style>
+</head>
+<body class="bg-gray-50 min-h-screen pb-20">
+  <!-- Header -->
+  <header class="bg-white shadow-sm sticky top-0 z-50">
+    <div class="max-w-3xl mx-auto px-4 h-14 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <a href="home_property_search.html" class="w-10 h-10 rounded-full flex items-center justify-center hover:bg-gray-100">
+          <span class="material-symbols-outlined">arrow_back</span>
+        </a>
+        <span class="font-bold text-gray-800">Hồ sơ cá nhân</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="max-w-3xl mx-auto px-4 mt-6">
+    <!-- Profile Card -->
+    <div class="bg-white rounded-2xl shadow-sm p-6 text-center">
+      <div class="w-20 h-20 bg-indigo-600 rounded-full flex items-center justify-center mx-auto text-white text-3xl font-bold" id="avatar">U</div>
+      <h2 class="text-xl font-bold text-gray-800 mt-4" id="fullName">Đang tải...</h2>
+      <p class="text-gray-500" id="email"></p>
+      <span class="inline-block mt-2 px-3 py-1 rounded-full text-sm font-medium bg-indigo-100 text-indigo-700" id="role"></span>
+    </div>
+
+    <!-- Menu -->
+    <div class="bg-white rounded-2xl shadow-sm mt-4 overflow-hidden">
+      <a href="home_property_search.html" class="flex items-center gap-4 px-6 py-4 hover:bg-gray-50 border-b border-gray-100">
+        <span class="material-symbols-outlined text-indigo-600">real_estate_agent</span>
+        <span class="font-medium text-gray-800">Tin đăng của tôi</span>
+        <span class="material-symbols-outlined text-gray-400 ml-auto">chevron_right</span>
+      </a>
+      <a href="home_property_search.html" class="flex items-center gap-4 px-6 py-4 hover:bg-gray-50 border-b border-gray-100">
+        <span class="material-symbols-outlined text-indigo-600">favorite</span>
+        <span class="font-medium text-gray-800">Đã lưu</span>
+        <span class="material-symbols-outlined text-gray-400 ml-auto">chevron_right</span>
+      </a>
+      <a href="home_property_search.html" class="flex items-center gap-4 px-6 py-4 hover:bg-gray-50">
+        <span class="material-symbols-outlined text-indigo-600">history</span>
+        <span class="font-medium text-gray-800">Lịch sử xem</span>
+        <span class="material-symbols-outlined text-gray-400 ml-auto">chevron_right</span>
+      </a>
+    </div>
+
+    <!-- Logout -->
+    <button onclick="logout()" class="w-full mt-4 py-4 bg-white rounded-2xl shadow-sm text-red-500 font-medium hover:bg-red-50 transition-colors flex items-center justify-center gap-2">
+      <span class="material-symbols-outlined">logout</span>
+      Đăng xuất
+    </button>
+  </div>
+
+  <!-- Bottom Nav -->
+  <nav class="fixed bottom-0 w-full bg-white border-t border-gray-200 z-50">
+    <div class="flex justify-around items-center h-16 max-w-5xl mx-auto">
+      <a href="home_property_search.html" class="flex flex-col items-center text-gray-400 hover:text-indigo-600">
+        <span class="material-symbols-outlined">search</span>
+        <span class="text-xs mt-1">Tìm kiếm</span>
+      </a>
+      <a href="user_profile.html" class="flex flex-col items-center text-indigo-600">
+        <span class="material-symbols-outlined">person</span>
+        <span class="text-xs mt-1 font-medium">Hồ sơ</span>
+      </a>
+    </div>
+  </nav>
+
+  <script>
+    const token = localStorage.getItem('accessToken');
+    if (!token) window.location.href = 'signin.html';
+
+    const roleMap = { Admin: 'Quản trị viên', Buyer: 'Người mua', Seller: 'Người bán', Broker: 'Môi giới', Agency: 'Đại lý' };
+
+    fetch('/api/auth/me', { headers: { 'Authorization': 'Bearer ' + token } })
+      .then(r => { if (!r.ok) throw new Error(); return r.json(); })
+      .then(u => {
+        document.getElementById('fullName').textContent = u.fullName;
+        document.getElementById('email').textContent = u.email;
+        document.getElementById('role').textContent = roleMap[u.role] || u.role;
+        document.getElementById('avatar').textContent = u.fullName ? u.fullName[0].toUpperCase() : 'U';
+      })
+      .catch(() => {
+        localStorage.removeItem('accessToken');
+        window.location.href = 'signin.html';
+      });
+
+    function logout() {
+      localStorage.removeItem('accessToken');
+      window.location.href = 'signin.html';
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Tìm kiếm BĐS - Bất Động Sản</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@400,0" rel="stylesheet"/>
+  <style>body{font-family:'Inter',sans-serif;}</style>
+</head>
+<body class="bg-gray-50 min-h-screen pb-20">
+  <!-- Header -->
+  <header class="bg-white shadow-sm sticky top-0 z-50">
+    <div class="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 bg-indigo-600 rounded-lg flex items-center justify-center">
+          <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+          </svg>
+        </div>
+        <span class="text-xl font-bold text-gray-800">Bất Động Sản</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <a href="user_profile.html" class="w-10 h-10 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-600 font-bold" id="avatar">U</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Search -->
+  <div class="max-w-5xl mx-auto px-4 mt-6">
+    <div class="bg-white rounded-2xl shadow-sm p-4">
+      <div class="flex gap-2">
+        <input type="text" id="searchInput" placeholder="Tìm theo tên, địa chỉ, thành phố..."
+          class="flex-1 px-4 py-3 bg-gray-100 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500"/>
+        <button onclick="searchListings()" class="px-6 py-3 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 font-medium transition-colors">
+          Tìm kiếm
+        </button>
+      </div>
+      <div class="flex gap-2 mt-3 flex-wrap">
+        <button onclick="filterType(null)" class="filter-chip px-4 py-2 rounded-full text-sm font-medium bg-indigo-600 text-white">Tất cả</button>
+        <button onclick="filterType('Sale')" class="filter-chip px-4 py-2 rounded-full text-sm font-medium bg-gray-100 text-gray-600 hover:bg-gray-200">Bán</button>
+        <button onclick="filterType('Rent')" class="filter-chip px-4 py-2 rounded-full text-sm font-medium bg-gray-100 text-gray-600 hover:bg-gray-200">Cho thuê</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Listing Button -->
+  <div class="max-w-5xl mx-auto px-4 mt-4">
+    <button onclick="showCreateForm()" id="toggleCreateBtn"
+      class="w-full py-3 border-2 border-dashed border-indigo-300 rounded-xl text-indigo-600 font-medium hover:bg-indigo-50 transition-colors flex items-center justify-center gap-2">
+      <span class="material-symbols-outlined">add</span> Đăng tin mới
+    </button>
+  </div>
+
+  <!-- Create Listing Form (hidden by default) -->
+  <div id="createForm" class="max-w-5xl mx-auto px-4 mt-4 hidden">
+    <div class="bg-white rounded-2xl shadow-sm p-6">
+      <h3 class="text-lg font-bold text-gray-800 mb-4">Đăng tin bất động sản</h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="md:col-span-2">
+          <input type="text" id="c_title" placeholder="Tiêu đề *" class="w-full px-4 py-3 bg-gray-100 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500"/>
+        </div>
+        <div class="md:col-span-2">
+          <textarea id="c_desc" placeholder="Mô tả" rows="3" class="w-full px-4 py-3 bg-gray-100 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
+        </div>
+        <select id="c_type" class="px-4 py-3 bg-gray-100 rounded-xl outline-none">
+          <option value="Sale">Bán</option>
+          <option value="Rent">Cho thuê</option>
+        </select>
+        <input type="number" id="c_price" placeholder="Giá (VNĐ) *" class="px-4 py-3 bg-gray-100 rounded-xl outline-none"/>
+        <input type="text" id="c_address" placeholder="Địa chỉ" class="px-4 py-3 bg-gray-100 rounded-xl outline-none"/>
+        <input type="text" id="c_city" placeholder="Thành phố *" class="px-4 py-3 bg-gray-100 rounded-xl outline-none"/>
+        <input type="text" id="c_district" placeholder="Quận/Huyện" class="px-4 py-3 bg-gray-100 rounded-xl outline-none"/>
+        <input type="number" id="c_area" placeholder="Diện tích (m²)" class="px-4 py-3 bg-gray-100 rounded-xl outline-none"/>
+        <input type="number" id="c_bed" placeholder="Số phòng ngủ" class="px-4 py-3 bg-gray-100 rounded-xl outline-none"/>
+        <input type="number" id="c_bath" placeholder="Số phòng tắm" class="px-4 py-3 bg-gray-100 rounded-xl outline-none"/>
+      </div>
+      <div class="flex gap-3 mt-4">
+        <button onclick="createListing()" class="px-6 py-3 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 font-medium">Đăng tin</button>
+        <button onclick="hideCreateForm()" class="px-6 py-3 bg-gray-100 text-gray-600 rounded-xl hover:bg-gray-200 font-medium">Hủy</button>
+      </div>
+      <div id="create-msg" class="mt-3 text-sm hidden"></div>
+    </div>
+  </div>
+
+  <!-- Listings -->
+  <div class="max-w-5xl mx-auto px-4 mt-6">
+    <div id="listings-count" class="text-gray-500 text-sm mb-3"></div>
+    <div id="listings" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div class="text-gray-400 text-center py-12 col-span-full">Đang tải...</div>
+    </div>
+    <div id="empty-state" class="hidden text-center py-16">
+      <div class="text-6xl mb-4">🏠</div>
+      <h3 class="text-xl font-bold text-gray-700">Chưa có tin đăng nào</h3>
+      <p class="text-gray-500 mt-2">Hãy là người đầu tiên đăng tin bất động sản!</p>
+    </div>
+  </div>
+
+  <!-- Bottom Nav -->
+  <nav class="fixed bottom-0 w-full bg-white border-t border-gray-200 z-50">
+    <div class="flex justify-around items-center h-16 max-w-5xl mx-auto">
+      <a href="home_property_search.html" class="flex flex-col items-center text-indigo-600">
+        <span class="material-symbols-outlined">search</span>
+        <span class="text-xs mt-1 font-medium">Tìm kiếm</span>
+      </a>
+      <a href="#" onclick="showCreateForm();window.scrollTo(0,0);return false;" class="flex flex-col items-center text-gray-400 hover:text-indigo-600">
+        <span class="material-symbols-outlined">add_circle</span>
+        <span class="text-xs mt-1">Đăng tin</span>
+      </a>
+      <a href="user_profile.html" class="flex flex-col items-center text-gray-400 hover:text-indigo-600">
+        <span class="material-symbols-outlined">person</span>
+        <span class="text-xs mt-1">Hồ sơ</span>
+      </a>
+    </div>
+  </nav>
+
+  <script>
+    const token = localStorage.getItem('accessToken');
+    if (!token) window.location.href = 'signin.html';
+
+    let currentFilter = null;
+
+    // Load user info for avatar
+    fetch('/api/auth/me', { headers: { 'Authorization': 'Bearer ' + token } })
+      .then(r => r.json())
+      .then(u => { document.getElementById('avatar').textContent = u.fullName ? u.fullName[0].toUpperCase() : 'U'; })
+      .catch(() => {});
+
+    function formatPrice(price) {
+      if (price >= 1000000000) return (price / 1000000000).toFixed(1) + ' tỷ';
+      if (price >= 1000000) return (price / 1000000).toFixed(0) + ' triệu';
+      return price.toLocaleString('vi-VN') + ' đ';
+    }
+
+    function renderListings(data) {
+      const container = document.getElementById('listings');
+      const emptyState = document.getElementById('empty-state');
+      const countEl = document.getElementById('listings-count');
+
+      if (!data || data.length === 0) {
+        container.innerHTML = '';
+        emptyState.classList.remove('hidden');
+        countEl.textContent = '';
+        return;
+      }
+
+      emptyState.classList.add('hidden');
+      countEl.textContent = `Tìm thấy ${data.length} tin đăng`;
+
+      container.innerHTML = data.map(l => `
+        <article class="bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-md transition-shadow cursor-pointer" onclick="viewDetail(${l.id})">
+          <div class="h-48 bg-gradient-to-br from-indigo-100 to-blue-50 flex items-center justify-center">
+            <div class="text-center">
+              <div class="text-4xl">${l.type === 'Sale' ? '🏠' : '🏢'}</div>
+              <span class="mt-2 inline-block px-3 py-1 rounded-full text-xs font-medium ${l.type === 'Sale' ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700'}">
+                ${l.type === 'Sale' ? 'Bán' : 'Cho thuê'}
+              </span>
+            </div>
+          </div>
+          <div class="p-4">
+            <h3 class="font-bold text-gray-800 line-clamp-2">${l.title}</h3>
+            <p class="text-gray-500 text-sm mt-1 flex items-center gap-1">
+              <span class="material-symbols-outlined text-base">location_on</span>
+              ${l.district ? l.district + ', ' : ''}${l.city || 'Chưa rõ'}
+            </p>
+            <div class="flex items-center gap-3 mt-2 text-sm text-gray-500">
+              ${l.area ? `<span>${l.area} m²</span>` : ''}
+              ${l.bedrooms ? `<span>${l.bedrooms} PN</span>` : ''}
+              ${l.bathrooms ? `<span>${l.bathrooms} PT</span>` : ''}
+            </div>
+            <div class="mt-3 flex items-center justify-between">
+              <span class="text-xl font-bold text-indigo-600">${formatPrice(l.price)}</span>
+              <span class="text-xs text-gray-400">${new Date(l.createdAt).toLocaleDateString('vi-VN')}</span>
+            </div>
+          </div>
+        </article>
+      `).join('');
+    }
+
+    async function loadListings() {
+      try {
+        const url = currentFilter ? `/api/listings/search?type=${currentFilter === 'Sale' ? 0 : 1}` : '/api/listings';
+        const res = await fetch(url);
+        const data = await res.json();
+        renderListings(data);
+      } catch (err) {
+        document.getElementById('listings').innerHTML = '<p class="text-red-500 col-span-full text-center">Lỗi tải dữ liệu</p>';
+      }
+    }
+
+    async function searchListings() {
+      const keyword = document.getElementById('searchInput').value;
+      try {
+        const res = await fetch(`/api/listings/search?keyword=${encodeURIComponent(keyword)}`);
+        const data = await res.json();
+        renderListings(data);
+      } catch (err) {}
+    }
+
+    function filterType(type) {
+      currentFilter = type;
+      document.querySelectorAll('.filter-chip').forEach(c => {
+        c.className = c.className.replace('bg-indigo-600 text-white', 'bg-gray-100 text-gray-600 hover:bg-gray-200');
+      });
+      event.target.className = event.target.className.replace('bg-gray-100 text-gray-600 hover:bg-gray-200', 'bg-indigo-600 text-white');
+      loadListings();
+    }
+
+    function viewDetail(id) {
+      window.location.href = 'property_detail.html?id=' + id;
+    }
+
+    function showCreateForm() {
+      document.getElementById('createForm').classList.remove('hidden');
+      document.getElementById('toggleCreateBtn').classList.add('hidden');
+    }
+    function hideCreateForm() {
+      document.getElementById('createForm').classList.add('hidden');
+      document.getElementById('toggleCreateBtn').classList.remove('hidden');
+    }
+
+    async function createListing() {
+      const msgEl = document.getElementById('create-msg');
+      try {
+        const res = await fetch('/api/listings', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+          body: JSON.stringify({
+            title: document.getElementById('c_title').value,
+            description: document.getElementById('c_desc').value,
+            type: document.getElementById('c_type').value,
+            price: parseFloat(document.getElementById('c_price').value) || 0,
+            address: document.getElementById('c_address').value,
+            city: document.getElementById('c_city').value,
+            district: document.getElementById('c_district').value,
+            area: parseFloat(document.getElementById('c_area').value) || 0,
+            bedrooms: parseInt(document.getElementById('c_bed').value) || 0,
+            bathrooms: parseInt(document.getElementById('c_bath').value) || 0
+          })
+        });
+        const data = await res.json();
+        if (res.ok) {
+          msgEl.textContent = '✅ ' + (data.message || 'Đăng tin thành công!');
+          msgEl.className = 'mt-3 text-sm text-green-600';
+          setTimeout(() => { hideCreateForm(); loadListings(); }, 1000);
+        } else {
+          msgEl.textContent = '❌ Lỗi: ' + JSON.stringify(data);
+          msgEl.className = 'mt-3 text-sm text-red-500';
+        }
+      } catch (err) {
+        msgEl.textContent = '❌ Lỗi kết nối';
+        msgEl.className = 'mt-3 text-sm text-red-500';
+      }
+    }
+
+    document.getElementById('searchInput').addEventListener('keypress', e => {
+      if (e.key === 'Enter') searchListings();
+    });
+
+    loadListings();
+  </script>
+</body>
+</html>

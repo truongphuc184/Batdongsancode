@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Đăng nhập - BatDongSan</title>
+  <link href="https://cdn.jsdelivr.net/npm/@mui/material@5.15.0/dist/material.min.css" rel="stylesheet" />
+</head>
+<body>
+  <div style="max-width:400px;margin:auto;padding:2rem;">
+    <h2>Đăng nhập</h2>
+    <form id="loginForm">
+      <div>
+        <label for="email">Email</label><br/>
+        <input type="email" id="email" name="email" required style="width:100%;" />
+      </div>
+      <div style="margin-top:1rem;">
+        <label for="password">Password</label><br/>
+        <input type="password" id="password" name="password" required style="width:100%;" />
+      </div>
+      <div style="margin-top:1.5rem;">
+        <button type="submit" style="width:100%;">Login</button>
+      </div>
+      <div style="margin-top:1rem; text-align:center;">
+        <a href="./Register.html">Create an account</a>
+      </div>
+    </form>
+  </div>
+  <script>
+    document.getElementById('loginForm').addEventListener('submit', async e => {
+      e.preventDefault();
+      const email = e.target.email.value;
+      const password = e.target.password.value;
+      try {
+        const res = await fetch('https://localhost:5001/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+        if (!res.ok) throw new Error('Login failed');
+        const data = await res.json();
+        localStorage.setItem('accessToken', data.accessToken);
+        window.location.href = './home_property_search.html';
+      } catch (err) {
+        alert('Invalid credentials');
+      }
+    });
+  </script>
+</body>
+</html>
