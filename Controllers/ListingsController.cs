@@ -70,26 +70,37 @@ public class ListingsController : ControllerBase
     [Authorize]
     public async Task<IActionResult> Create([FromBody] CreateListingRequest request)
     {
-        var userId = int.Parse(User.FindFirst("sub")!.Value);
+        if (string.IsNullOrWhiteSpace(request.Title))
+            return BadRequest(new { message = "Tiêu đề không được để trống" });
+
+        var subClaim = User.FindFirst("sub")?.Value 
+            ?? User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+
+        if (string.IsNullOrEmpty(subClaim) || !int.TryParse(subClaim, out var userId))
+            return Unauthorized(new { message = "Phiên đăng nhập không hợp lệ, vui lòng đăng nhập lại" });
+
+        if (!Enum.TryParse<PropertyType>(request.Type, true, out var pType))
+            pType = PropertyType.Sale;
+
         var listing = new Listing
         {
-            Title = request.Title,
-            Description = request.Description,
-            Type = Enum.Parse<PropertyType>(request.Type, true),
-            Price = request.Price,
-            Address = request.Address,
-            City = request.City,
-            District = request.District,
-            Area = request.Area,
-            Bedrooms = request.Bedrooms,
-            Bathrooms = request.Bathrooms,
+            Title = request.Title.Trim(),
+            Description = request.Description?.Trim() ?? "",
+            Type = pType,
+            Price = request.Price > 0 ? request.Price : 0,
+            Address = request.Address?.Trim() ?? "",
+            City = request.City?.Trim() ?? "",
+            District = request.District?.Trim() ?? "",
+            Area = request.Area > 0 ? request.Area : 0,
+            Bedrooms = request.Bedrooms > 0 ? request.Bedrooms : 0,
+            Bathrooms = request.Bathrooms > 0 ? request.Bathrooms : 0,
             ImageUrls = request.ImageUrls ?? "",
             Status = ListingStatus.Active,
             OwnerId = userId
         };
 
         var created = await _listingService.CreateAsync(listing);
-        return CreatedAtAction(nameof(GetById), new { id = created.Id }, new { created.Id, message = "Tạo tin đăng thành công" });
+        return Ok(new { id = created.Id, message = "Đăng tin bất động sản thành công!" });
     }
 
     [HttpDelete("{id}")]

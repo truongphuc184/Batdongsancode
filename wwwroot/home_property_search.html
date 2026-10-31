@@ -222,35 +222,91 @@
 
     async function createListing() {
       const msgEl = document.getElementById('create-msg');
+      const submitBtn = event?.target || document.querySelector('#createForm button[onclick="createListing()"]');
+      
+      const title = document.getElementById('c_title').value.trim();
+      const city = document.getElementById('c_city').value.trim();
+      const price = parseFloat(document.getElementById('c_price').value);
+
+      if (!title) {
+        msgEl.textContent = '⚠️ Vui lòng nhập tiêu đề tin đăng!';
+        msgEl.className = 'mt-3 text-sm text-red-500 font-medium';
+        return;
+      }
+      if (!price || price <= 0) {
+        msgEl.textContent = '⚠️ Vui lòng nhập giá bất động sản!';
+        msgEl.className = 'mt-3 text-sm text-red-500 font-medium';
+        return;
+      }
+
+      msgEl.textContent = '⏳ Đang đăng tin...';
+      msgEl.className = 'mt-3 text-sm text-indigo-600 font-medium';
+      if (submitBtn) submitBtn.disabled = true;
+
       try {
+        const currentToken = localStorage.getItem('accessToken');
+        if (!currentToken) {
+          alert('Bạn chưa đăng nhập hoặc phiên đã hết hạn!');
+          window.location.href = 'signin.html';
+          return;
+        }
+
         const res = await fetch('/api/listings', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+          headers: { 
+            'Content-Type': 'application/json', 
+            'Authorization': 'Bearer ' + currentToken 
+          },
           body: JSON.stringify({
-            title: document.getElementById('c_title').value,
-            description: document.getElementById('c_desc').value,
+            title: title,
+            description: document.getElementById('c_desc').value.trim(),
             type: document.getElementById('c_type').value,
-            price: parseFloat(document.getElementById('c_price').value) || 0,
-            address: document.getElementById('c_address').value,
-            city: document.getElementById('c_city').value,
-            district: document.getElementById('c_district').value,
+            price: price,
+            address: document.getElementById('c_address').value.trim(),
+            city: city,
+            district: document.getElementById('c_district').value.trim(),
             area: parseFloat(document.getElementById('c_area').value) || 0,
             bedrooms: parseInt(document.getElementById('c_bed').value) || 0,
             bathrooms: parseInt(document.getElementById('c_bath').value) || 0
           })
         });
-        const data = await res.json();
+
+        const data = await res.json().catch(() => ({}));
+
         if (res.ok) {
           msgEl.textContent = '✅ ' + (data.message || 'Đăng tin thành công!');
-          msgEl.className = 'mt-3 text-sm text-green-600';
-          setTimeout(() => { hideCreateForm(); loadListings(); }, 1000);
+          msgEl.className = 'mt-3 text-sm text-green-600 font-bold';
+          
+          // Reset form fields
+          document.getElementById('c_title').value = '';
+          document.getElementById('c_desc').value = '';
+          document.getElementById('c_price').value = '';
+          document.getElementById('c_address').value = '';
+          document.getElementById('c_city').value = '';
+          document.getElementById('c_district').value = '';
+          document.getElementById('c_area').value = '';
+          document.getElementById('c_bed').value = '';
+          document.getElementById('c_bath').value = '';
+
+          setTimeout(() => { 
+            hideCreateForm(); 
+            msgEl.textContent = '';
+            loadListings(); 
+          }, 1200);
+        } else if (res.status === 401) {
+          msgEl.textContent = '❌ Phiên đăng nhập đã hết hạn. Đang chuyển về trang đăng nhập...';
+          msgEl.className = 'mt-3 text-sm text-red-500 font-medium';
+          localStorage.removeItem('accessToken');
+          setTimeout(() => { window.location.href = 'signin.html'; }, 1500);
         } else {
-          msgEl.textContent = '❌ Lỗi: ' + JSON.stringify(data);
-          msgEl.className = 'mt-3 text-sm text-red-500';
+          msgEl.textContent = '❌ Lỗi: ' + (data.message || 'Không thể đăng tin');
+          msgEl.className = 'mt-3 text-sm text-red-500 font-medium';
         }
       } catch (err) {
-        msgEl.textContent = '❌ Lỗi kết nối';
-        msgEl.className = 'mt-3 text-sm text-red-500';
+        msgEl.textContent = '❌ Lỗi kết nối tới máy chủ: ' + err.message;
+        msgEl.className = 'mt-3 text-sm text-red-500 font-medium';
+      } finally {
+        if (submitBtn) submitBtn.disabled = false;
       }
     }
 

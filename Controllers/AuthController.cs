@@ -39,7 +39,12 @@ public class AuthController : ControllerBase
     [Authorize]
     public async Task<IActionResult> Me()
     {
-        var userId = int.Parse(User.FindFirst("sub")!.Value);
+        var subClaim = User.FindFirst("sub")?.Value 
+            ?? User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+
+        if (string.IsNullOrEmpty(subClaim) || !int.TryParse(subClaim, out var userId))
+            return Unauthorized();
+
         var user = await _userService.GetByIdAsync(userId);
         if (user == null)
             return NotFound();
