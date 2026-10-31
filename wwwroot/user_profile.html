@@ -29,6 +29,22 @@
       <h2 class="text-xl font-bold text-gray-800 mt-4" id="fullName">Đang tải...</h2>
       <p class="text-gray-500" id="email"></p>
       <span class="inline-block mt-2 px-3 py-1 rounded-full text-sm font-medium bg-indigo-100 text-indigo-700" id="role"></span>
+
+      <!-- Trạng thái gói hội viên -->
+      <div class="mt-4 pt-4 border-t border-gray-100 flex items-center justify-around text-xs">
+        <div>
+          <span class="text-gray-400">Gói dịch vụ:</span>
+          <div class="font-bold text-gray-900 mt-0.5" id="userPackageName">Đang tải...</div>
+        </div>
+        <div class="h-6 w-px bg-gray-200"></div>
+        <div>
+          <span class="text-gray-400">Lượt đẩy tin còn lại:</span>
+          <div class="font-extrabold text-indigo-600 mt-0.5" id="userPushesCount">-- lượt</div>
+        </div>
+      </div>
+      <a href="packages.html" class="mt-4 w-full py-2.5 bg-gradient-to-r from-red-600 to-pink-600 hover:from-red-700 hover:to-pink-700 text-white rounded-xl font-bold text-xs flex items-center justify-center gap-1.5 shadow-sm transition-all">
+        💎 Nâng cấp Gói Hội viên (Tiết kiệm 39%)
+      </a>
     </div>
 
     <!-- Menu -->
@@ -85,7 +101,13 @@
       Tenant: 'Người thuê nhà' 
     };
 
-    fetch('/api/auth/me', { headers: { 'Authorization': 'Bearer ' + token } })
+    fetch('/api/subscriptions/my-status', { headers: { 'Authorization': 'Bearer ' + token } })
+      .then(r => r.json())
+      .then(s => {
+        document.getElementById('userPackageName').textContent = s.currentPackage || 'Thành viên thường';
+        document.getElementById('userPushesCount').textContent = (s.remainingPushes || 0) + ' lượt';
+      })
+      .catch(() => {});
       .then(r => { if (!r.ok) throw new Error(); return r.json(); })
       .then(u => {
         document.getElementById('fullName').textContent = u.fullName;

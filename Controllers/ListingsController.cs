@@ -220,11 +220,33 @@ public class ListingsController : ControllerBase
         if (listing.OwnerId != userId.Value && role != "Admin")
             return Forbid();
 
+        var user = await _context.Users.FindAsync(userId.Value);
+        if (user == null) return NotFound();
+
+        if (role != "Admin")
+        {
+            if (user.RemainingPushes <= 0)
+            {
+                return BadRequest(new 
+                { 
+                    code = "OUT_OF_PUSHES", 
+                    message = "Bạn đã sử dụng hết lượt đẩy tin. Vui lòng nâng cấp Gói hội viên để nhận thêm lượt đẩy!" 
+                });
+            }
+
+            user.RemainingPushes -= 1;
+        }
+
         listing.PriorityTime = DateTime.UtcNow;
         listing.UpdatedAt = DateTime.UtcNow;
         await _context.SaveChangesAsync();
 
-        return Ok(new { message = "🚀 Đã đẩy tin lên đầu trang thành công!" });
+        var remainingText = (role == "Admin") ? "vô hạn (Quyền Admin)" : $"{user.RemainingPushes} lượt";
+        return Ok(new 
+        { 
+            message = $"🚀 Đã đẩy tin lên đầu trang thành công! Số lượt đẩy còn lại: {remainingText}",
+            remainingPushes = user.RemainingPushes
+        });
     }
 
     // 9. Cập nhật trạng thái BĐS (Đã bán, Đã cho thuê, Ẩn tin theo Ad1 & Ad2)

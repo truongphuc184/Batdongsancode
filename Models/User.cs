@@ -23,5 +23,10 @@ public class User
 
     public bool IsActive { get; set; } = true;
 
+    public int RemainingPushes { get; set; } = 5; // Số lượt đẩy tin còn lại
+
+    [MaxLength(100)]
+    public string CurrentPackage { get; set; } = "Thành viên thường";
+
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 }
