@@ -17,14 +17,14 @@
 <body class="bg-[#fafafa] min-h-screen text-gray-800 pb-20">
   <!-- Header -->
   <header class="bg-white shadow-sm sticky top-0 z-50">
-    <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
-      <div class="flex items-center gap-3">
-        <a href="home_property_search.html" class="w-10 h-10 rounded-full flex items-center justify-center hover:bg-gray-100 transition-colors">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-2.5 sm:gap-3">
+        <a href="home_property_search.html" class="w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center hover:bg-gray-100 transition-colors">
           <span class="material-symbols-outlined text-xl">arrow_back</span>
         </a>
         <div>
-          <h1 class="text-base font-bold text-gray-900 leading-tight">Gói Dịch Vụ Hội Viên</h1>
-          <p class="text-xs text-gray-500">Đầu tư đúng gói • Tối ưu từng tin đăng</p>
+          <h1 class="text-sm sm:text-base font-bold text-gray-900 leading-tight">Gói Dịch Vụ Hội Viên</h1>
+          <p class="text-[10px] sm:text-xs text-gray-500">Đầu tư đúng gói • Tối ưu từng tin đăng</p>
         </div>
       </div>
       <div class="flex items-center gap-2">
@@ -32,15 +32,15 @@
           <span class="text-xs text-gray-400">Gói hiện tại:</span>
           <div class="text-xs font-bold text-indigo-600" id="currentPkgName">Đang tải...</div>
         </div>
-        <div class="bg-indigo-50 border border-indigo-200 px-3 py-1.5 rounded-full flex items-center gap-1.5">
+        <div class="bg-indigo-50 border border-indigo-200 px-2.5 sm:px-3 py-1.5 rounded-full flex items-center gap-1 sm:gap-1.5 shrink-0">
           <span class="material-symbols-outlined text-amber-500 text-sm">rocket_launch</span>
-          <span class="text-xs font-bold text-indigo-700" id="remainingPushesDisplay">-- lượt đẩy</span>
+          <span class="text-xs font-bold text-indigo-700" id="remainingPushesDisplay">-- lượt</span>
         </div>
       </div>
     </div>
   </header>
 
-  <main class="max-w-6xl mx-auto px-4 py-8">
+  <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
     <!-- Tiêu đề lớn & Giới thiệu -->
     <div class="text-center max-w-2xl mx-auto mb-10">
       <div class="inline-flex items-center gap-2 mb-2">
@@ -233,8 +233,8 @@
   </main>
 
   <!-- Modal Thanh Toán (Sequence Diagram 4: Thanh toán gói dịch vụ) -->
-  <div id="paymentModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-    <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl relative">
+  <div id="paymentModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-3 sm:p-4 hidden">
+    <div class="bg-white rounded-3xl max-w-md w-full p-5 sm:p-6 shadow-2xl relative max-h-[92vh] overflow-y-auto">
       <div class="flex items-center justify-between pb-3 border-b border-gray-100">
         <h3 class="font-black text-gray-900 text-base">Thanh Toán Gói Dịch Vụ</h3>
         <button onclick="closePaymentModal()" class="text-gray-400 hover:text-gray-600">

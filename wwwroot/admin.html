@@ -12,30 +12,30 @@
 <body class="bg-gray-100 min-h-screen pb-20 text-gray-800">
   <!-- Header -->
   <header class="bg-gray-900 text-white shadow-md sticky top-0 z-50">
-    <div class="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
-      <div class="flex items-center gap-3">
-        <div class="w-10 h-10 bg-amber-500 rounded-xl flex items-center justify-center font-bold text-gray-900 shadow">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-2.5 sm:gap-3">
+        <div class="w-9 h-9 sm:w-10 sm:h-10 bg-amber-500 rounded-xl flex items-center justify-center font-bold text-gray-900 shadow shrink-0">
           🛡️
         </div>
         <div>
-          <h1 class="text-lg font-bold leading-tight flex items-center gap-2">
+          <h1 class="text-base sm:text-lg font-bold leading-tight flex items-center gap-1.5 sm:gap-2">
             Hệ Thống Quản Trị
-            <span class="text-[10px] bg-red-600 text-white px-2 py-0.5 rounded font-bold uppercase tracking-wider">Admin</span>
+            <span class="text-[9px] sm:text-[10px] bg-red-600 text-white px-2 py-0.5 rounded font-bold uppercase tracking-wider">Admin</span>
           </h1>
-          <p class="text-xs text-gray-400">Kiểm duyệt tin đăng & Quản trị hệ thống (Theo Sơ đồ Use Case 4)</p>
+          <p class="text-[10px] sm:text-xs text-gray-400">Kiểm duyệt tin đăng & Quản trị hệ thống (Use Case 4)</p>
         </div>
       </div>
-      <div class="flex items-center gap-3">
-        <a href="home_property_search.html" class="px-3.5 py-1.5 bg-gray-800 hover:bg-gray-700 rounded-xl text-xs font-semibold text-gray-200 transition-colors flex items-center gap-1">
-          <span class="material-symbols-outlined text-sm">home</span> Về trang chủ
+      <div class="flex items-center gap-2 sm:gap-3">
+        <a href="home_property_search.html" class="px-2.5 sm:px-3.5 py-1.5 bg-gray-800 hover:bg-gray-700 rounded-xl text-xs font-semibold text-gray-200 transition-colors flex items-center gap-1 shrink-0">
+          <span class="material-symbols-outlined text-sm">home</span> <span class="hidden sm:inline">Về trang chủ</span>
         </a>
       </div>
     </div>
   </header>
 
-  <main class="max-w-5xl mx-auto px-4 mt-6">
-    <!-- Thống kê nhanh 4 cột -->
-    <div class="grid grid-cols-1 sm:grid-cols-4 gap-4 mb-6">
+  <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mt-4 sm:mt-6">
+    <!-- Thống kê nhanh 4 cột: 2 cột trên điện thoại, 4 cột trên iPad/Máy tính -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mb-6">
       <div class="bg-white p-5 rounded-2xl shadow-sm border border-amber-200">
         <div class="flex items-center justify-between">
           <span class="text-xs font-bold text-amber-600 uppercase">Tin chờ duyệt</span>

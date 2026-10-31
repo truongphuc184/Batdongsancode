@@ -12,58 +12,59 @@
 <body class="bg-gray-100 min-h-screen pb-24 text-gray-800">
   <!-- Header -->
   <header class="bg-white shadow-sm sticky top-0 z-50">
-    <div class="max-w-4xl mx-auto px-4 h-16 flex items-center justify-between">
-      <div class="flex items-center gap-3">
-        <div class="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center shadow-md">
-          <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-2.5 sm:gap-3">
+        <div class="w-9 h-9 sm:w-10 sm:h-10 bg-indigo-600 rounded-xl flex items-center justify-center shadow-md shrink-0">
+          <svg class="w-5 h-5 sm:w-6 sm:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
           </svg>
         </div>
         <div>
-          <h1 class="text-xl font-bold text-gray-900 leading-tight">Bất Động Sản</h1>
-          <p class="text-xs text-gray-500">Kênh thông tin nhà đất trực tuyến</p>
+          <h1 class="text-lg sm:text-xl font-bold text-gray-900 leading-tight">Bất Động Sản</h1>
+          <p class="text-[10px] sm:text-xs text-gray-500">Kênh thông tin nhà đất trực tuyến</p>
         </div>
       </div>
-      <div class="flex items-center gap-2.5">
-        <a href="packages.html" class="px-3 py-1.5 bg-gradient-to-r from-red-600 to-pink-600 hover:from-red-700 hover:to-pink-700 text-white rounded-xl text-xs font-bold transition-all flex items-center gap-1 shadow-sm">
-          💎 Gói Hội viên
+      <div class="flex items-center gap-1.5 sm:gap-2.5">
+        <a href="packages.html" class="px-2.5 sm:px-3 py-1.5 bg-gradient-to-r from-red-600 to-pink-600 hover:from-red-700 hover:to-pink-700 text-white rounded-xl text-xs font-bold transition-all flex items-center gap-1 shadow-sm shrink-0">
+          <span>💎</span> <span class="hidden sm:inline">Gói Hội viên</span>
         </a>
-        <a href="admin.html" id="adminLink" class="hidden px-3.5 py-1.5 bg-amber-500 hover:bg-amber-600 text-gray-900 rounded-xl text-xs font-bold transition-colors flex items-center gap-1 shadow-sm">
-          🛡️ Kiểm duyệt tin
+        <a href="admin.html" id="adminLink" class="hidden px-2.5 sm:px-3.5 py-1.5 bg-amber-500 hover:bg-amber-600 text-gray-900 rounded-xl text-xs font-bold transition-colors flex items-center gap-1 shadow-sm shrink-0">
+          <span>🛡️</span> <span class="hidden sm:inline">Kiểm duyệt tin</span>
         </a>
-        <a href="user_profile.html" class="flex items-center gap-2 bg-gray-50 hover:bg-gray-100 py-1.5 px-3 rounded-full transition-colors border">
-          <div class="w-7 h-7 bg-indigo-600 rounded-full flex items-center justify-center text-white text-xs font-bold" id="avatar">U</div>
+        <a href="user_profile.html" class="flex items-center gap-1.5 sm:gap-2 bg-gray-50 hover:bg-gray-100 py-1 sm:py-1.5 px-2.5 sm:px-3 rounded-full transition-colors border shrink-0">
+          <div class="w-7 h-7 bg-indigo-600 rounded-full flex items-center justify-center text-white text-xs font-bold shrink-0" id="avatar">U</div>
           <span class="text-xs font-semibold text-gray-700 hidden sm:inline" id="userDisplayName">Tài khoản</span>
-          <span class="text-[10px] bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded-full font-bold uppercase hidden sm:inline" id="userRoleBadge"></span>
+          <span class="text-[10px] bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded-full font-bold uppercase hidden md:inline" id="userRoleBadge"></span>
         </a>
       </div>
     </div>
   </header>
 
   <!-- Thanh tìm kiếm & Lọc nâng cao (Theo Sơ đồ Use Case: Tìm kiếm & Tra cứu) -->
-  <div class="max-w-4xl mx-auto px-4 mt-5">
-    <div class="bg-white rounded-2xl shadow-sm p-4 border border-gray-200">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mt-4 sm:mt-6">
+    <div class="bg-white rounded-2xl shadow-sm p-3.5 sm:p-5 border border-gray-200">
       <!-- Hàng tìm kiếm chính -->
-      <div class="flex gap-2">
+      <div class="flex gap-1.5 sm:gap-2">
         <div class="relative flex-1">
-          <span class="material-symbols-outlined absolute left-3.5 top-3.5 text-gray-400">search</span>
+          <span class="material-symbols-outlined absolute left-3 sm:left-3.5 top-3 sm:top-3.5 text-gray-400 text-lg sm:text-xl">search</span>
           <input type="text" id="searchInput" 
-            placeholder="Tìm theo tiêu đề, địa chỉ, quận huyện, dự án... (Nhấn Enter hoặc gõ để tìm)"
+            placeholder="Tìm theo tiêu đề, địa chỉ, quận huyện, dự án... (Enter để tìm)"
             onkeydown="if(event.key === 'Enter') executeSearch()"
             oninput="handleSearchInputDebounced()"
-            class="w-full pl-10 pr-9 py-3 bg-gray-50 border border-gray-300 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white text-sm transition-all font-medium"/>
-          <button id="btnClearSearch" onclick="clearSearchInput()" class="absolute right-3 top-3 text-gray-400 hover:text-gray-600 hidden">
+            class="w-full pl-9 sm:pl-10 pr-8 sm:pr-9 py-2.5 sm:py-3 bg-gray-50 border border-gray-300 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white text-xs sm:text-sm transition-all font-medium"/>
+          <button id="btnClearSearch" onclick="clearSearchInput()" class="absolute right-2.5 top-2.5 text-gray-400 hover:text-gray-600 hidden">
             <span class="material-symbols-outlined text-lg">cancel</span>
           </button>
         </div>
         <button onclick="toggleAdvancedFilter()" id="btnToggleFilter" 
-          class="px-4 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold text-xs rounded-xl transition-colors flex items-center gap-1.5 shrink-0 border border-gray-200">
+          class="px-2.5 sm:px-4 py-2.5 sm:py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold text-xs rounded-xl transition-colors flex items-center gap-1 sm:gap-1.5 shrink-0 border border-gray-200">
           <span class="material-symbols-outlined text-base">tune</span>
           <span class="hidden sm:inline">Bộ lọc</span>
           <span id="filterCountBadge" class="hidden px-1.5 py-0.2 bg-indigo-600 text-white rounded-full text-[10px] font-bold"></span>
         </button>
-        <button onclick="executeSearch()" class="px-6 py-3 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 font-semibold text-sm transition-colors flex items-center gap-1.5 shrink-0 shadow-sm">
-          <span>Tìm kiếm</span>
+        <button onclick="executeSearch()" class="px-3.5 sm:px-6 py-2.5 sm:py-3 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 font-semibold text-xs sm:text-sm transition-colors flex items-center gap-1 sm:gap-1.5 shrink-0 shadow-sm">
+          <span class="hidden sm:inline">Tìm kiếm</span>
+          <span class="sm:hidden font-bold">Tìm</span>
         </button>
       </div>
 
@@ -193,7 +194,7 @@
   </div>
 
   <!-- Banner Giới thiệu Gói Hội viên (Theo mẫu 3 gói mới) -->
-  <div class="max-w-4xl mx-auto px-4 mt-4">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mt-4">
     <div class="bg-gradient-to-r from-red-600 via-purple-600 to-indigo-700 rounded-2xl p-4 sm:p-5 text-white flex flex-col sm:flex-row items-center justify-between gap-4 shadow-md">
       <div class="flex items-center gap-3.5">
         <div class="w-12 h-12 rounded-xl bg-white/20 backdrop-blur-md flex items-center justify-center text-2xl shrink-0">
@@ -215,7 +216,7 @@
   </div>
 
   <!-- Nút Bật Form Đăng Tin -->
-  <div class="max-w-4xl mx-auto px-4 mt-4">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mt-4">
     <button onclick="showCreateForm()" id="toggleCreateBtn"
       class="w-full py-3.5 bg-gradient-to-r from-indigo-600 to-blue-600 text-white font-semibold rounded-2xl shadow-md hover:from-indigo-700 hover:to-blue-700 transition-all flex items-center justify-center gap-2">
       <span class="material-symbols-outlined text-xl">add_circle</span> Đăng tin bất động sản mới
@@ -223,7 +224,7 @@
   </div>
 
   <!-- Form Đăng Tin BĐS -->
-  <div id="createForm" class="max-w-4xl mx-auto px-4 mt-4 hidden">
+  <div id="createForm" class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mt-4 hidden">
     <div class="bg-white rounded-2xl shadow-md p-6 border border-indigo-100">
       <div class="flex items-center justify-between pb-4 border-b border-gray-100 mb-5">
         <div>
@@ -365,7 +366,7 @@
   </div>
 
   <!-- Danh sách tin đăng (MỖI TIN NẰM DƯỚI NHAU DẠNG HÀNG NGANG) -->
-  <main class="max-w-4xl mx-auto px-4 mt-6">
+  <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
     <div class="flex items-center justify-between mb-3">
       <h2 class="text-base font-bold text-gray-900" id="section-title">Danh sách tin đăng bất động sản</h2>
       <span id="listings-count" class="text-xs font-semibold text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-full border border-indigo-100"></span>
@@ -394,7 +395,7 @@
 
   <!-- Bottom Nav -->
   <nav class="fixed bottom-0 w-full bg-white border-t border-gray-200 z-50 shadow-lg">
-    <div class="flex justify-around items-center h-16 max-w-4xl mx-auto px-4">
+    <div class="flex justify-around items-center h-16 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
       <a href="home_property_search.html" class="flex flex-col items-center text-indigo-600">
         <span class="material-symbols-outlined text-2xl">travel_explore</span>
         <span class="text-[11px] mt-0.5 font-bold">Khám phá</span>
@@ -592,8 +593,8 @@
 
         return `
           <article class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-md hover:border-indigo-200 transition-all cursor-pointer group flex flex-col md:flex-row relative" onclick="viewDetail(${l.id})">
-            <!-- Cột ảnh (Bên trái trên PC, trên cùng trên Mobile) -->
-            <div class="relative w-full md:w-64 h-48 md:h-auto shrink-0 overflow-hidden bg-gray-100">
+            <!-- Cột ảnh (Bên trái trên PC/iPad, trên cùng trên Mobile) -->
+            <div class="relative w-full md:w-72 lg:w-80 h-52 sm:h-60 md:h-auto shrink-0 overflow-hidden bg-gray-100">
               ${imgHtml}
               <span class="absolute top-3 left-3 px-3 py-1 rounded-full text-xs font-bold shadow-md ${l.type === 'Sale' ? 'bg-emerald-600 text-white' : 'bg-blue-600 text-white'}">
                 ${l.type === 'Sale' ? 'Cần bán' : 'Cho thuê'}
@@ -1247,8 +1248,8 @@
   </script>
 
   <!-- MODAL SO SÁNH BẤT ĐỘNG SẢN (Use Case: So sánh BĐS) -->
-  <div id="compareModal" class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 hidden backdrop-blur-sm">
-    <div class="bg-white rounded-3xl max-w-4xl w-full p-6 shadow-2xl max-h-[90vh] flex flex-col">
+  <div id="compareModal" class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-3 sm:p-4 hidden backdrop-blur-sm">
+    <div class="bg-white rounded-3xl max-w-5xl w-full p-4 sm:p-6 shadow-2xl max-h-[92vh] flex flex-col">
       <div class="flex items-center justify-between pb-4 border-b">
         <div class="flex items-center gap-2">
           <span class="material-symbols-outlined text-purple-600 text-2xl">balance</span>

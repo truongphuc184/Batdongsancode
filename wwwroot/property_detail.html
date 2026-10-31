@@ -12,24 +12,24 @@
 <body class="bg-gray-100 min-h-screen pb-24 text-gray-800">
   <!-- Header -->
   <header class="bg-white shadow-sm sticky top-0 z-50">
-    <div class="max-w-3xl mx-auto px-4 h-16 flex items-center justify-between">
-      <div class="flex items-center gap-3">
-        <a href="home_property_search.html" class="w-10 h-10 rounded-full flex items-center justify-center hover:bg-gray-100 transition-colors">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-2 sm:gap-3">
+        <a href="home_property_search.html" class="w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center hover:bg-gray-100 transition-colors">
           <span class="material-symbols-outlined text-xl">arrow_back</span>
         </a>
-        <span class="font-bold text-gray-900 text-base">Chi tiết bất động sản</span>
+        <span class="font-bold text-gray-900 text-sm sm:text-base">Chi tiết bất động sản</span>
       </div>
       <a href="home_property_search.html" class="text-xs font-semibold text-indigo-600 hover:underline">Về danh sách</a>
     </div>
   </header>
 
-  <div id="content" class="max-w-3xl mx-auto px-4 mt-6">
+  <div id="content" class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 mt-4 sm:mt-6">
     <div class="text-gray-400 text-center py-16 bg-white rounded-2xl shadow-sm border">Đang tải chi tiết...</div>
   </div>
 
   <!-- Bottom Nav -->
   <nav class="fixed bottom-0 w-full bg-white border-t border-gray-200 z-50 shadow-lg">
-    <div class="flex justify-around items-center h-16 max-w-3xl mx-auto px-4">
+    <div class="flex justify-around items-center h-16 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
       <a href="home_property_search.html" class="flex flex-col items-center text-indigo-600">
         <span class="material-symbols-outlined text-2xl">travel_explore</span>
         <span class="text-[11px] mt-0.5 font-bold">Khám phá</span>
@@ -78,7 +78,7 @@
               <!-- BỘ SƯU TẬP ẢNH (GALLERY & SLIDER NHIỀU ẢNH) -->
               <div class="relative bg-gray-900 group">
                 <!-- Ảnh to chính -->
-                <div class="w-full h-80 sm:h-96 overflow-hidden flex items-center justify-center bg-black/10">
+                <div class="w-full h-64 sm:h-80 md:h-[420px] lg:h-[480px] overflow-hidden flex items-center justify-center bg-black/10">
                   <img id="mainGalleryImage" src="${window.propertyImages[0]}" alt="${l.title}" 
                     class="w-full h-full object-cover transition-all duration-300"
                     onerror="this.src='https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1200&q=80'"/>
@@ -118,15 +118,15 @@
               ` : ''}
 
               <!-- Nội dung chi tiết BĐS -->
-              <div class="p-6">
-                <h1 class="text-2xl font-black text-gray-900 leading-snug">${l.title}</h1>
-                <p class="text-sm text-gray-500 mt-2 flex items-center gap-1.5">
+              <div class="p-4 sm:p-6 md:p-8">
+                <h1 class="text-xl sm:text-2xl md:text-3xl font-black text-gray-900 leading-snug">${l.title}</h1>
+                <p class="text-xs sm:text-sm text-gray-500 mt-2 flex items-center gap-1.5">
                   <span class="material-symbols-outlined text-base text-gray-400">location_on</span>
                   ${l.address ? l.address + ', ' : ''}${l.district ? l.district + ', ' : ''}${l.city}
                 </p>
 
                 <!-- Mức giá -->
-                <div class="mt-4 p-4 bg-indigo-50/50 rounded-xl border border-indigo-100 flex items-center justify-between">
+                <div class="mt-4 p-4 bg-indigo-50/50 rounded-xl border border-indigo-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                   <div>
                     <span class="text-xs text-indigo-700 font-medium">Mức giá niêm yết:</span>
                     <div class="text-3xl font-black text-red-600">${formatPrice(l.price)}</div>
@@ -449,8 +449,8 @@
   </script>
 
   <!-- MODAL BÁO CÁO VI PHẠM (Use case: Báo cáo tin đăng vi phạm) -->
-  <div id="reportModal" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 hidden">
-    <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl">
+  <div id="reportModal" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-3 sm:p-4 hidden backdrop-blur-sm">
+    <div class="bg-white rounded-2xl max-w-md w-full p-4 sm:p-6 shadow-2xl max-h-[90vh] overflow-y-auto">
       <div class="flex items-center justify-between pb-3 border-b mb-4">
         <div class="flex items-center gap-2">
           <span class="material-symbols-outlined text-red-600">report</span>
