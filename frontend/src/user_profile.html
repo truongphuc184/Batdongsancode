@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Hồ sơ - Bất Động Sản</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@400,0" rel="stylesheet"/>
+  <style>body{font-family:'Inter',sans-serif;}</style>
+</head>
+<body class="bg-gray-50 min-h-screen pb-20">
+  <!-- Header -->
+  <header class="bg-white shadow-sm sticky top-0 z-50">
+    <div class="max-w-3xl mx-auto px-4 h-14 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <a href="home_property_search.html" class="w-10 h-10 rounded-full flex items-center justify-center hover:bg-gray-100">
+          <span class="material-symbols-outlined">arrow_back</span>
+        </a>
+        <span class="font-bold text-gray-800">Hồ sơ cá nhân</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="max-w-3xl mx-auto px-4 mt-6">
+    <!-- Profile Card -->
+    <div class="bg-white rounded-2xl shadow-sm p-6 text-center">
+      <div class="w-20 h-20 bg-indigo-600 rounded-full flex items-center justify-center mx-auto text-white text-3xl font-bold" id="avatar">U</div>
+      <h2 class="text-xl font-bold text-gray-800 mt-4" id="fullName">Đang tải...</h2>
+      <p class="text-gray-500" id="email"></p>
+      <span class="inline-block mt-2 px-3 py-1 rounded-full text-sm font-medium bg-indigo-100 text-indigo-700" id="role"></span>
+
+      <!-- Trạng thái gói hội viên -->
+      <div class="mt-4 pt-4 border-t border-gray-100 flex items-center justify-around text-xs">
+        <div>
+          <span class="text-gray-400">Gói dịch vụ:</span>
+          <div class="font-bold text-gray-900 mt-0.5" id="userPackageName">Đang tải...</div>
+        </div>
+        <div class="h-6 w-px bg-gray-200"></div>
+        <div>
+          <span class="text-gray-400">Lượt đẩy tin còn lại:</span>
+          <div class="font-extrabold text-indigo-600 mt-0.5" id="userPushesCount">-- lượt</div>
+        </div>
+      </div>
+      <a href="packages.html" class="mt-4 w-full py-2.5 bg-gradient-to-r from-red-600 to-pink-600 hover:from-red-700 hover:to-pink-700 text-white rounded-xl font-bold text-xs flex items-center justify-center gap-1.5 shadow-sm transition-all">
+        💎 Nâng cấp Gói Hội viên (Tiết kiệm 39%)
+      </a>
+    </div>
+
+    <!-- Menu -->
+    <div class="bg-white rounded-2xl shadow-sm mt-4 overflow-hidden">
+      <a href="home_property_search.html" class="flex items-center gap-4 px-6 py-4 hover:bg-gray-50 border-b border-gray-100">
+        <span class="material-symbols-outlined text-indigo-600">real_estate_agent</span>
+        <span class="font-medium text-gray-800">Tin đăng của tôi</span>
+        <span class="material-symbols-outlined text-gray-400 ml-auto">chevron_right</span>
+      </a>
+      <a href="home_property_search.html" class="flex items-center gap-4 px-6 py-4 hover:bg-gray-50 border-b border-gray-100">
+        <span class="material-symbols-outlined text-red-500">favorite</span>
+        <span class="font-medium text-gray-800">Tin đã lưu yêu thích</span>
+        <span class="material-symbols-outlined text-gray-400 ml-auto">chevron_right</span>
+      </a>
+      <a href="packages.html" class="flex items-center gap-4 px-6 py-4 hover:bg-gray-50 border-b border-gray-100">
+        <span class="material-symbols-outlined text-amber-500">workspace_premium</span>
+        <span class="font-medium text-gray-800">Gói dịch vụ & Lượt đẩy tin</span>
+        <span class="material-symbols-outlined text-gray-400 ml-auto">chevron_right</span>
+      </a>
+    </div>
+
+    <!-- KHÁCH HÀNG QUAN TÂM / CRM (Sơ đồ Use case 3 & Sơ đồ CRM: Tiếp nhận thông tin khách quan tâm) -->
+    <div id="crmSection" class="bg-white rounded-2xl shadow-sm mt-4 p-6 hidden border border-indigo-100">
+      <div class="flex items-center justify-between pb-3 border-b mb-4">
+        <div>
+          <h3 class="text-base font-bold text-gray-900 flex items-center gap-2">
+            <span class="material-symbols-outlined text-indigo-600">contact_phone</span>
+            Quản lý khách hàng tiềm năng (CRM Mini)
+          </h3>
+          <p class="text-xs text-gray-500 mt-0.5">Khách hàng để lại thông tin tư vấn & đặt lịch hẹn xem BĐS của bạn</p>
+        </div>
+        <button onclick="loadMyLeads()" class="px-3 py-1.5 bg-gray-100 hover:bg-gray-200 rounded-xl text-xs font-semibold text-gray-700 flex items-center gap-1">
+          <span class="material-symbols-outlined text-sm">refresh</span> Làm mới
+        </button>
+      </div>
+
+      <div id="leadsList" class="space-y-3">
+        <div class="text-center py-6 text-gray-400 text-xs">Đang tải danh sách khách hàng...</div>
+      </div>
+    </div>
+
+    <!-- Logout -->
+    <button onclick="logout()" class="w-full mt-4 py-4 bg-white rounded-2xl shadow-sm text-red-500 font-medium hover:bg-red-50 transition-colors flex items-center justify-center gap-2">
+      <span class="material-symbols-outlined">logout</span>
+      Đăng xuất
+    </button>
+  </div>
+
+  <!-- Bottom Nav -->
+  <nav class="fixed bottom-0 w-full bg-white border-t border-gray-200 z-50">
+    <div class="flex justify-around items-center h-16 max-w-5xl mx-auto">
+      <a href="home_property_search.html" class="flex flex-col items-center text-gray-400 hover:text-indigo-600">
+        <span class="material-symbols-outlined">search</span>
+        <span class="text-xs mt-1">Tìm kiếm</span>
+      </a>
+      <a href="user_profile.html" class="flex flex-col items-center text-indigo-600">
+        <span class="material-symbols-outlined">person</span>
+        <span class="text-xs mt-1 font-medium">Hồ sơ</span>
+      </a>
+    </div>
+  </nav>
+
+  <script>
+    const token = localStorage.getItem('accessToken');
+    if (!token) window.location.href = 'signin.html';
+
+    const roleMap = { 
+      Admin: 'Quản trị viên Hệ thống', 
+      Seller: 'Người bán (Chủ nhà)', 
+      Landlord: 'Người cho thuê', 
+      Agent: 'Môi giới Bất động sản', 
+      Broker: 'Môi giới Bất động sản', 
+      Buyer: 'Người mua BĐS', 
+      Tenant: 'Người thuê nhà' 
+    };
+
+    fetch('/api/subscriptions/my-status', { headers: { 'Authorization': 'Bearer ' + token } })
+      .then(r => r.json())
+      .then(s => {
+        document.getElementById('userPackageName').textContent = s.currentPackage || 'Thành viên thường';
+        document.getElementById('userPushesCount').textContent = (s.remainingPushes || 0) + ' lượt';
+      })
+      .catch(() => {});
+
+    fetch('/api/auth/me', { headers: { 'Authorization': 'Bearer ' + token } })
+      .then(r => { if (!r.ok) throw new Error(); return r.json(); })
+      .then(u => {
+        document.getElementById('fullName').textContent = u.fullName;
+        document.getElementById('email').textContent = u.email;
+        document.getElementById('role').textContent = roleMap[u.role] || u.role;
+        document.getElementById('avatar').textContent = u.fullName ? u.fullName[0].toUpperCase() : 'U';
+
+        // Nếu là Seller, Landlord hoặc Agent -> Hiển thị CRM
+        if (['Seller', 'Landlord', 'Agent', 'Broker', 'Admin'].includes(u.role)) {
+          document.getElementById('crmSection').classList.remove('hidden');
+          loadMyLeads();
+        }
+
+        if (u.role === 'Admin') {
+          const adminBtn = document.createElement('a');
+          adminBtn.href = 'admin.html';
+          adminBtn.className = 'w-full mt-3 py-3.5 bg-amber-500 hover:bg-amber-600 text-gray-900 font-bold rounded-2xl shadow-sm flex items-center justify-center gap-2 transition-colors';
+          adminBtn.innerHTML = '<span class="material-symbols-outlined">admin_panel_settings</span> Trang Quản Trị & Kiểm Duyệt Tin';
+          document.querySelector('.max-w-3xl').insertBefore(adminBtn, document.querySelector('button[onclick="logout()"]'));
+        }
+      })
+      .catch(() => {
+        localStorage.removeItem('accessToken');
+        window.location.href = 'signin.html';
+      });
+
+    // CRM: Tải danh sách khách hàng liên hệ
+    async function loadMyLeads() {
+      const container = document.getElementById('leadsList');
+      try {
+        const res = await fetch('/api/leads/my-leads', {
+          headers: { 'Authorization': 'Bearer ' + token }
+        });
+        const data = await res.json();
+
+        if (!data || data.length === 0) {
+          container.innerHTML = `
+            <div class="text-center py-8 text-gray-400">
+              <span class="text-3xl block mb-1">📭</span>
+              <p class="font-bold text-gray-700">Chưa có khách hàng liên hệ</p>
+              <p class="text-xs text-gray-400 mt-0.5">Khi người xem gửi yêu cầu tư vấn trên tin đăng của bạn, thông tin sẽ xuất hiện ở đây.</p>
+            </div>
+          `;
+          return;
+        }
+
+        container.innerHTML = data.map(ld => {
+          return `
+            <div class="p-4 rounded-xl border border-gray-200 bg-gray-50/50 hover:bg-white hover:border-indigo-300 transition-all">
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                <div>
+                  <div class="flex items-center gap-2">
+                    <strong class="text-sm font-bold text-gray-900">${ld.customerName}</strong>
+                    <a href="tel:${ld.customerPhone}" class="inline-flex items-center gap-1 text-xs font-black text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded hover:bg-indigo-100">
+                      📞 ${ld.customerPhone}
+                    </a>
+                  </div>
+                  <p class="text-xs text-gray-500 mt-1">
+                    Quan tâm tin: <strong class="text-gray-800">${ld.listingTitle}</strong>
+                  </p>
+                  ${ld.customerEmail ? `<p class="text-[11px] text-gray-400">Email: ${ld.customerEmail}</p>` : ''}
+                  ${ld.notes ? `<p class="text-xs text-gray-700 mt-1.5 bg-white p-2 rounded border">💬 Lời nhắn: "${ld.notes}"</p>` : ''}
+                </div>
+
+                <!-- Phân loại trạng thái khách hàng (Sơ đồ CRM: NEW, CONSULTING, VIEWING, NEGOTIATING, DEALT, CANCELED) -->
+                <div class="flex items-center gap-1.5 shrink-0">
+                  <span class="text-[11px] text-gray-400">Trạng thái:</span>
+                  <select onchange="updateLeadStatus(${ld.id}, this.value)" 
+                    class="px-2.5 py-1.5 bg-white border border-gray-300 rounded-lg text-xs font-bold outline-none cursor-pointer">
+                    <option value="NEW" ${ld.status === 'NEW' ? 'selected' : ''}>🟡 Mới tiếp nhận</option>
+                    <option value="CONSULTING" ${ld.status === 'CONSULTING' ? 'selected' : ''}>🔵 Đang tư vấn</option>
+                    <option value="VIEWING" ${ld.status === 'VIEWING' ? 'selected' : ''}>🟣 Hẹn xem nhà</option>
+                    <option value="NEGOTIATING" ${ld.status === 'NEGOTIATING' ? 'selected' : ''}>🟠 Đang đàm phán</option>
+                    <option value="DEALT" ${ld.status === 'DEALT' ? 'selected' : ''}>🟢 Đã chốt cọc</option>
+                    <option value="CANCELED" ${ld.status === 'CANCELED' ? 'selected' : ''}>⚪ Đã hủy</option>
+                  </select>
+                </div>
+              </div>
+              <div class="text-[11px] text-gray-400 mt-2 text-right">
+                Ngày gửi: ${new Date(ld.createdAt).toLocaleString('vi-VN')}
+              </div>
+            </div>
+          `;
+        }).join('');
+      } catch (err) {
+        container.innerHTML = '<p class="text-red-500 text-xs text-center py-4">Lỗi tải danh sách khách hàng</p>';
+      }
+    }
+
+    async function updateLeadStatus(id, newStatus) {
+      try {
+        const res = await fetch('/api/leads/' + id + '/status', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+          body: JSON.stringify({ status: newStatus })
+        });
+        const data = await res.json();
+        alert(data.message || 'Đã cập nhật trạng thái khách hàng!');
+      } catch {
+        alert('Lỗi cập nhật trạng thái');
+      }
+    }
+
+    function logout() {
+      localStorage.removeItem('accessToken');
+      window.location.href = 'signin.html';
+    }
+  </script>
+</body>
+</html>

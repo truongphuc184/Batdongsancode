@@ -3,74 +3,97 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Đăng ký - Bất Động Sản</title>
+  <title>Đăng ký - Hệ Thống Bất Động Sản</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
-  <style>body{font-family:'Inter',sans-serif;}</style>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@400,0" rel="stylesheet"/>
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-image: url('images/login-bg.jpg');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+    }
+  </style>
 </head>
-<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen flex items-center justify-center p-4">
-  <div class="bg-white rounded-2xl shadow-xl w-full max-w-md p-8">
-    <div class="text-center mb-6">
-      <div class="w-16 h-16 bg-indigo-600 rounded-xl flex items-center justify-center mx-auto mb-4">
-        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
-        </svg>
+<body class="min-h-screen flex items-center justify-center p-4 relative">
+  <!-- Lớp phủ làm mờ nhẹ -->
+  <div class="absolute inset-0 bg-gradient-to-tr from-black/60 via-black/40 to-indigo-950/40 backdrop-blur-[2px]"></div>
+
+  <div class="relative z-10 w-full max-w-md my-8">
+    <div class="bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl p-8 sm:p-10 border border-white/50">
+      <div class="text-center mb-6">
+        <div class="w-16 h-16 bg-gradient-to-tr from-indigo-600 to-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-lg shadow-indigo-500/30">
+          <span class="material-symbols-outlined text-white text-3xl">person_add</span>
+        </div>
+        <h1 class="text-2xl font-black text-gray-900 tracking-tight">Tạo tài khoản mới</h1>
+        <p class="text-xs text-gray-500 mt-1 font-medium">Tham gia sàn giao dịch bất động sản</p>
       </div>
-      <h1 class="text-2xl font-bold text-gray-800">Tạo tài khoản</h1>
+
+      <form id="registerForm" class="space-y-3.5">
+        <div>
+          <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Họ và tên</label>
+          <input type="text" id="fullName" required placeholder="Nguyễn Văn A"
+            class="w-full px-4 py-2.5 bg-gray-50/80 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-indigo-500 focus:bg-white focus:border-transparent outline-none text-sm font-medium"/>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Email</label>
+          <input type="email" id="email" required placeholder="nhapemail@batdongsan.vn"
+            class="w-full px-4 py-2.5 bg-gray-50/80 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-indigo-500 focus:bg-white focus:border-transparent outline-none text-sm font-medium"/>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Mật khẩu</label>
+          <input type="password" id="password" required placeholder="Tối thiểu 6 ký tự"
+            class="w-full px-4 py-2.5 bg-gray-50/80 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-indigo-500 focus:bg-white focus:border-transparent outline-none text-sm font-medium"/>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Vai trò trong hệ thống (Actor)</label>
+          <select id="role" class="w-full px-4 py-2.5 bg-gray-50/80 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-indigo-500 focus:bg-white focus:border-transparent outline-none text-sm font-bold text-indigo-900 cursor-pointer">
+            <option value="Buyer">🛒 Người mua Bất động sản</option>
+            <option value="Tenant">🔑 Người thuê nhà / căn hộ</option>
+            <option value="Seller">🏠 Người bán (Chủ nhà)</option>
+            <option value="Landlord">🏢 Người cho thuê</option>
+            <option value="Agent">👔 Môi giới Bất động sản chuyên nghiệp</option>
+          </select>
+        </div>
+
+        <div id="error-msg" class="text-red-500 text-xs font-semibold bg-red-50 p-2.5 rounded-xl border border-red-200 hidden"></div>
+        <div id="success-msg" class="text-emerald-700 text-xs font-bold bg-emerald-50 p-2.5 rounded-xl border border-emerald-200 hidden"></div>
+
+        <button type="submit" id="reg-btn"
+          class="w-full py-3.5 bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 text-white font-bold rounded-2xl shadow-lg shadow-indigo-500/25 transition-all text-sm flex items-center justify-center gap-1.5 mt-2">
+          <span>Đăng ký tài khoản</span>
+          <span class="material-symbols-outlined text-sm">arrow_forward</span>
+        </button>
+      </form>
+
+      <p class="text-center mt-5 text-gray-500 text-xs font-medium">
+        Đã có tài khoản? <a href="signin.html" class="text-indigo-600 font-bold hover:underline">Đăng nhập ngay</a>
+      </p>
     </div>
-    <form id="registerForm" class="space-y-4">
-      <div>
-        <label class="block text-sm font-medium text-gray-700 mb-1">Họ và tên</label>
-        <input type="text" id="fullName" required placeholder="Nguyễn Văn A"
-          class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none"/>
-      </div>
-      <div>
-        <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
-        <input type="email" id="email" required placeholder="example@email.com"
-          class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none"/>
-      </div>
-      <div>
-        <label class="block text-sm font-medium text-gray-700 mb-1">Mật khẩu</label>
-        <input type="password" id="password" required placeholder="Tối thiểu 6 ký tự"
-          class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none"/>
-      </div>
-      <div>
-        <label class="block text-sm font-medium text-gray-700 mb-1">Vai trò</label>
-        <select id="role" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none bg-white font-medium">
-          <option value="Buyer">Người mua</option>
-          <option value="Tenant">Người thuê</option>
-          <option value="Seller">Người bán</option>
-          <option value="Landlord">Người cho thuê</option>
-          <option value="Agent">Môi giới BĐS</option>
-        </select>
-      </div>
-      <div id="error-msg" class="text-red-500 text-sm hidden"></div>
-      <div id="success-msg" class="text-green-600 text-sm hidden"></div>
-      <button type="submit" id="reg-btn"
-        class="w-full py-3 bg-indigo-600 text-white font-semibold rounded-xl hover:bg-indigo-700 transition-colors">
-        Đăng ký
-      </button>
-    </form>
-    <p class="text-center mt-6 text-gray-500 text-sm">
-      Đã có tài khoản? <a href="signin.html" class="text-indigo-600 font-medium hover:underline">Đăng nhập</a>
-    </p>
   </div>
+
   <script>
     document.getElementById('registerForm').addEventListener('submit', async e => {
       e.preventDefault();
       const btn = document.getElementById('reg-btn');
       const errDiv = document.getElementById('error-msg');
-      const sucDiv = document.getElementById('success-msg');
-      btn.textContent = 'Đang xử lý...'; btn.disabled = true;
-      errDiv.classList.add('hidden'); sucDiv.classList.add('hidden');
+      const succDiv = document.getElementById('success-msg');
+      btn.innerHTML = '<span class="material-symbols-outlined text-sm animate-spin">sync</span> Đang tạo tài khoản...';
+      btn.disabled = true;
+      errDiv.classList.add('hidden');
+      succDiv.classList.add('hidden');
+
       try {
         const res = await fetch('/api/auth/register', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            email: document.getElementById('email').value,
+            fullName: document.getElementById('fullName').value.trim(),
+            email: document.getElementById('email').value.trim(),
             password: document.getElementById('password').value,
-            fullName: document.getElementById('fullName').value,
             role: document.getElementById('role').value
           })
         });
@@ -78,16 +101,17 @@
         if (!res.ok) {
           errDiv.textContent = data.message || 'Đăng ký thất bại';
           errDiv.classList.remove('hidden');
-        } else {
-          sucDiv.textContent = 'Đăng ký thành công! Đang chuyển đến trang đăng nhập...';
-          sucDiv.classList.remove('hidden');
-          setTimeout(() => window.location.href = 'signin.html', 1500);
+          return;
         }
+        succDiv.textContent = '🎉 Đăng ký thành công! Đang chuyển hướng sang đăng nhập...';
+        succDiv.classList.remove('hidden');
+        setTimeout(() => window.location.href = 'signin.html', 1200);
       } catch (err) {
         errDiv.textContent = 'Lỗi kết nối server';
         errDiv.classList.remove('hidden');
       } finally {
-        btn.textContent = 'Đăng ký'; btn.disabled = false;
+        btn.innerHTML = '<span>Đăng ký tài khoản</span><span class="material-symbols-outlined text-sm">arrow_forward</span>';
+        btn.disabled = false;
       }
     });
   </script>

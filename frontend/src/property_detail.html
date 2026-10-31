@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Chi tiết BĐS - Bất Động Sản</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@400,0" rel="stylesheet"/>
+  <style>body{font-family:'Inter',sans-serif;}</style>
+</head>
+<body class="bg-gray-100 min-h-screen pb-24 text-gray-800">
+  <!-- Header -->
+  <header class="bg-white shadow-sm sticky top-0 z-50">
+    <div class="max-w-3xl mx-auto px-4 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <a href="home_property_search.html" class="w-10 h-10 rounded-full flex items-center justify-center hover:bg-gray-100 transition-colors">
+          <span class="material-symbols-outlined text-xl">arrow_back</span>
+        </a>
+        <span class="font-bold text-gray-900 text-base">Chi tiết bất động sản</span>
+      </div>
+      <a href="home_property_search.html" class="text-xs font-semibold text-indigo-600 hover:underline">Về danh sách</a>
+    </div>
+  </header>
+
+  <div id="content" class="max-w-3xl mx-auto px-4 mt-6">
+    <div class="text-gray-400 text-center py-16 bg-white rounded-2xl shadow-sm border">Đang tải chi tiết...</div>
+  </div>
+
+  <!-- Bottom Nav -->
+  <nav class="fixed bottom-0 w-full bg-white border-t border-gray-200 z-50 shadow-lg">
+    <div class="flex justify-around items-center h-16 max-w-3xl mx-auto px-4">
+      <a href="home_property_search.html" class="flex flex-col items-center text-indigo-600">
+        <span class="material-symbols-outlined text-2xl">travel_explore</span>
+        <span class="text-[11px] mt-0.5 font-bold">Khám phá</span>
+      </a>
+      <a href="user_profile.html" class="flex flex-col items-center text-gray-500 hover:text-indigo-600">
+        <span class="material-symbols-outlined text-2xl">account_circle</span>
+        <span class="text-[11px] mt-0.5 font-semibold">Hồ sơ</span>
+      </a>
+    </div>
+  </nav>
+
+  <script>
+    const token = localStorage.getItem('accessToken');
+    if (!token) window.location.href = 'signin.html';
+
+    function formatPrice(price) {
+      if (!price || price <= 0) return 'Thương lượng';
+      if (price >= 1000000000) {
+        const ty = price / 1000000000;
+        return (Number.isInteger(ty) ? ty : ty.toFixed(2).replace(/\.?0+$/, '')) + ' tỷ';
+      }
+      if (price >= 1000000) {
+        const tr = price / 1000000;
+        return (Number.isInteger(tr) ? tr : tr.toFixed(1).replace(/\.?0+$/, '')) + ' triệu';
+      }
+      return price.toLocaleString('vi-VN') + ' đ';
+    }
+
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get('id');
+
+    if (!id) {
+      document.getElementById('content').innerHTML = '<p class="text-center text-gray-500 py-12">Không tìm thấy mã tin đăng</p>';
+    } else {
+      fetch('/api/listings/' + id)
+        .then(r => { if (!r.ok) throw new Error(); return r.json(); })
+        .then(l => {
+          const imgHtml = (l.imageUrls && l.imageUrls.trim().length > 0)
+            ? `<img src="${l.imageUrls.split(',')[0].trim()}" alt="${l.title}" class="w-full h-80 object-cover" onerror="this.onerror=null;this.parentElement.innerHTML='<div class=\\'flex items-center justify-center w-full h-72 bg-gradient-to-br from-indigo-100 to-blue-50 text-6xl\\'>🏡</div>'"/>`
+            : `<div class="flex items-center justify-center w-full h-72 bg-gradient-to-br from-indigo-100 to-blue-50 text-6xl">${l.type === 'Sale' ? '🏠' : '🏢'}</div>`;
+
+          document.getElementById('content').innerHTML = `
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden mb-8">
+              <!-- Banner Ảnh -->
+              <div class="relative bg-gray-100">
+                ${imgHtml}
+                <span class="absolute top-4 left-4 px-3.5 py-1.5 rounded-full text-xs font-bold shadow-md ${l.type === 'Sale' ? 'bg-emerald-600 text-white' : 'bg-blue-600 text-white'}">
+                  ${l.type === 'Sale' ? 'Cần bán' : 'Cho thuê'}
+                </span>
+              </div>
+
+              <!-- Nội dung -->
+              <div class="p-6">
+                <h1 class="text-2xl font-black text-gray-900 leading-snug">${l.title}</h1>
+                <p class="text-sm text-gray-500 mt-2 flex items-center gap-1.5">
+                  <span class="material-symbols-outlined text-base text-gray-400">location_on</span>
+                  ${l.address ? l.address + ', ' : ''}${l.district ? l.district + ', ' : ''}${l.city}
+                </p>
+
+                <!-- Mức giá -->
+                <div class="mt-4 p-4 bg-indigo-50/50 rounded-xl border border-indigo-100 flex items-center justify-between">
+                  <div>
+                    <span class="text-xs text-indigo-700 font-medium">Mức giá niêm yết:</span>
+                    <div class="text-3xl font-black text-red-600">${formatPrice(l.price)}</div>
+                    <span class="text-xs text-gray-500">${l.price ? l.price.toLocaleString('vi-VN') + ' VNĐ' : ''}</span>
+                  </div>
+                  ${l.direction ? `<div class="text-right"><span class="text-xs text-gray-500">Hướng nhà:</span><div class="text-sm font-bold text-gray-800">🧭 Hướng ${l.direction}</div></div>` : ''}
+                </div>
+
+                <!-- Thông số 3 cột -->
+                <div class="grid grid-cols-3 gap-3 mt-5 py-4 border-t border-b border-gray-100">
+                  <div class="text-center p-3 bg-gray-50 rounded-xl">
+                    <span class="text-xs text-gray-500">Diện tích</span>
+                    <div class="text-xl font-black text-gray-900 mt-0.5">${l.area ? l.area + ' m²' : '--'}</div>
+                  </div>
+                  <div class="text-center p-3 bg-gray-50 rounded-xl">
+                    <span class="text-xs text-gray-500">Phòng ngủ</span>
+                    <div class="text-xl font-black text-gray-900 mt-0.5">${l.bedrooms || '--'} PN</div>
+                  </div>
+                  <div class="text-center p-3 bg-gray-50 rounded-xl">
+                    <span class="text-xs text-gray-500">Phòng tắm</span>
+                    <div class="text-xl font-black text-gray-900 mt-0.5">${l.bathrooms || '--'} PT</div>
+                  </div>
+                </div>
+
+                <!-- Mô tả -->
+                ${l.description ? `
+                <div class="mt-6">
+                  <h3 class="text-base font-bold text-gray-900 mb-2">Mô tả bất động sản</h3>
+                  <div class="text-sm text-gray-700 leading-relaxed whitespace-pre-line bg-gray-50 p-4 rounded-xl border">${l.description}</div>
+                </div>` : ''}
+
+                <!-- Chi tiết khác -->
+                <div class="mt-6">
+                  <h3 class="text-base font-bold text-gray-900 mb-2">Đặc điểm bất động sản</h3>
+                  <div class="grid grid-cols-2 gap-2 text-xs">
+                    <div class="bg-gray-50 rounded-xl p-3 border"><span class="text-gray-400">Hướng phong thủy:</span><br><strong class="text-gray-800 text-sm">${l.direction ? 'Hướng ' + l.direction : 'Không xác định'}</strong></div>
+                    <div class="bg-gray-50 rounded-xl p-3 border"><span class="text-gray-400">Trạng thái:</span><br><strong class="text-emerald-600 text-sm">${l.status}</strong></div>
+                    <div class="bg-gray-50 rounded-xl p-3 border"><span class="text-gray-400">Người đăng tin:</span><br><strong class="text-gray-800 text-sm">${l.ownerName || 'Thành viên BĐS'}</strong></div>
+                    <div class="bg-gray-50 rounded-xl p-3 border"><span class="text-gray-400">Ngày đăng:</span><br><strong class="text-gray-800 text-sm">${new Date(l.createdAt).toLocaleDateString('vi-VN')}</strong></div>
+                  </div>
+                </div>
+
+                <!-- Nút hành động chính: Lưu yêu thích & Báo cáo vi phạm -->
+                <div class="mt-6 flex items-center justify-between gap-3 pt-4 border-t border-gray-100 flex-wrap">
+                  <div class="flex items-center gap-2">
+                    <button id="btnFavorite" onclick="toggleFavorite(${l.id})" class="px-4 py-2 bg-gray-50 hover:bg-red-50 text-gray-700 hover:text-red-600 rounded-xl font-bold text-xs transition-colors flex items-center gap-1.5 border border-gray-200">
+                      <span class="material-symbols-outlined text-base" id="favIcon">favorite_border</span>
+                      <span id="favText">Lưu tin yêu thích</span>
+                    </button>
+                    <button onclick="openReportModal(${l.id})" class="px-4 py-2 bg-gray-50 hover:bg-amber-50 text-gray-500 hover:text-amber-700 rounded-xl font-semibold text-xs transition-colors flex items-center gap-1 border border-gray-200">
+                      <span class="material-symbols-outlined text-base">flag</span> Báo cáo vi phạm
+                    </button>
+                  </div>
+                  <button onclick="deleteListing(${l.id})" class="px-3.5 py-2 bg-red-50 text-red-600 rounded-xl font-semibold text-xs hover:bg-red-100 transition-colors flex items-center gap-1 border border-red-200">
+                    <span class="material-symbols-outlined text-base">delete</span> Xóa tin
+                  </button>
+                </div>
+
+                <!-- VỊ TRÍ TRÊN BẢN ĐỒ (Use case: Xem chi tiết BĐS -> Xem vị trí trên bản đồ) -->
+                <div class="mt-6">
+                  <h3 class="text-base font-bold text-gray-900 mb-2 flex items-center gap-1.5">
+                    <span class="material-symbols-outlined text-indigo-600">map</span> Vị trí trên bản đồ
+                  </h3>
+                  <div class="w-full h-64 rounded-2xl overflow-hidden border border-gray-200 shadow-inner bg-gray-100">
+                    <iframe 
+                      width="100%" 
+                      height="100%" 
+                      style="border:0" 
+                      loading="lazy" 
+                      allowfullscreen 
+                      src="https://maps.google.com/maps?q=${encodeURIComponent((l.address ? l.address + ', ' : '') + (l.district ? l.district + ', ' : '') + (l.city || 'Việt Nam'))}&t=&z=15&ie=UTF8&iwloc=&output=embed">
+                    </iframe>
+                  </div>
+                </div>
+
+                <!-- FORM ĐĂNG KÝ XEM NHÀ & TƯ VẤN (Sơ đồ CRM: Tiếp nhận thông tin khách quan tâm -> Lead) -->
+                <div class="mt-8 bg-gradient-to-br from-indigo-50/70 to-blue-50/70 p-6 rounded-2xl border border-indigo-100">
+                  <div class="flex items-center gap-2 mb-2">
+                    <span class="material-symbols-outlined text-indigo-600">contact_mail</span>
+                    <h3 class="text-base font-extrabold text-indigo-950">Đăng ký xem nhà & Nhận tư vấn trực tiếp</h3>
+                  </div>
+                  <p class="text-xs text-gray-600 mb-4">Để lại thông tin để chủ bất động sản hoặc môi giới liên hệ lại và đặt lịch hẹn xem thực tế.</p>
+                  
+                  <div class="space-y-3">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      <div>
+                        <label class="block text-[11px] font-bold text-gray-700 uppercase mb-1">Họ và tên <span class="text-red-500">*</span></label>
+                        <input type="text" id="lead_name" placeholder="VD: Nguyễn Văn A" 
+                          class="w-full px-3.5 py-2.5 bg-white border border-gray-300 rounded-xl outline-none text-xs font-semibold focus:ring-2 focus:ring-indigo-500"/>
+                      </div>
+                      <div>
+                        <label class="block text-[11px] font-bold text-gray-700 uppercase mb-1">Số điện thoại <span class="text-red-500">*</span></label>
+                        <input type="tel" id="lead_phone" placeholder="VD: 0912 345 678" 
+                          class="w-full px-3.5 py-2.5 bg-white border border-gray-300 rounded-xl outline-none text-xs font-semibold focus:ring-2 focus:ring-indigo-500"/>
+                      </div>
+                    </div>
+                    <div>
+                      <label class="block text-[11px] font-bold text-gray-700 uppercase mb-1">Email (không bắt buộc)</label>
+                      <input type="email" id="lead_email" placeholder="VD: email@example.com" 
+                        class="w-full px-3.5 py-2.5 bg-white border border-gray-300 rounded-xl outline-none text-xs focus:ring-2 focus:ring-indigo-500"/>
+                    </div>
+                    <div>
+                      <label class="block text-[11px] font-bold text-gray-700 uppercase mb-1">Lời nhắn / Thời gian hẹn xem nhà</label>
+                      <textarea id="lead_notes" rows="2" placeholder="VD: Tôi muốn xem nhà vào sáng thứ 7 tuần này lúc 9h..." 
+                        class="w-full px-3.5 py-2 bg-white border border-gray-300 rounded-xl outline-none text-xs focus:ring-2 focus:ring-indigo-500"></textarea>
+                    </div>
+                    <button onclick="submitLead(${l.id})" id="btnSubmitLead"
+                      class="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold text-xs shadow-md transition-all flex items-center justify-center gap-1.5">
+                      <span class="material-symbols-outlined text-base">send</span> Gửi thông tin tư vấn
+                    </button>
+                    <p id="leadMsg" class="text-xs font-semibold mt-1 text-center"></p>
+                  </div>
+                </div>
+
+                <!-- Chân trang chi tiết: Quay lại -->
+                <div class="mt-8 text-center">
+                  <button onclick="history.back()" class="px-8 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl font-semibold text-xs transition-colors">
+                    ← Quay lại danh sách
+                  </button>
+                </div>
+              </div>
+            </div>
+          `;
+          checkIfFavorited(l.id);
+        })
+        .catch(() => {
+          document.getElementById('content').innerHTML = '<p class="text-center text-red-500 py-12">Không tìm thấy thông tin tin đăng này</p>';
+        });
+    }
+
+    async function deleteListing(listingId) {
+      if (!confirm('Bạn có chắc chắn muốn xóa tin đăng này không?')) return;
+      try {
+        const res = await fetch('/api/listings/' + listingId, {
+          method: 'DELETE',
+          headers: { 'Authorization': 'Bearer ' + token }
+        });
+        if (res.ok) {
+          alert('Đã xóa tin đăng thành công!');
+          window.location.href = 'home_property_search.html';
+        } else {
+          alert('Không thể xóa tin đăng');
+        }
+      } catch (err) {
+        alert('Lỗi khi xóa tin');
+      }
+    }
+
+    // 1. Quản lý Yêu thích (Favorites) - Use case Lưu BĐS yêu thích
+    function getFavorites() {
+      try {
+        return JSON.parse(localStorage.getItem('fav_listings') || '[]');
+      } catch { return []; }
+    }
+
+    function checkIfFavorited(listingId) {
+      const favs = getFavorites();
+      const isFav = favs.includes(listingId);
+      const icon = document.getElementById('favIcon');
+      const text = document.getElementById('favText');
+      const btn = document.getElementById('btnFavorite');
+      if (isFav) {
+        icon.textContent = 'favorite';
+        icon.classList.add('text-red-500');
+        text.textContent = 'Đã lưu yêu thích';
+        btn.classList.add('bg-red-50', 'text-red-600', 'border-red-200');
+      } else {
+        icon.textContent = 'favorite_border';
+        icon.classList.remove('text-red-500');
+        text.textContent = 'Lưu tin yêu thích';
+        btn.classList.remove('bg-red-50', 'text-red-600', 'border-red-200');
+      }
+    }
+
+    function toggleFavorite(listingId) {
+      let favs = getFavorites();
+      if (favs.includes(listingId)) {
+        favs = favs.filter(x => x !== listingId);
+        alert('Đã bỏ lưu tin này khỏi danh sách yêu thích');
+      } else {
+        favs.push(listingId);
+        alert('❤️ Đã lưu tin bất động sản vào danh sách yêu thích!');
+      }
+      localStorage.setItem('fav_listings', JSON.stringify(favs));
+      checkIfFavorited(listingId);
+    }
+
+    // 2. Gửi yêu cầu tư vấn / Đặt lịch xem nhà (Lead CRM)
+    async function submitLead(listingId) {
+      const name = document.getElementById('lead_name').value.trim();
+      const phone = document.getElementById('lead_phone').value.trim();
+      const email = document.getElementById('lead_email').value.trim();
+      const notes = document.getElementById('lead_notes').value.trim();
+      const msgEl = document.getElementById('leadMsg');
+      const btn = document.getElementById('btnSubmitLead');
+
+      if (!name || !phone) {
+        alert('Vui lòng nhập Họ tên và Số điện thoại để gửi yêu cầu!');
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = 'Đang gửi...';
+
+      try {
+        const res = await fetch('/api/leads', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            listingId: listingId,
+            customerName: name,
+            customerPhone: phone,
+            customerEmail: email,
+            notes: notes
+          })
+        });
+
+        const data = await res.json();
+        if (res.ok) {
+          msgEl.textContent = '🎉 ' + data.message;
+          msgEl.className = 'text-xs font-bold text-emerald-600 mt-2 text-center';
+          document.getElementById('lead_name').value = '';
+          document.getElementById('lead_phone').value = '';
+          document.getElementById('lead_email').value = '';
+          document.getElementById('lead_notes').value = '';
+          alert('🎉 Yêu cầu của bạn đã được chuyển tới chủ tin đăng!');
+        } else {
+          msgEl.textContent = '⚠️ ' + (data.message || 'Lỗi khi gửi yêu cầu');
+          msgEl.className = 'text-xs font-bold text-red-600 mt-2 text-center';
+        }
+      } catch (err) {
+        msgEl.textContent = 'Lỗi kết nối máy chủ';
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<span class="material-symbols-outlined text-base">send</span> Gửi thông tin tư vấn';
+      }
+    }
+
+    // 3. Báo cáo vi phạm (Report Listing)
+    let currentReportListingId = null;
+
+    function openReportModal(listingId) {
+      currentReportListingId = listingId;
+      document.getElementById('reportModal').classList.remove('hidden');
+    }
+
+    function closeReportModal() {
+      document.getElementById('reportModal').classList.add('hidden');
+    }
+
+    async function sendReport() {
+      const reason = document.getElementById('reportReason').value;
+      const details = document.getElementById('reportDetails').value.trim();
+      const reporterName = document.getElementById('reporterName').value.trim();
+      const reporterPhone = document.getElementById('reporterPhone').value.trim();
+
+      if (!reason) {
+        alert('Vui lòng chọn lý do vi phạm');
+        return;
+      }
+
+      try {
+        const res = await fetch('/api/reports', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            listingId: currentReportListingId,
+            reason: reason,
+            details: details,
+            reporterName: reporterName,
+            reporterPhone: reporterPhone
+          })
+        });
+
+        const data = await res.json();
+        alert(data.message || 'Đã gửi báo cáo vi phạm!');
+        closeReportModal();
+      } catch (err) {
+        alert('Lỗi khi gửi báo cáo');
+      }
+    }
+  </script>
+
+  <!-- MODAL BÁO CÁO VI PHẠM (Use case: Báo cáo tin đăng vi phạm) -->
+  <div id="reportModal" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl">
+      <div class="flex items-center justify-between pb-3 border-b mb-4">
+        <div class="flex items-center gap-2">
+          <span class="material-symbols-outlined text-red-600">report</span>
+          <h3 class="font-bold text-gray-900 text-base">Báo cáo tin đăng vi phạm</h3>
+        </div>
+        <button onclick="closeReportModal()" class="text-gray-400 hover:text-gray-600 text-xl font-bold">✕</button>
+      </div>
+
+      <div class="space-y-3">
+        <div>
+          <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Lý do vi phạm <span class="text-red-500">*</span></label>
+          <select id="reportReason" class="w-full px-3 py-2 bg-gray-50 border rounded-xl text-xs font-semibold outline-none">
+            <option value="Tin ảo / Đã bán / Không có thật">Tin ảo / Đã bán / Không có thật</option>
+            <option value="Sai giá niêm yết">Sai giá niêm yết (kê giá hoặc giá ảo)</option>
+            <option value="Sai địa chỉ / Vị trí">Sai địa chỉ / Vị trí thực tế</option>
+            <option value="Lừa đảo / Mạo danh chủ nhà">Lừa đảo / Mạo danh chủ nhà</option>
+            <option value="Hình ảnh trùng lặp / phản cảm">Hình ảnh trùng lặp / sai thực tế</option>
+            <option value="Không liên lạc được số điện thoại">Không liên lạc được số điện thoại</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Mô tả thêm (nếu có)</label>
+          <textarea id="reportDetails" rows="2" placeholder="Ghi chú chi tiết hơn về vi phạm..." class="w-full px-3 py-2 bg-gray-50 border rounded-xl text-xs outline-none"></textarea>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Họ tên của bạn</label>
+            <input type="text" id="reporterName" placeholder="Tùy chọn" class="w-full px-3 py-2 bg-gray-50 border rounded-xl text-xs outline-none"/>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Số điện thoại</label>
+            <input type="tel" id="reporterPhone" placeholder="Tùy chọn" class="w-full px-3 py-2 bg-gray-50 border rounded-xl text-xs outline-none"/>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-end gap-2 mt-5 pt-3 border-t">
+        <button onclick="closeReportModal()" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-semibold rounded-xl">
+          Hủy bỏ
+        </button>
+        <button onclick="sendReport()" class="px-5 py-2 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded-xl shadow">
+          Gửi báo cáo
+        </button>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
