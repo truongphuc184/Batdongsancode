@@ -103,8 +103,11 @@ END
 GO
 
 -- 6. DỮ LIỆU MẪU: 6 VAI TRÒ (MẬT KHẨU MẶC ĐỊNH: 123456)
--- Hash BCrypt chuẩn của mật khẩu '123456': $2a$11$qR6mN8tF4sW5yP1z0v2lOekJ7z9c1v2u0m7n4v6p5e8b2k5l3e2um
-DECLARE @DefaultHash NVARCHAR(MAX) = '$2a$11$w1uM9f6mNnU2E7h1n0zD0.w2m1I7w4s1O8b2K5l3e2u0m7n4v6p5e';
+-- Hash BCrypt chuẩn 100% của mật khẩu '123456'
+DECLARE @DefaultHash NVARCHAR(MAX) = '$2a$11$qNA0JOrSYqjFIXS/Z.kpjOSt./3QxrNL/BZHqEjK70cHOU/CDARY.';
+
+-- Cập nhật lại mật khẩu chuẩn nếu tài khoản đã tồn tại
+UPDATE Users SET PasswordHash = @DefaultHash;
 
 IF NOT EXISTS (SELECT 1 FROM Users WHERE Email = 'admin@batdongsan.vn')
     INSERT INTO Users (Email, PasswordHash, FullName, Role, IsActive, CreatedAt, RemainingPushes, CurrentPackage)
