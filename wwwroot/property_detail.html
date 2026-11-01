@@ -316,40 +316,43 @@
     // 1. Quản lý Yêu thích (Favorites) - Use case Lưu BĐS yêu thích
     function getFavorites() {
       try {
-        return JSON.parse(localStorage.getItem('fav_listings') || '[]');
+        return JSON.parse(localStorage.getItem('fav_listings') || '[]').map(Number);
       } catch { return []; }
     }
 
     function checkIfFavorited(listingId) {
+      const numId = Number(listingId);
       const favs = getFavorites();
-      const isFav = favs.includes(listingId);
+      const isFav = favs.includes(numId);
       const icon = document.getElementById('favIcon');
       const text = document.getElementById('favText');
       const btn = document.getElementById('btnFavorite');
+      if (!icon || !text || !btn) return;
       if (isFav) {
         icon.textContent = 'favorite';
         icon.classList.add('text-red-500');
-        text.textContent = 'Đã lưu yêu thích';
-        btn.classList.add('bg-red-50', 'text-red-600', 'border-red-200');
+        icon.classList.remove('text-gray-400');
+        text.textContent = 'Đã lưu yêu thích ❤️';
+        btn.className = 'px-4 py-2 bg-red-50 text-red-600 rounded-xl font-bold text-xs transition-all flex items-center gap-1.5 border border-red-200 shadow-sm';
       } else {
         icon.textContent = 'favorite_border';
         icon.classList.remove('text-red-500');
+        icon.classList.add('text-gray-400');
         text.textContent = 'Lưu tin yêu thích';
-        btn.classList.remove('bg-red-50', 'text-red-600', 'border-red-200');
+        btn.className = 'px-4 py-2 bg-gray-50 hover:bg-red-50 text-gray-700 hover:text-red-600 rounded-xl font-bold text-xs transition-all flex items-center gap-1.5 border border-gray-200';
       }
     }
 
     function toggleFavorite(listingId) {
+      const numId = Number(listingId);
       let favs = getFavorites();
-      if (favs.includes(listingId)) {
-        favs = favs.filter(x => x !== listingId);
-        alert('Đã bỏ lưu tin này khỏi danh sách yêu thích');
+      if (favs.includes(numId)) {
+        favs = favs.filter(x => x !== numId);
       } else {
-        favs.push(listingId);
-        alert('❤️ Đã lưu tin bất động sản vào danh sách yêu thích!');
+        favs.push(numId);
       }
       localStorage.setItem('fav_listings', JSON.stringify(favs));
-      checkIfFavorited(listingId);
+      checkIfFavorited(numId);
     }
 
     // 2. Gửi yêu cầu tư vấn / Đặt lịch xem nhà (Lead CRM)

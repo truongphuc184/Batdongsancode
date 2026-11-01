@@ -50,5 +50,45 @@ public class AuthController : ControllerBase
             return NotFound();
         return Ok(new { user.Id, user.Email, user.FullName, Role = user.Role.ToString() });
     }
+
+    // Chỉnh sửa thông tin cá nhân (Họ tên, Đổi mật khẩu)
+    [HttpPut("profile")]
+    [Authorize]
+    public async Task<IActionResult> UpdateProfile([FromBody] UpdateProfileRequest request, [FromServices] Batdongsancode.Data.AppDbContext context)
+    {
+        var subClaim = User.FindFirst("sub")?.Value 
+            ?? User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+
+        if (string.IsNullOrEmpty(subClaim) || !int.TryParse(subClaim, out var userId))
+            return Unauthorized(new { message = "Phiên đăng nhập không hợp lệ" });
+
+        var user = await context.Users.FindAsync(userId);
+        if (user == null)
+            return NotFound(new { message = "Không tìm thấy tài khoản người dùng" });
+
+        if (!string.IsNullOrWhiteSpace(request.FullName))
+            user.FullName = request.FullName.Trim();
+
+        if (!string.IsNullOrWhiteSpace(request.NewPassword))
+        {
+            if (request.NewPassword.Trim().Length < 6)
+                return BadRequest(new { message = "Mật khẩu mới phải có tối thiểu 6 ký tự" });
+
+            user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.NewPassword.Trim());
+        }
+
+        await context.SaveChangesAsync();
+        return Ok(new 
+        { 
+            message = "Cập nhật thông tin cá nhân thành công!", 
+            user = new { user.Id, user.Email, user.FullName, Role = user.Role.ToString() } 
+        });
+    }
+}
+
+public class UpdateProfileRequest
+{
+    public string? FullName { get; set; }
+    public string? NewPassword { get; set; }
 }
 

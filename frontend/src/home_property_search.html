@@ -623,7 +623,7 @@
       const container = document.getElementById('listings');
       const emptyState = document.getElementById('empty-state');
       const countEl = document.getElementById('listings-count');
-      const savedIds = JSON.parse(localStorage.getItem('fav_listings') || '[]');
+      const savedIds = JSON.parse(localStorage.getItem('fav_listings') || '[]').map(Number);
 
       if (!data || data.length === 0) {
         container.innerHTML = '';
@@ -636,7 +636,7 @@
       countEl.textContent = `${data.length} tin đăng`;
 
       container.innerHTML = data.map(l => {
-        const isFav = savedIds.includes(l.id);
+        const isFav = savedIds.includes(Number(l.id));
         const isCompared = compareList.includes(l.id);
 
         const imgList = (l.imageUrls && l.imageUrls.trim().length > 0) ? l.imageUrls.split(',').filter(x => x.trim().length > 0) : [];
@@ -661,9 +661,9 @@
               </span>
               ` : ''}
               <!-- Nút Lưu yêu thích nhanh -->
-              <button onclick="event.stopPropagation(); toggleCardFavorite(${l.id})" 
-                class="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/90 hover:bg-white flex items-center justify-center shadow transition-transform active:scale-90" title="Lưu tin yêu thích">
-                <span class="material-symbols-outlined text-base ${isFav ? 'text-red-500 font-bold' : 'text-gray-500'}">
+              <button type="button" onclick="event.stopPropagation(); toggleCardFavorite(${l.id})" 
+                class="absolute top-3 right-3 w-9 h-9 rounded-full bg-white/95 hover:bg-white flex items-center justify-center shadow-md transition-all active:scale-90 z-20" title="${isFav ? 'Bỏ lưu tin' : 'Lưu tin yêu thích'}">
+                <span class="material-symbols-outlined text-lg ${isFav ? 'text-red-500 font-bold' : 'text-gray-400 hover:text-red-400'}">
                   ${isFav ? 'favorite' : 'favorite_border'}
                 </span>
               </button>
@@ -721,11 +721,12 @@
 
     // Toggle Favorite từ danh sách thẻ
     function toggleCardFavorite(id) {
-      let favs = JSON.parse(localStorage.getItem('fav_listings') || '[]');
-      if (favs.includes(id)) {
-        favs = favs.filter(x => x !== id);
+      const numId = Number(id);
+      let favs = JSON.parse(localStorage.getItem('fav_listings') || '[]').map(Number);
+      if (favs.includes(numId)) {
+        favs = favs.filter(x => x !== numId);
       } else {
-        favs.push(id);
+        favs.push(numId);
       }
       localStorage.setItem('fav_listings', JSON.stringify(favs));
       renderListings(allCurrentListings);
@@ -733,32 +734,35 @@
 
     // Tab xem các tin đã lưu yêu thích (Use Case: Lưu BĐS yêu thích)
     async function loadSavedListingsTab() {
-      const favs = JSON.parse(localStorage.getItem('fav_listings') || '[]');
+      const favs = JSON.parse(localStorage.getItem('fav_listings') || '[]').map(Number);
       const titleEl = document.getElementById('section-title');
       const countEl = document.getElementById('listings-count');
       const container = document.getElementById('listings');
 
-      titleEl.textContent = 'Danh sách BĐS đã lưu yêu thích';
+      titleEl.innerHTML = '❤️ Danh sách BĐS đã lưu yêu thích';
+
+      // Cập nhật trạng thái active cho chip nút
+      document.querySelectorAll('.filter-type-chip').forEach(c => c.className = 'filter-type-chip px-3.5 py-1.5 rounded-full text-xs font-semibold bg-gray-100 text-gray-600 hover:bg-gray-200');
 
       if (favs.length === 0) {
         container.innerHTML = `
-          <div class="text-center py-12 bg-white rounded-2xl border p-6">
-            <span class="text-4xl block mb-2">💔</span>
-            <p class="font-bold text-gray-700">Bạn chưa lưu bất động sản nào.</p>
-            <p class="text-xs text-gray-400 mt-1">Bấm vào biểu tượng trái tim ❤️ trên các tin để lưu và xem lại tại đây.</p>
-            <button onclick="resetFilters()" class="mt-4 px-4 py-2 bg-indigo-600 text-white rounded-xl text-xs font-bold">
-              Khám phá tin đăng ngay
+          <div class="text-center py-12 bg-white rounded-2xl border p-6 shadow-sm">
+            <span class="text-5xl block mb-2">💔</span>
+            <h3 class="font-bold text-gray-800 text-base">Bạn chưa lưu bất động sản nào</h3>
+            <p class="text-xs text-gray-400 mt-1 max-w-sm mx-auto">Bấm vào biểu tượng trái tim ❤️ ở góc trên mỗi tin đăng để lưu lại và đối chiếu bất kỳ lúc nào.</p>
+            <button onclick="resetFilters()" class="mt-4 px-5 py-2 bg-indigo-600 text-white rounded-xl text-xs font-bold shadow-sm hover:bg-indigo-700">
+              Khám phá danh sách BĐS ngay
             </button>
           </div>
         `;
-        countEl.textContent = '0 tin';
+        countEl.textContent = '0 tin đã lưu';
         return;
       }
 
       try {
         const res = await fetch('/api/listings');
         const data = await res.json();
-        const savedData = data.filter(l => favs.includes(l.id));
+        const savedData = data.filter(l => favs.includes(Number(l.id)));
         renderListings(savedData);
         countEl.textContent = `${savedData.length} tin đã lưu`;
       } catch {
@@ -1307,7 +1311,13 @@
       if (e.key === 'Enter') searchListings();
     });
 
-    loadListings();
+    // Tự động mở tab Tin đã lưu nếu chuyển từ Hồ sơ sang (?tab=saved)
+    const searchParams = new URLSearchParams(window.location.search);
+    if (searchParams.get('tab') === 'saved') {
+      setTimeout(() => loadSavedListingsTab(), 200);
+    } else {
+      loadListings();
+    }
   </script>
 
   <!-- MODAL SO SÁNH BẤT ĐỘNG SẢN (Use Case: So sánh BĐS) -->
