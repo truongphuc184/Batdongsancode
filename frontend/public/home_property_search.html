@@ -1,292 +1,1355 @@
 <!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Tìm kiếm BĐS - Bất Động Sản</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@400,0" rel="stylesheet"/>
+  <style>body{font-family:'Inter',sans-serif;}</style>
+</head>
+<body class="bg-gray-100 min-h-screen pb-24 text-gray-800">
+  <!-- Header -->
+  <header class="bg-white shadow-sm sticky top-0 z-50">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-2.5 sm:gap-3">
+        <div class="w-9 h-9 sm:w-10 sm:h-10 bg-indigo-600 rounded-xl flex items-center justify-center shadow-md shrink-0">
+          <svg class="w-5 h-5 sm:w-6 sm:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+          </svg>
+        </div>
+        <div>
+          <h1 class="text-lg sm:text-xl font-bold text-gray-900 leading-tight">Bất Động Sản</h1>
+          <p class="text-[10px] sm:text-xs text-gray-500">Kênh thông tin nhà đất trực tuyến</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-1.5 sm:gap-2.5">
+        <a href="packages.html" class="px-2.5 sm:px-3 py-1.5 bg-gradient-to-r from-red-600 to-pink-600 hover:from-red-700 hover:to-pink-700 text-white rounded-xl text-xs font-bold transition-all flex items-center gap-1 shadow-sm shrink-0">
+          <span>💎</span> <span class="hidden sm:inline">Gói Hội viên</span>
+        </a>
+        <a href="admin.html" id="adminLink" class="hidden px-2.5 sm:px-3.5 py-1.5 bg-amber-500 hover:bg-amber-600 text-gray-900 rounded-xl text-xs font-bold transition-colors flex items-center gap-1 shadow-sm shrink-0">
+          <span>🛡️</span> <span class="hidden sm:inline">Kiểm duyệt tin</span>
+        </a>
+        <a href="user_profile.html" class="flex items-center gap-1.5 sm:gap-2 bg-gray-50 hover:bg-gray-100 py-1 sm:py-1.5 px-2.5 sm:px-3 rounded-full transition-colors border shrink-0">
+          <div class="w-7 h-7 bg-indigo-600 rounded-full flex items-center justify-center text-white text-xs font-bold shrink-0" id="avatar">U</div>
+          <span class="text-xs font-semibold text-gray-700 hidden sm:inline" id="userDisplayName">Tài khoản</span>
+          <span class="text-[10px] bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded-full font-bold uppercase hidden md:inline" id="userRoleBadge"></span>
+        </a>
+      </div>
+    </div>
+  </header>
 
-<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/><meta content="mobile_tab" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Manrope:wght@600;700&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{width:100vw;margin:0;padding:0;}body{overscroll-behavior:none;}.pb-safe{padding-bottom:env(safe-area-inset-bottom,0px);}.pt-safe{padding-top:env(safe-area-inset-top,0px);}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { colors: { "primary-fixed": "#dae2fd", "on-primary-container": "#7c839b", "surface-container-highest": "#e0e3e5", "surface-tint": "#565e74", "secondary-fixed-dim": "#ffb77d", "inverse-on-surface": "#eff1f3", "surface-container": "#eceef0", "on-secondary-fixed": "#2f1500", "tertiary-fixed-dim": "#b9c7e0", "tertiary": "#000000", "primary-container": "#131b2e", "on-error-container": "#93000a", "on-surface-variant": "#45464d", "secondary-fixed": "#ffdcc3", "secondary-container": "#fe932c", "outline-variant": "#c6c6cd", "surface-container-low": "#f2f4f6", "on-tertiary": "#ffffff", "error": "#ba1a1a", "on-primary": "#ffffff", "surface-bright": "#f7f9fb", "outline": "#76777d", "tertiary-fixed": "#d5e3fd", "on-tertiary-fixed-variant": "#3a485c", "on-surface": "#191c1e", "on-tertiary-container": "#76859b", "surface": "#f7f9fb", "on-secondary-container": "#663500", "on-error": "#ffffff", "error-container": "#ffdad6", "secondary": "#904d00", "inverse-surface": "#2d3133", "on-background": "#191c1e", "surface-container-high": "#e6e8ea", "on-secondary-fixed-variant": "#6e3900", "primary-fixed-dim": "#bec6e0", "surface-variant": "#e0e3e5", "tertiary-container": "#0d1c2f", "primary": "#000000", "on-primary-fixed-variant": "#3f465c", "surface-dim": "#d8dadc", "on-tertiary-fixed": "#0d1c2f", "inverse-primary": "#bec6e0", "on-primary-fixed": "#131b2e", "on-secondary": "#ffffff", "background": "#f7f9fb", "surface-container-lowest": "#ffffff" }, borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, spacing: { "space-xs": "0.25rem", "space-md": "1rem", "gutter": "1rem", "space-sm": "0.5rem", "space-xl": "2rem", "space-lg": "1.5rem", "margin": "1.25rem", "gutter-sm": "0.75rem", "margin-lg": "1.75rem" }, fontFamily: { "label-sm": ["Inter"], "body-lg": ["Inter"], "label-md": ["Inter"], "headline-md": ["Manrope"], "headline-lg": ["Manrope"], "display-lg": ["Manrope"], "headline-lg-mobile": ["Manrope"], "body-sm": ["Inter"], "body-md": ["Inter"], "headline-sm": ["Manrope"] }, fontSize: { "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.04em", "fontWeight": "600" }], "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }], "label-md": ["13px", { "lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "500" }], "headline-md": ["22px", { "lineHeight": "30px", "letterSpacing": "-0.015em", "fontWeight": "600" }], "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.025em", "fontWeight": "600" }], "display-lg": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.03em", "fontWeight": "700" }], "headline-lg-mobile": ["26px", { "lineHeight": "34px", "letterSpacing": "-0.02em", "fontWeight": "600" }], "body-sm": ["12px", { "lineHeight": "18px", "fontWeight": "400" }], "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }], "headline-sm": ["18px", { "lineHeight": "26px", "letterSpacing": "-0.01em", "fontWeight": "600" }] } } } };</script><style>
-    body {
-      min-height: max(884px, 100dvh);
+  <!-- Thanh tìm kiếm & Lọc nâng cao (Theo Sơ đồ Use Case: Tìm kiếm & Tra cứu) -->
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mt-4 sm:mt-6">
+    <div class="bg-white rounded-2xl shadow-sm p-3.5 sm:p-5 border border-gray-200">
+      <!-- Hàng tìm kiếm chính -->
+      <div class="flex gap-1.5 sm:gap-2">
+        <div class="relative flex-1">
+          <span class="material-symbols-outlined absolute left-3 sm:left-3.5 top-3 sm:top-3.5 text-gray-400 text-lg sm:text-xl">search</span>
+          <input type="text" id="searchInput" 
+            placeholder="Tìm theo tiêu đề, địa chỉ, quận huyện, dự án... (Enter để tìm)"
+            onkeydown="if(event.key === 'Enter') executeSearch()"
+            oninput="handleSearchInputDebounced()"
+            class="w-full pl-9 sm:pl-10 pr-8 sm:pr-9 py-2.5 sm:py-3 bg-gray-50 border border-gray-300 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white text-xs sm:text-sm transition-all font-medium"/>
+          <button id="btnClearSearch" onclick="clearSearchInput()" class="absolute right-2.5 top-2.5 text-gray-400 hover:text-gray-600 hidden">
+            <span class="material-symbols-outlined text-lg">cancel</span>
+          </button>
+        </div>
+        <button onclick="toggleAdvancedFilter()" id="btnToggleFilter" 
+          class="px-2.5 sm:px-4 py-2.5 sm:py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold text-xs rounded-xl transition-colors flex items-center gap-1 sm:gap-1.5 shrink-0 border border-gray-200">
+          <span class="material-symbols-outlined text-base">tune</span>
+          <span class="hidden sm:inline">Bộ lọc</span>
+          <span id="filterCountBadge" class="hidden px-1.5 py-0.2 bg-indigo-600 text-white rounded-full text-[10px] font-bold"></span>
+        </button>
+        <button onclick="executeSearch()" class="px-3.5 sm:px-6 py-2.5 sm:py-3 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 font-semibold text-xs sm:text-sm transition-colors flex items-center gap-1 sm:gap-1.5 shrink-0 shadow-sm">
+          <span class="hidden sm:inline">Tìm kiếm</span>
+          <span class="sm:hidden font-bold">Tìm</span>
+        </button>
+      </div>
+
+      <!-- Thanh chọn nhanh nhu cầu & Sắp xếp -->
+      <div class="flex flex-wrap items-center justify-between gap-2 mt-3 pt-3 border-t border-gray-100">
+        <div class="flex items-center gap-2 flex-wrap">
+          <button onclick="quickFilterType(null)" class="filter-type-chip px-3.5 py-1.5 rounded-full text-xs font-bold bg-indigo-600 text-white shadow-sm">Tất cả</button>
+          <button onclick="quickFilterType('Sale')" class="filter-type-chip px-3.5 py-1.5 rounded-full text-xs font-semibold bg-gray-100 text-gray-600 hover:bg-gray-200">Mua bán</button>
+          <button onclick="quickFilterType('Rent')" class="filter-type-chip px-3.5 py-1.5 rounded-full text-xs font-semibold bg-gray-100 text-gray-600 hover:bg-gray-200">Cho thuê</button>
+          <button onclick="loadSavedListingsTab()" class="px-3.5 py-1.5 rounded-full text-xs font-semibold bg-red-50 text-red-700 hover:bg-red-100 flex items-center gap-1 border border-red-200">
+            <span class="material-symbols-outlined text-sm text-red-500">favorite</span> Tin đã lưu
+          </button>
+          <button id="btnMyListingsTab" onclick="loadMyListingsTab()" class="px-3.5 py-1.5 rounded-full text-xs font-semibold bg-amber-100 text-amber-800 hover:bg-amber-200 flex items-center gap-1 border border-amber-300">
+            <span class="material-symbols-outlined text-sm">inventory_2</span> Tin của tôi
+          </button>
+          <button onclick="openCompareModal()" id="btnCompareBadge" class="hidden px-3.5 py-1.5 rounded-full text-xs font-bold bg-purple-600 hover:bg-purple-700 text-white flex items-center gap-1 shadow-sm animate-pulse">
+            <span class="material-symbols-outlined text-sm">balance</span> So sánh (<span id="compareCount">0</span>)
+          </button>
+        </div>
+
+        <div class="flex items-center gap-1.5 text-xs">
+          <span class="text-gray-400 font-medium">Sắp xếp:</span>
+          <select id="sortBy" onchange="executeSearch()" class="bg-gray-50 border border-gray-200 rounded-lg py-1 px-2.5 text-xs font-semibold outline-none cursor-pointer">
+            <option value="priority">Tin ưu tiên (VIP/Đẩy)</option>
+            <option value="newest">Mới nhất</option>
+            <option value="price_asc">Giá: Thấp đến Cao</option>
+            <option value="price_desc">Giá: Cao đến Thấp</option>
+            <option value="area_desc">Diện tích: Lớn nhất</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Tag hiển thị các tiêu chí đang lọc -->
+      <div id="activeFiltersContainer" class="flex flex-wrap items-center gap-2 mt-3 pt-2 border-t border-gray-100 hidden text-xs">
+        <span class="text-gray-400 font-medium">Đang lọc theo:</span>
+        <div id="activeFilterTags" class="flex flex-wrap items-center gap-1.5"></div>
+        <button onclick="resetFilters()" class="text-indigo-600 hover:underline font-bold text-[11px] ml-1">Xóa tất cả</button>
+      </div>
+
+      <!-- BẢNG BỘ LỌC NÂNG CAO (Sơ đồ Use Case: Lọc BĐS nâng cao) -->
+      <div id="advancedFilterBox" class="mt-4 pt-4 border-t border-gray-100 hidden">
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
+          <!-- 1. Tỉnh thành -->
+          <div>
+            <label class="block text-[11px] font-bold text-gray-700 uppercase mb-1">📍 Khu vực / Tỉnh thành</label>
+            <select id="f_city" onchange="executeSearch()" class="w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-xl text-xs font-medium outline-none cursor-pointer">
+              <option value="">Toàn quốc (Tất cả)</option>
+              <option value="Hà Nội">Hà Nội</option>
+              <option value="Hồ Chí Minh">TP. Hồ Chí Minh</option>
+              <option value="Đà Nẵng">Đà Nẵng</option>
+              <option value="Bình Dương">Bình Dương</option>
+              <option value="Đồng Nai">Đồng Nai</option>
+              <option value="Hải Phòng">Hải Phòng</option>
+              <option value="Cần Thơ">Cần Thơ</option>
+            </select>
+          </div>
+
+          <!-- 2. Khoảng giá -->
+          <div>
+            <label class="block text-[11px] font-bold text-gray-700 uppercase mb-1">💰 Mức giá</label>
+            <select id="f_priceRange" onchange="handlePriceRangeSelect(this.value)" class="w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-xl text-xs font-medium outline-none cursor-pointer">
+              <option value="">Tất cả mức giá</option>
+              <option value="0-1000000000">Dưới 1 tỷ</option>
+              <option value="1000000000-2000000000">1 - 2 tỷ</option>
+              <option value="2000000000-3000000000">2 - 3 tỷ</option>
+              <option value="3000000000-5000000000">3 - 5 tỷ</option>
+              <option value="5000000000-10000000000">5 - 10 tỷ</option>
+              <option value="10000000000-20000000000">10 - 20 tỷ</option>
+              <option value="20000000000-999999999999">Trên 20 tỷ</option>
+            </select>
+          </div>
+
+          <!-- 3. Khoảng diện tích -->
+          <div>
+            <label class="block text-[11px] font-bold text-gray-700 uppercase mb-1">📐 Diện tích</label>
+            <select id="f_areaRange" onchange="handleAreaRangeSelect(this.value)" class="w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-xl text-xs font-medium outline-none cursor-pointer">
+              <option value="">Tất cả diện tích</option>
+              <option value="0-30">Dưới 30 m²</option>
+              <option value="30-50">30 - 50 m²</option>
+              <option value="50-80">50 - 80 m²</option>
+              <option value="80-120">80 - 120 m²</option>
+              <option value="120-200">120 - 200 m²</option>
+              <option value="200-99999">Trên 200 m²</option>
+            </select>
+          </div>
+
+          <!-- 4. Hướng nhà phong thủy -->
+          <div>
+            <label class="block text-[11px] font-bold text-gray-700 uppercase mb-1">🧭 Hướng nhà</label>
+            <select id="f_direction" onchange="executeSearch()" class="w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-xl text-xs font-medium outline-none cursor-pointer">
+              <option value="">Tất cả các hướng</option>
+              <option value="Đông">Hướng Đông</option>
+              <option value="Tây">Hướng Tây</option>
+              <option value="Nam">Hướng Nam</option>
+              <option value="Bắc">Hướng Bắc</option>
+              <option value="Đông Nam">Hướng Đông Nam</option>
+              <option value="Đông Bắc">Hướng Đông Bắc</option>
+              <option value="Tây Nam">Hướng Tây Nam</option>
+              <option value="Tây Bắc">Hướng Tây Bắc</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="flex items-center justify-between gap-2 mt-4 pt-3 border-t border-gray-100 flex-wrap">
+          <div class="flex items-center gap-2">
+            <span class="text-xs text-gray-500 font-medium">Số phòng ngủ:</span>
+            <div class="inline-flex rounded-lg border border-gray-200 bg-gray-50 p-0.5 text-xs" id="bedRadioGroup">
+              <button onclick="setFilterBeds(0)" class="bed-chip px-2.5 py-1 rounded-md font-bold bg-white text-indigo-600 shadow-sm">Bất kỳ</button>
+              <button onclick="setFilterBeds(1)" class="bed-chip px-2.5 py-1 rounded-md text-gray-600 hover:text-gray-900">1+</button>
+              <button onclick="setFilterBeds(2)" class="bed-chip px-2.5 py-1 rounded-md text-gray-600 hover:text-gray-900">2+</button>
+              <button onclick="setFilterBeds(3)" class="bed-chip px-2.5 py-1 rounded-md text-gray-600 hover:text-gray-900">3+</button>
+              <button onclick="setFilterBeds(4)" class="bed-chip px-2.5 py-1 rounded-md text-gray-600 hover:text-gray-900">4+</button>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <button onclick="resetFilters()" class="px-3 py-1.5 text-xs text-gray-500 hover:text-gray-800 font-semibold transition-colors">
+              Xóa bộ lọc
+            </button>
+            <button onclick="executeSearch()" class="px-4 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold transition-colors shadow-sm flex items-center gap-1">
+              <span class="material-symbols-outlined text-sm">filter_alt</span> Áp dụng
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Banner Giới thiệu Gói Hội viên (Theo mẫu 3 gói mới) -->
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mt-4">
+    <div class="bg-gradient-to-r from-red-600 via-purple-600 to-indigo-700 rounded-2xl p-4 sm:p-5 text-white flex flex-col sm:flex-row items-center justify-between gap-4 shadow-md">
+      <div class="flex items-center gap-3.5">
+        <div class="w-12 h-12 rounded-xl bg-white/20 backdrop-blur-md flex items-center justify-center text-2xl shrink-0">
+          👑
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="font-extrabold text-sm sm:text-base">Gói Hội Viên Bất Động Sản</span>
+            <span class="bg-amber-400 text-gray-900 text-[10px] font-black px-2 py-0.5 rounded-full uppercase">Tiết kiệm đến 39%</span>
+          </div>
+          <p class="text-xs text-white/90 mt-0.5">3 gói từ Cơ bản (467K), Tiêu chuẩn (1.267K) đến Cao cấp (2.200K) • Tối ưu từng tin đăng & lượt đẩy</p>
+        </div>
+      </div>
+      <a href="packages.html" class="shrink-0 px-4 py-2 bg-white text-gray-900 hover:bg-gray-100 rounded-xl text-xs font-bold transition-all shadow flex items-center gap-1">
+        <span>Xem các gói</span>
+        <span class="material-symbols-outlined text-sm">arrow_forward</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- Nút Bật Form Đăng Tin (Chỉ hiển thị cho Seller, Landlord, Agent, Admin - Tự động ẩn với Buyer) -->
+  <div id="createListingBannerWrapper" class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mt-4">
+    <button onclick="showCreateForm()" id="toggleCreateBtn"
+      class="w-full py-3.5 bg-gradient-to-r from-indigo-600 to-blue-600 text-white font-semibold rounded-2xl shadow-md hover:from-indigo-700 hover:to-blue-700 transition-all flex items-center justify-center gap-2">
+      <span class="material-symbols-outlined text-xl">add_circle</span> Đăng tin bất động sản mới
+    </button>
+  </div>
+
+  <!-- Form Đăng Tin BĐS -->
+  <div id="createForm" class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mt-4 hidden">
+    <div class="bg-white rounded-2xl shadow-md p-6 border border-indigo-100">
+      <div class="flex items-center justify-between pb-4 border-b border-gray-100 mb-5">
+        <div>
+          <h2 class="text-lg font-bold text-gray-900">Đăng tin bất động sản mới</h2>
+          <p class="text-xs text-gray-500 mt-0.5">Điền đầy đủ thông tin để người mua dễ dàng liên hệ</p>
+        </div>
+        <button onclick="hideCreateForm()" class="text-gray-400 hover:text-gray-600 p-1">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+
+      <div class="space-y-4">
+        <!-- Tiêu đề -->
+        <div>
+          <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Tiêu đề tin đăng <span class="text-red-500">*</span></label>
+          <input type="text" id="c_title" placeholder="VD: Bán căn hộ 2PN Vinhomes Central Park view sông Sài Gòn" 
+            class="w-full px-4 py-2.5 bg-gray-50 border border-gray-300 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white text-sm font-medium"/>
+        </div>
+
+        <!-- Ảnh bất động sản (Hỗ trợ nhiều ảnh) -->
+        <div class="bg-indigo-50/50 p-4 rounded-xl border border-indigo-100">
+          <div class="flex items-center justify-between mb-2">
+            <label class="block text-xs font-bold text-indigo-900 uppercase">Hình ảnh bất động sản (Tải lên nhiều ảnh)</label>
+            <span id="imageCountBadge" class="text-xs font-bold text-indigo-600 bg-white px-2 py-0.5 rounded-full border border-indigo-200">0 ảnh</span>
+          </div>
+
+          <div class="flex flex-col sm:flex-row gap-3 items-start sm:items-center">
+            <label class="cursor-pointer px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-xl flex items-center gap-1.5 transition-colors shadow-sm shrink-0">
+              <span class="material-symbols-outlined text-base">cloud_upload</span> Chọn nhiều ảnh từ máy tính
+              <input type="file" id="imageFileInput" accept="image/*" multiple class="hidden" onchange="handleMultipleFileUpload(event)"/>
+            </label>
+            <span class="text-xs text-gray-400">hoặc dán thêm link ảnh:</span>
+            <div class="flex gap-2 flex-1 w-full">
+              <input type="url" id="c_image_input" placeholder="https://domain.com/hinh-anh.jpg"
+                class="flex-1 px-3 py-2 bg-white border border-gray-300 rounded-xl text-xs outline-none focus:ring-2 focus:ring-indigo-500"/>
+              <button type="button" onclick="addUrlImage()" class="px-3 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl text-xs font-bold shrink-0">
+                + Thêm
+              </button>
+            </div>
+          </div>
+
+          <!-- Input ẩn lưu chuỗi danh sách ảnh -->
+          <input type="hidden" id="c_image" value=""/>
+
+          <!-- Lưới xem trước danh sách nhiều ảnh -->
+          <div id="imageGalleryPreview" class="mt-3 grid grid-cols-3 sm:grid-cols-5 md:grid-cols-6 gap-2.5 hidden">
+            <!-- Render động các ảnh nhỏ -->
+          </div>
+        </div>
+
+        <!-- Loại BĐS & Giá tiền & Diện tích -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div>
+            <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Nhu cầu</label>
+            <select id="c_type" class="w-full px-3 py-2.5 bg-gray-50 border border-gray-300 rounded-xl outline-none text-sm font-semibold bg-white">
+              <option value="Sale">Cần bán</option>
+              <option value="Rent">Cho thuê</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Mức giá (VNĐ) <span class="text-red-500">*</span></label>
+            <input type="number" id="c_price" placeholder="VD: 3500000000" oninput="updatePriceHint(this.value)"
+              class="w-full px-3 py-2.5 bg-gray-50 border border-gray-300 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white text-sm font-semibold"/>
+            <p id="priceHint" class="text-xs text-indigo-600 font-semibold mt-1"></p>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Diện tích (m²)</label>
+            <input type="number" id="c_area" placeholder="VD: 75.5"
+              class="w-full px-3 py-2.5 bg-gray-50 border border-gray-300 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white text-sm font-medium"/>
+          </div>
+        </div>
+
+        <!-- Hướng nhà, Phòng ngủ, Phòng tắm -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div>
+            <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Hướng nhà (Phong thủy)</label>
+            <select id="c_direction" class="w-full px-3 py-2.5 bg-gray-50 border border-gray-300 rounded-xl outline-none text-sm bg-white font-medium">
+              <option value="">-- Không xác định --</option>
+              <option value="Đông">Hướng Đông</option>
+              <option value="Tây">Hướng Tây</option>
+              <option value="Nam">Hướng Nam</option>
+              <option value="Bắc">Hướng Bắc</option>
+              <option value="Đông Nam">Hướng Đông Nam</option>
+              <option value="Đông Bắc">Hướng Đông Bắc</option>
+              <option value="Tây Nam">Hướng Tây Nam</option>
+              <option value="Tây Bắc">Hướng Tây Bắc</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Số phòng ngủ</label>
+            <input type="number" id="c_bed" placeholder="VD: 2" min="0"
+              class="w-full px-3 py-2.5 bg-gray-50 border border-gray-300 rounded-xl outline-none text-sm font-medium"/>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Số phòng tắm/WC</label>
+            <input type="number" id="c_bath" placeholder="VD: 2" min="0"
+              class="w-full px-3 py-2.5 bg-gray-50 border border-gray-300 rounded-xl outline-none text-sm font-medium"/>
+          </div>
+        </div>
+
+        <!-- Địa chỉ, Tỉnh/Thành, Quận/Huyện -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div>
+            <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Tỉnh / Thành phố <span class="text-red-500">*</span></label>
+            <input type="text" id="c_city" placeholder="VD: TP. Hồ Chí Minh"
+              class="w-full px-3 py-2.5 bg-gray-50 border border-gray-300 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 text-sm font-medium"/>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Quận / Huyện</label>
+            <input type="text" id="c_district" placeholder="VD: Bình Thạnh"
+              class="w-full px-3 py-2.5 bg-gray-50 border border-gray-300 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 text-sm font-medium"/>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Địa chỉ cụ thể / Đường</label>
+            <input type="text" id="c_address" placeholder="VD: 208 Nguyễn Hữu Cảnh, Phường 22"
+              class="w-full px-3 py-2.5 bg-gray-50 border border-gray-300 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 text-sm font-medium"/>
+          </div>
+        </div>
+
+        <!-- Mô tả chi tiết -->
+        <div>
+          <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Mô tả chi tiết</label>
+          <textarea id="c_desc" placeholder="Thông tin chi tiết về pháp lý, sổ hồng, tiện ích xung quanh, nội thất..." rows="3"
+            class="w-full px-4 py-2.5 bg-gray-50 border border-gray-300 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white text-sm"></textarea>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-3 mt-6 pt-4 border-t border-gray-100">
+        <button id="btnSubmitListing" onclick="createListing()" 
+          class="px-8 py-3 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 font-bold text-sm shadow-md transition-all flex items-center gap-2">
+          <span class="material-symbols-outlined text-lg">check_circle</span> Đăng tin ngay
+        </button>
+        <button onclick="hideCreateForm()" class="px-6 py-3 bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-200 font-semibold text-sm transition-colors">
+          Hủy bỏ
+        </button>
+      </div>
+      <div id="create-msg" class="mt-3 text-sm font-medium"></div>
+    </div>
+  </div>
+
+  <!-- Danh sách tin đăng (MỖI TIN NẰM DƯỚI NHAU DẠNG HÀNG NGANG) -->
+  <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
+    <div class="flex items-center justify-between mb-3">
+      <h2 class="text-base font-bold text-gray-900" id="section-title">Danh sách tin đăng bất động sản</h2>
+      <span id="listings-count" class="text-xs font-semibold text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-full border border-indigo-100"></span>
+    </div>
+
+    <!-- Container danh sách: Flex dọc, mỗi tin nằm dưới nhau -->
+    <div id="listings" class="flex flex-col gap-4">
+      <div class="text-gray-400 text-center py-12 bg-white rounded-2xl shadow-sm border">Đang tải danh sách...</div>
+    </div>
+
+    <!-- Empty State -->
+    <div id="empty-state" class="hidden text-center py-16 bg-white rounded-2xl shadow-sm border border-gray-200 mt-2">
+      <div class="text-5xl mb-3">🔍</div>
+      <h3 class="text-lg font-bold text-gray-800">Không tìm thấy bất động sản phù hợp</h3>
+      <p class="text-xs text-gray-500 mt-1 max-w-sm mx-auto">Vui lòng thử tìm với từ khóa khác hoặc xóa bớt tiêu chí lọc khu vực, mức giá, diện tích.</p>
+      <div class="flex items-center justify-center gap-2 mt-4">
+        <button onclick="resetFilters()" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-800 rounded-xl font-bold text-xs transition-colors border">
+          🔄 Xóa bộ lọc & Xem tất cả
+        </button>
+        <button id="emptyStateCreateBtn" onclick="showCreateForm()" class="px-5 py-2 bg-indigo-600 text-white rounded-xl font-bold text-xs shadow-sm hover:bg-indigo-700">
+          + Đăng tin mới
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <!-- Bottom Nav -->
+  <nav class="fixed bottom-0 w-full bg-white border-t border-gray-200 z-50 shadow-lg">
+    <div class="flex justify-around items-center h-16 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <a href="home_property_search.html" class="flex flex-col items-center text-indigo-600">
+        <span class="material-symbols-outlined text-2xl">travel_explore</span>
+        <span class="text-[11px] mt-0.5 font-bold">Khám phá</span>
+      </a>
+      <a id="navCreateBtn" href="#" onclick="showCreateForm(); window.scrollTo({top: 0, behavior: 'smooth'}); return false;" class="flex flex-col items-center text-gray-500 hover:text-indigo-600 transition-colors">
+        <div class="w-9 h-9 bg-indigo-600 text-white rounded-full flex items-center justify-center -mt-3 shadow-md hover:bg-indigo-700">
+          <span class="material-symbols-outlined text-xl">add</span>
+        </div>
+        <span class="text-[11px] mt-1 font-semibold">Đăng tin</span>
+      </a>
+      <a id="navSavedBtn" href="#" onclick="loadSavedListingsTab(); window.scrollTo({top: 0, behavior: 'smooth'}); return false;" class="hidden flex flex-col items-center text-gray-500 hover:text-red-500 transition-colors">
+        <div class="w-9 h-9 bg-red-50 text-red-600 rounded-full flex items-center justify-center -mt-3 shadow-md border border-red-200 hover:bg-red-100">
+          <span class="material-symbols-outlined text-xl">favorite</span>
+        </div>
+        <span class="text-[11px] mt-1 font-semibold">Tin đã lưu</span>
+      </a>
+      <a href="user_profile.html" class="flex flex-col items-center text-gray-500 hover:text-indigo-600 transition-colors">
+        <span class="material-symbols-outlined text-2xl">account_circle</span>
+        <span class="text-[11px] mt-0.5 font-semibold">Hồ sơ</span>
+      </a>
+    </div>
+  </nav>
+
+  <script>
+    const token = localStorage.getItem('accessToken');
+    if (!token) window.location.href = 'signin.html';
+
+    let currentFilter = null;
+    let uploadedImageUrl = '';
+    let currentUserRole = '';
+
+    // Hàm giải mã JWT an toàn lấy vai trò người dùng ngay lập tức
+    function parseJwt(t) {
+      try {
+        const base64Url = t.split('.')[1];
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        const jsonPayload = decodeURIComponent(atob(base64).split('').map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join(''));
+        return JSON.parse(jsonPayload);
+      } catch (e) {
+        return null;
+      }
     }
-  </style>
-<style>
-    body {
-      min-height: max(884px, 100dvh);
+
+    // Phân quyền giao diện: Xóa/ẩn chức năng đăng tin đối với tài khoản Người mua (Buyer / Tenant)
+    function applyRoleRestrictions(role) {
+      currentUserRole = role;
+      if (role === 'Buyer' || role === 'Tenant') {
+        // 1. Xóa nút Đăng tin lớn ở đầu trang
+        const bannerWrap = document.getElementById('createListingBannerWrapper');
+        if (bannerWrap) bannerWrap.classList.add('hidden');
+
+        // 2. Ẩn form đăng tin nếu đang mở
+        const createForm = document.getElementById('createForm');
+        if (createForm) createForm.classList.add('hidden');
+
+        // 3. Xóa nút Đăng tin ở thanh điều hướng dưới cùng (Bottom nav)
+        const navCreateBtn = document.getElementById('navCreateBtn');
+        if (navCreateBtn) navCreateBtn.classList.add('hidden');
+
+        // 4. Thay bằng nút "Tin đã lưu" ở Bottom nav cho Người mua
+        const navSavedBtn = document.getElementById('navSavedBtn');
+        if (navSavedBtn) navSavedBtn.classList.remove('hidden');
+
+        // 5. Ẩn nút Đăng tin ở Empty state
+        const emptyCreateBtn = document.getElementById('emptyStateCreateBtn');
+        if (emptyCreateBtn) emptyCreateBtn.classList.add('hidden');
+
+        // 6. Ẩn tab "Tin của tôi" vì Buyer không được đăng tin
+        const myTab = document.getElementById('btnMyListingsTab');
+        if (myTab) myTab.classList.add('hidden');
+      }
     }
-  </style>
-  </head><body class="bg-surface font-body-md text-body-md text-on-surface antialiased"><header class="fixed top-0 w-full z-50 pt-safe bg-surface-container-lowest/80 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="h-16 px-margin flex items-center justify-between gap-space-sm"><div class="flex items-center gap-space-sm min-w-0"><img alt="Havenly Logo" class="h-8 w-auto object-contain shrink-0" src="https://lh3.googleusercontent.com/aida/AEtjO1XoiYaOUYQIJOlGgy5QrLJDTjXSighpy2CqKXz0MKKbcCIg25e3ZNwWqdtf3yzSaot_6le7i0nQIZh-5WWsTQQpYE4PJaa7LCgbIps_EsW-E2_mpsHp_0uvwVEcBDFGXSL3B12BvPr9bYawKo3v5yxETRTNa8NRtjhHAkrR--xs0xFq8434oYUqWs5wCJWkoXmH37qxxZESIwwxOdBv1yy7mgGUN24AZA1_7anTcR_lSw"/><div class="flex flex-col min-w-0"><span class="font-headline-sm text-headline-sm text-on-surface tracking-tight truncate">Havenly</span><span class="font-label-sm text-label-sm text-on-surface-variant truncate">Home / Property Search</span></div></div><div class="flex items-center gap-space-xs shrink-0"><button aria-label="Notifications" class="w-11 h-11 rounded-full flex items-center justify-center text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors" type="button"><span class="material-symbols-outlined text-[22px]">notifications</span></button><button aria-label="View user profile" class="w-11 h-11 flex items-center justify-center" type="button"><img alt="Profile" class="w-8 h-8 rounded-full object-cover shadow-[0_2px_8px_-2px_rgba(15,23,42,0.1)]" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB-WUVGzrVbS9a42Kup1PPEHSz22lZDqcdUyGy3hVLTWGdmnpm7Kq97kzsHYxaS77FSV6ClNYPDRlpfdi-FaUiWDE7Gt2TtIANzGpW1_-hH41r1x9sDsnNx9KIAMb3TpO3oQi6P7IuMNDLuE_K3nF9KC0RFG4jZfPJTtYkWLrOhwDv4F6VDp-vggIN87nYPFyDltS4KSdnUQR0hM9ylyHm7g5p4FRV-qp5-P5qSBgbw"/></button></div></div></header><main class="flex flex-col relative w-full pt-16 pb-24 bg-surface min-h-screen"><div class="flex flex-col w-full">
-<!-- Search & Filter Masthead -->
-<div class="px-margin pt-space-md pb-space-sm flex flex-col gap-space-sm">
-<div class="flex items-center gap-space-xs">
-<div class="flex-1 relative flex items-center bg-surface-container-low rounded-xl px-3 py-2.5 shadow-sm">
-<span class="material-symbols-outlined text-[20px] text-on-surface-variant mr-2 shrink-0">search</span>
-<input class="w-full bg-transparent text-on-surface font-body-md text-body-md placeholder:text-on-surface-variant focus:outline-none min-w-0" placeholder="Search Beverly Hills, Aspen, Tribeca..." type="text"/>
-<button aria-label="Voice Search" class="text-on-surface-variant hover:text-on-surface p-1 flex items-center justify-center shrink-0" type="button">
-<span class="material-symbols-outlined text-[18px]">mic</span>
-</button>
-</div>
-<button class="relative h-[44px] px-3.5 rounded-xl bg-primary text-on-primary font-label-md text-label-md flex items-center gap-1.5 shadow-sm active:scale-95 transition-transform shrink-0" id="filter-trigger" type="button">
-<span class="material-symbols-outlined text-[18px]">tune</span>
-<span class="hidden xs:inline">Filters</span>
-<span class="inline-flex items-center justify-center bg-secondary text-on-secondary text-[10px] font-bold h-4 w-4 rounded-full ml-0.5">3</span>
-</button>
-</div>
-<!-- Category Filter Chips -->
-<div class="flex items-center gap-2 overflow-x-auto no-scrollbar py-1 -mx-margin px-margin">
-<button class="category-chip px-3.5 py-1.5 rounded-full font-label-md text-label-md shrink-0 bg-primary text-on-primary shadow-sm transition-colors" type="button">
-        All Types
-      </button>
-<button class="category-chip px-3.5 py-1.5 rounded-full font-label-md text-label-md shrink-0 bg-surface-container text-on-surface-variant hover:text-on-surface transition-colors" type="button">
-        Villas
-      </button>
-<button class="category-chip px-3.5 py-1.5 rounded-full font-label-md text-label-md shrink-0 bg-surface-container text-on-surface-variant hover:text-on-surface transition-colors" type="button">
-        Penthouses
-      </button>
-<button class="category-chip px-3.5 py-1.5 rounded-full font-label-md text-label-md shrink-0 bg-surface-container text-on-surface-variant hover:text-on-surface transition-colors" type="button">
-        Architectural Modern
-      </button>
-<button class="category-chip px-3.5 py-1.5 rounded-full font-label-md text-label-md shrink-0 bg-surface-container text-on-surface-variant hover:text-on-surface transition-colors" type="button">
-        Historic Estates
-      </button>
-<button class="category-chip px-3.5 py-1.5 rounded-full font-label-md text-label-md shrink-0 bg-surface-container text-on-surface-variant hover:text-on-surface transition-colors" type="button">
-        Waterfront
-      </button>
-</div>
-<!-- Secondary Range Pill Indicators -->
-<div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1 -mx-margin px-margin">
-<button class="flex items-center gap-1.5 px-2.5 py-1 bg-surface-container-low rounded-lg text-on-surface font-label-sm text-label-sm shrink-0 shadow-sm" type="button">
-<span class="material-symbols-outlined text-[14px] text-secondary">payments</span>
-<span>$1M – $10M+</span>
-<span class="material-symbols-outlined text-[14px] text-on-surface-variant">expand_more</span>
-</button>
-<button class="flex items-center gap-1.5 px-2.5 py-1 bg-surface-container-low rounded-lg text-on-surface font-label-sm text-label-sm shrink-0 shadow-sm" type="button">
-<span class="material-symbols-outlined text-[14px] text-on-surface-variant">bed</span>
-<span>3+ Beds, 3+ Baths</span>
-<span class="material-symbols-outlined text-[14px] text-on-surface-variant">expand_more</span>
-</button>
-<button class="flex items-center gap-1 px-2.5 py-1 bg-secondary-fixed text-on-secondary-fixed rounded-lg font-label-sm text-label-sm shrink-0 shadow-sm" type="button">
-<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">verified</span>
-<span>Verified Architect</span>
-</button>
-</div>
-</div>
-<!-- Feed Header Controls -->
-<div class="px-margin pt-space-sm pb-2 flex items-center justify-between gap-2">
-<div>
-<h2 class="font-headline-sm text-headline-sm text-on-surface tracking-tight">Curated Sanctuaries</h2>
-<p class="font-body-sm text-body-sm text-on-surface-variant">24 hand-picked modern acquisitions</p>
-</div>
-<div class="flex items-center gap-1.5">
-<!-- Sort Dropdown Trigger -->
-<button class="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-surface-container text-on-surface font-label-sm text-label-sm" type="button">
-<span>Curated First</span>
-<span class="material-symbols-outlined text-[14px]">arrow_drop_down</span>
-</button>
-<!-- View Switcher -->
-<div class="flex bg-surface-container rounded-lg p-0.5" id="view-toggle">
-<button aria-label="Grid View" class="w-7 h-7 flex items-center justify-center rounded-md bg-surface-container-lowest text-on-surface shadow-sm" type="button">
-<span class="material-symbols-outlined text-[16px]">grid_view</span>
-</button>
-<button aria-label="Map View" class="w-7 h-7 flex items-center justify-center rounded-md text-on-surface-variant hover:text-on-surface" type="button">
-<span class="material-symbols-outlined text-[16px]">map</span>
-</button>
-</div>
-</div>
-</div>
-<!-- Properties Feed -->
-<div class="px-margin flex flex-col gap-space-lg pb-space-lg">
-<!-- Property Card 1 -->
-<article class="flex flex-col bg-surface-container-lowest rounded-xl overflow-hidden shadow-[0_2px_12px_-2px_rgba(15,23,42,0.06)] group">
-<div class="relative w-full aspect-[4/3] bg-surface-container overflow-hidden">
-<img alt="The Glass Pavilion Residence" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out" data-alt="Stunning architectural glass pavilion home in Beverly Hills surrounded by lush minimalist landscaped gardens, dramatic warm dusk ambient lighting reflecting in serene reflection pools, concrete cantilevers, ultra high-end architectural photography, shot on Hasselblad, crisp lines and warm amber glowing interiors." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCWA2EJT1YcK3uQjbrPESQaYu9HDJUjasZJvMpeiCl9yqNzjUnhwRnlRQ9FFH_alejmHs3kd2Tu5t8tc-AimziSZg8KkS5jrwLNID7owl7Q3nDekrX6j2fyMEIhvYS_2rX-VIrpB0o8RhlaGhHoQTR62xMLktOiOGt3DDhkQp_Tf6P8a6nSIaSiXFYUc9xaYzNlCnqloYSaNPRNHu5BdjqE1uE5spn3jeGojiwHWrjj"/>
-<!-- Badges Overlay -->
-<div class="absolute top-3 left-3 flex flex-wrap gap-1.5 max-w-[80%]">
-<span class="px-2 py-0.5 rounded-md bg-primary/80 backdrop-blur-md text-on-primary font-label-sm text-label-sm tracking-wide uppercase">
-            Exclusive Listing
-          </span>
-<span class="px-2 py-0.5 rounded-md bg-secondary text-on-secondary font-label-sm text-label-sm tracking-wide uppercase flex items-center gap-1">
-<span class="material-symbols-outlined text-[12px]" style="font-variation-settings: 'FILL' 1;">verified</span>
-            Verified Architect
-          </span>
-</div>
-<!-- Favorite Button -->
-<button aria-label="Add to favorites" class="absolute top-3 right-3 w-9 h-9 rounded-full bg-surface-container-lowest/80 backdrop-blur-md flex items-center justify-center text-on-surface shadow-sm active:scale-90 transition-transform" onclick="this.classList.toggle('text-error'); const icon = this.querySelector('span'); icon.style.fontVariationSettings = icon.style.fontVariationSettings.includes('1') ? '\'FILL\' 0' : '\'FILL\' 1';" type="button">
-<span class="material-symbols-outlined text-[18px]">favorite</span>
-</button>
-<!-- Media counter bottom pill -->
-<div class="absolute bottom-2.5 right-3 px-2 py-0.5 rounded bg-primary/70 backdrop-blur-md text-on-primary font-label-sm text-label-sm flex items-center gap-1">
-<span class="material-symbols-outlined text-[12px]">photo_library</span>
-<span>1/18</span>
-</div>
-</div>
-<!-- Card Metadata Content -->
-<div class="p-space-md flex flex-col gap-2">
-<div class="flex items-start justify-between gap-2">
-<div>
-<h3 class="font-headline-sm text-headline-sm text-on-surface tracking-tight">The Glass Pavilion Residence</h3>
-<p class="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-1 mt-0.5">
-<span class="material-symbols-outlined text-[14px]">location_on</span>
-              742 Evergreen Terrace, Beverly Hills, CA
-            </p>
-</div>
-</div>
-<!-- Tabular Architectural Specs -->
-<div class="flex items-center gap-3 py-1.5 font-label-md text-label-md text-on-surface-variant flex-wrap">
-<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[15px]">square_foot</span>380 m²</span>
-<span class="w-1 h-1 rounded-full bg-outline-variant"></span>
-<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[15px]">bed</span>4 Beds</span>
-<span class="w-1 h-1 rounded-full bg-outline-variant"></span>
-<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[15px]">bathtub</span>3.5 Baths</span>
-<span class="w-1 h-1 rounded-full bg-outline-variant"></span>
-<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[15px]">garage</span>2 Garages</span>
-</div>
-<!-- Footer / Price & Agent -->
-<div class="pt-2 flex items-center justify-between gap-2">
-<div>
-<div class="font-headline-md text-headline-md text-on-surface tracking-tight leading-none">$1,850,000</div>
-<div class="font-body-sm text-body-sm text-on-surface-variant mt-1">est. $8,420/mo</div>
-</div>
-<div class="flex items-center gap-2 bg-surface-container-low px-2.5 py-1.5 rounded-lg">
-<img alt="Elena Rostova" class="w-7 h-7 rounded-full object-cover" data-alt="Editorial profile portrait of Elena Rostova, premier luxury real estate broker wearing tailored neutral blazer, serene high-key studio lighting, confident warm expression, circular crop representation." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC1SNKrw6ujGyjAz6M_YkXx9iGevGQPk8UZDvq2_bFnGUt9e7IryfX8nGt-xK9_-ZVHmV5O54VKhVPJLKO41zY86vNQbK_gwmqU4PLfiYmOZTQneg-5wTK4aLFeD4a3kGalkqsR9_ngjkbsTK3oz46JcM0gi96Hcecun0PFnc5YjxqCzMaK0LtEi_MXUAZ57zrv_-9-PouFTIS2BUvmWtA3eVruo_89f69dIWYKztqa"/>
-<div class="flex flex-col text-left">
-<span class="font-label-sm text-label-sm text-on-surface font-semibold leading-none">Elena Rostova</span>
-<span class="text-[10px] text-on-surface-variant">Listing Partner</span>
-</div>
-</div>
-</div>
-</div>
-</article>
-<!-- Property Card 2 -->
-<article class="flex flex-col bg-surface-container-lowest rounded-xl overflow-hidden shadow-[0_2px_12px_-2px_rgba(15,23,42,0.06)] group">
-<div class="relative w-full aspect-[4/3] bg-surface-container overflow-hidden">
-<img alt="Bel-Air Horizon Villa" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out" data-alt="Mid-century modern hillside luxury villa in Bel-Air Los Angeles perched above a shimmering curved infinity edge swimming pool, expansive glass walls, warm timber soffits, twilight golden hour atmosphere, curated designer lounge furniture by the terrace, cinematic wide angle." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCDrclfP1T4QJT7kFbOevSnUm3BY6aKiVewrfECd-ZXcqZbXR8PFAT8Qy1vRmniBoamPVWSm4n0RSd2o66Rm0q-zJnGA9pX2OaUw945aJfq_lacRZWPFqYhzkG1A8zsdfSGA_jR7lgV3Pb2ssgvSVwsiNWbW5FWa9i2tPqRsw-JnFuVbCcv1KyRslRZ-GkAMFtiEW3ySdIM10Plh6Tph0X-F_6C2JKEPjJsJMpcCH19"/>
-<!-- Badges Overlay -->
-<div class="absolute top-3 left-3 flex flex-wrap gap-1.5 max-w-[80%]">
-<span class="px-2 py-0.5 rounded-md bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm tracking-wide uppercase font-semibold">
-            New to Market
-          </span>
-<span class="px-2 py-0.5 rounded-md bg-surface-container-lowest/80 backdrop-blur-md text-on-surface font-label-sm text-label-sm tracking-wide">
-            Bel-Air Foothills
-          </span>
-</div>
-<!-- Favorite Button -->
-<button aria-label="Add to favorites" class="absolute top-3 right-3 w-9 h-9 rounded-full bg-surface-container-lowest/80 backdrop-blur-md flex items-center justify-center text-on-surface shadow-sm active:scale-90 transition-transform" onclick="this.classList.toggle('text-error'); const icon = this.querySelector('span'); icon.style.fontVariationSettings = icon.style.fontVariationSettings.includes('1') ? '\'FILL\' 0' : '\'FILL\' 1';" type="button">
-<span class="material-symbols-outlined text-[18px]">favorite</span>
-</button>
-<div class="absolute bottom-2.5 right-3 px-2 py-0.5 rounded bg-primary/70 backdrop-blur-md text-on-primary font-label-sm text-label-sm flex items-center gap-1">
-<span class="material-symbols-outlined text-[12px]">view_in_ar</span>
-<span>Virtual 3D Tour</span>
-</div>
-</div>
-<div class="p-space-md flex flex-col gap-2">
-<div class="flex items-start justify-between gap-2">
-<div>
-<h3 class="font-headline-sm text-headline-sm text-on-surface tracking-tight">Bel-Air Horizon Villa</h3>
-<p class="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-1 mt-0.5">
-<span class="material-symbols-outlined text-[14px]">location_on</span>
-              1042 Stradella Rd, Los Angeles, CA
-            </p>
-</div>
-</div>
-<!-- Tabular Architectural Specs -->
-<div class="flex items-center gap-3 py-1.5 font-label-md text-label-md text-on-surface-variant flex-wrap">
-<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[15px]">square_foot</span>520 m²</span>
-<span class="w-1 h-1 rounded-full bg-outline-variant"></span>
-<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[15px]">bed</span>5 Beds</span>
-<span class="w-1 h-1 rounded-full bg-outline-variant"></span>
-<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[15px]">bathtub</span>6 Baths</span>
-<span class="w-1 h-1 rounded-full bg-outline-variant"></span>
-<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[15px]">pool</span>Infinity Pool</span>
-</div>
-<!-- Footer / Price & Tour Action -->
-<div class="pt-2 flex items-center justify-between gap-2">
-<div>
-<div class="font-headline-md text-headline-md text-on-surface tracking-tight leading-none">$4,200,000</div>
-<div class="font-body-sm text-body-sm text-on-surface-variant mt-1">est. $19,100/mo</div>
-</div>
-<button class="px-3.5 py-2 rounded-lg bg-secondary text-on-secondary font-label-md text-label-md flex items-center gap-1.5 shadow-sm active:scale-95 transition-transform" type="button">
-<span class="material-symbols-outlined text-[16px]">calendar_month</span>
-<span>Schedule Tour</span>
-</button>
-</div>
-</div>
-</article>
-<!-- Property Card 3 -->
-<article class="flex flex-col bg-surface-container-lowest rounded-xl overflow-hidden shadow-[0_2px_12px_-2px_rgba(15,23,42,0.06)] group">
-<div class="relative w-full aspect-[4/3] bg-surface-container overflow-hidden">
-<img alt="Nordic Light Retreat" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out" data-alt="Minimalist Scandinavian coastal residence in Pacific Palisades, cedar wood vertical slats combined with monumental black steel-framed windows, surrounded by native coastal grasses and sea mist, soft morning Nordic daylight, balanced architectural geometry, warm organic modernism." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDyzBxxl0Ih-unO1lX7xDvvAHaJ_Rx90uEYE55ZK5kR9TmYstNsIPPYok4sRTeTb0cIAoALbFI0SDAXdkP-E3jXNbj7N81LDhYLGYQgqd10V8Umvb1Vi_6h0NSnGrjkN7dFQ8D30sEAntl8Xc7-eoEu4-I6LNez_EAl5Egtj9Vr2k0xoXiFojSaP9t5sVQNyXMAGCsbQCsmVbSHCIqh_XDkSPzdTn3zjuC9IaGJbdoH"/>
-<div class="absolute top-3 left-3 flex flex-wrap gap-1.5 max-w-[80%]">
-<span class="px-2 py-0.5 rounded-md bg-primary/80 backdrop-blur-md text-on-primary font-label-sm text-label-sm tracking-wide uppercase">
-            Architectural Highlight
-          </span>
-</div>
-<button aria-label="Add to favorites" class="absolute top-3 right-3 w-9 h-9 rounded-full bg-surface-container-lowest/80 backdrop-blur-md flex items-center justify-center text-on-surface shadow-sm active:scale-90 transition-transform" onclick="this.classList.toggle('text-error'); const icon = this.querySelector('span'); icon.style.fontVariationSettings = icon.style.fontVariationSettings.includes('1') ? '\'FILL\' 0' : '\'FILL\' 1';" type="button">
-<span class="material-symbols-outlined text-[18px]">favorite</span>
-</button>
-<div class="absolute bottom-2.5 right-3 px-2 py-0.5 rounded bg-primary/70 backdrop-blur-md text-on-primary font-label-sm text-label-sm flex items-center gap-1">
-<span class="material-symbols-outlined text-[12px]">photo_library</span>
-<span>1/24</span>
-</div>
-</div>
-<div class="p-space-md flex flex-col gap-2">
-<div class="flex items-start justify-between gap-2">
-<div>
-<h3 class="font-headline-sm text-headline-sm text-on-surface tracking-tight">Nordic Light Retreat</h3>
-<p class="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-1 mt-0.5">
-<span class="material-symbols-outlined text-[14px]">location_on</span>
-              842 Via Del Mar, Pacific Palisades, CA
-            </p>
-</div>
-</div>
-<div class="flex items-center gap-3 py-1.5 font-label-md text-label-md text-on-surface-variant flex-wrap">
-<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[15px]">square_foot</span>620 m²</span>
-<span class="w-1 h-1 rounded-full bg-outline-variant"></span>
-<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[15px]">bed</span>6 Beds</span>
-<span class="w-1 h-1 rounded-full bg-outline-variant"></span>
-<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[15px]">bathtub</span>7 Baths</span>
-<span class="w-1 h-1 rounded-full bg-outline-variant"></span>
-<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[15px]">deck</span>Ocean Bluff</span>
-</div>
-<div class="pt-2 flex items-center justify-between gap-2">
-<div>
-<div class="font-headline-md text-headline-md text-on-surface tracking-tight leading-none">$4,850,000</div>
-<div class="font-body-sm text-body-sm text-on-surface-variant mt-1">est. $22,300/mo</div>
-</div>
-<button class="px-3.5 py-2 rounded-lg bg-surface-container text-on-surface hover:bg-surface-container-high font-label-md text-label-md flex items-center gap-1.5 transition-colors" type="button">
-<span>View Dossier</span>
-<span class="material-symbols-outlined text-[16px]">arrow_forward</span>
-</button>
-</div>
-</div>
-</article>
-<!-- Map Preview Teaser Card -->
-<div class="bg-surface-container-low rounded-xl p-space-md flex flex-col gap-space-sm shadow-sm">
-<div class="flex items-center justify-between">
-<div>
-<span class="font-label-sm text-label-sm uppercase tracking-wider text-secondary font-semibold">Interactive Spatial Discovery</span>
-<h4 class="font-headline-sm text-headline-sm text-on-surface">Explore by Neighborhood</h4>
-</div>
-<span class="material-symbols-outlined text-[24px] text-on-surface-variant">explore</span>
-</div>
-<div class="w-full h-36 bg-cover bg-center rounded-lg shadow-inner relative flex items-center justify-center" data-location="Pacific Palisades, Los Angeles, CA" style="">
-<button class="px-3 py-1.5 rounded-lg bg-surface-container-lowest/90 backdrop-blur-md text-on-surface font-label-md text-label-md shadow-md flex items-center gap-1.5 active:scale-95 transition-transform" type="button">
-<span class="material-symbols-outlined text-[16px] text-secondary">my_location</span>
-<span>Open Full Interactive Map</span>
-</button>
-</div>
-</div>
-</div>
-</div>
-<script>
-  (function() {
-    const chips = document.querySelectorAll('.category-chip');
-    chips.forEach(chip => {
-      chip.addEventListener('click', () => {
-        chips.forEach(c => {
-          c.classList.remove('bg-primary', 'text-on-primary', 'shadow-sm');
-          c.classList.add('bg-surface-container', 'text-on-surface-variant');
+
+    // Nhận diện quyền ngay tức thì qua JWT token
+    const initialPayload = parseJwt(token);
+    if (initialPayload && initialPayload.role) {
+      applyRoleRestrictions(initialPayload.role);
+    }
+
+    // Lấy thông tin user đăng nhập
+    const roleMap = {
+      Admin: 'Quản trị viên',
+      Seller: 'Người bán',
+      Landlord: 'Người cho thuê',
+      Agent: 'Môi giới BĐS',
+      Broker: 'Môi giới BĐS',
+      Buyer: 'Người mua',
+      Tenant: 'Người thuê'
+    };
+
+    fetch('/api/auth/me', { headers: { 'Authorization': 'Bearer ' + token } })
+      .then(r => r.json())
+      .then(u => {
+        if (u.role) applyRoleRestrictions(u.role);
+        if (u.fullName) {
+          document.getElementById('avatar').textContent = u.fullName[0].toUpperCase();
+          document.getElementById('userDisplayName').textContent = u.fullName;
+          const badgeEl = document.getElementById('userRoleBadge');
+          if (badgeEl) {
+            badgeEl.textContent = roleMap[u.role] || u.role;
+            badgeEl.classList.remove('hidden');
+          }
+        }
+        if (u.role === 'Admin') {
+          const adminLink = document.getElementById('adminLink');
+          if (adminLink) adminLink.classList.remove('hidden');
+        }
+      })
+      .catch(() => {});
+
+    // Định dạng giá tiền chuẩn tiếng Việt
+    function formatPrice(price) {
+      if (!price || price <= 0) return 'Thương lượng';
+      if (price >= 1000000000) {
+        const ty = price / 1000000000;
+        return (Number.isInteger(ty) ? ty : ty.toFixed(2).replace(/\.?0+$/, '')) + ' tỷ';
+      }
+      if (price >= 1000000) {
+        const tr = price / 1000000;
+        return (Number.isInteger(tr) ? tr : tr.toFixed(1).replace(/\.?0+$/, '')) + ' triệu';
+      }
+      return price.toLocaleString('vi-VN') + ' đ';
+    }
+
+    // Hiển thị gợi ý bằng chữ khi gõ giá tiền
+    function updatePriceHint(val) {
+      const p = parseFloat(val);
+      const hintEl = document.getElementById('priceHint');
+      if (!p || isNaN(p) || p <= 0) {
+        hintEl.textContent = '';
+      } else {
+        hintEl.textContent = '💡 Quy đổi: ' + formatPrice(p) + ' (' + p.toLocaleString('vi-VN') + ' VNĐ)';
+      }
+    }
+
+    let uploadedImagesList = [];
+
+    // Xử lý upload nhiều ảnh cùng lúc từ máy tính
+    async function handleMultipleFileUpload(event) {
+      const files = event.target.files;
+      if (!files || files.length === 0) return;
+
+      const formData = new FormData();
+      for (let i = 0; i < files.length; i++) {
+        formData.append('files', files[i]);
+      }
+
+      const badge = document.getElementById('imageCountBadge');
+      badge.textContent = 'Đang tải lên...';
+
+      try {
+        const res = await fetch('/api/listings/upload', {
+          method: 'POST',
+          headers: { 'Authorization': 'Bearer ' + token },
+          body: formData
         });
-        chip.classList.remove('bg-surface-container', 'text-on-surface-variant');
-        chip.classList.add('bg-primary', 'text-on-primary', 'shadow-sm');
+
+        const data = await res.json();
+        if (res.ok && data.urls && data.urls.length > 0) {
+          uploadedImagesList.push(...data.urls);
+          updateImageGalleryPreview();
+        } else {
+          alert('Lỗi tải ảnh: ' + (data.message || 'Không thể tải ảnh'));
+        }
+      } catch (err) {
+        alert('Lỗi khi tải ảnh lên máy chủ');
+      } finally {
+        event.target.value = '';
+      }
+    }
+
+    // Thêm link ảnh thủ công
+    function addUrlImage() {
+      const input = document.getElementById('c_image_input');
+      const url = input.value.trim();
+      if (!url || url.length < 5) {
+        alert('Vui lòng nhập link ảnh hợp lệ!');
+        return;
+      }
+      uploadedImagesList.push(url);
+      input.value = '';
+      updateImageGalleryPreview();
+    }
+
+    // Xóa 1 ảnh trong danh sách xem trước
+    function removeUploadedImage(index) {
+      uploadedImagesList.splice(index, 1);
+      updateImageGalleryPreview();
+    }
+
+    // Render lưới xem trước nhiều ảnh
+    function updateImageGalleryPreview() {
+      const container = document.getElementById('imageGalleryPreview');
+      const countBadge = document.getElementById('imageCountBadge');
+      const hiddenInput = document.getElementById('c_image');
+
+      hiddenInput.value = uploadedImagesList.join(',');
+      countBadge.textContent = `${uploadedImagesList.length} ảnh`;
+
+      if (uploadedImagesList.length === 0) {
+        container.classList.add('hidden');
+        container.innerHTML = '';
+        return;
+      }
+
+      container.classList.remove('hidden');
+      container.innerHTML = uploadedImagesList.map((url, idx) => `
+        <div class="relative group rounded-xl overflow-hidden aspect-square border border-gray-300 bg-gray-100 shadow-sm">
+          <img src="${url}" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/150x150?text=Loi+Anh'"/>
+          <button type="button" onclick="removeUploadedImage(${idx})" 
+            class="absolute top-1 right-1 w-5 h-5 bg-black/70 hover:bg-red-600 text-white rounded-full flex items-center justify-center text-xs font-bold transition-colors shadow">
+            ✕
+          </button>
+          ${idx === 0 ? '<span class="absolute bottom-1 left-1 bg-indigo-600 text-white text-[9px] font-black px-1.5 py-0.2 rounded shadow">Ảnh bìa</span>' : ''}
+        </div>
+      `).join('');
+    }
+
+    // RENDER DANH SÁCH: MỖI TIN NẰM DƯỚI NHAU
+    let allCurrentListings = [];
+    let compareList = [];
+
+    function renderListings(data) {
+      allCurrentListings = data || [];
+      const container = document.getElementById('listings');
+      const emptyState = document.getElementById('empty-state');
+      const countEl = document.getElementById('listings-count');
+      const savedIds = JSON.parse(localStorage.getItem('fav_listings') || '[]').map(Number);
+
+      if (!data || data.length === 0) {
+        container.innerHTML = '';
+        emptyState.classList.remove('hidden');
+        countEl.textContent = '0 tin';
+        return;
+      }
+
+      emptyState.classList.add('hidden');
+      countEl.textContent = `${data.length} tin đăng`;
+
+      container.innerHTML = data.map(l => {
+        const isFav = savedIds.includes(Number(l.id));
+        const isCompared = compareList.includes(l.id);
+
+        const imgList = (l.imageUrls && l.imageUrls.trim().length > 0) ? l.imageUrls.split(',').filter(x => x.trim().length > 0) : [];
+        const imgCount = imgList.length;
+
+        // Ảnh đại diện
+        const imgHtml = imgCount > 0
+          ? `<img src="${imgList[0].trim()}" alt="${l.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" onerror="this.onerror=null;this.parentElement.innerHTML='<div class=\\'flex items-center justify-center w-full h-full bg-gradient-to-br from-indigo-100 to-blue-50 text-4xl\\'>🏡</div>'"/>`
+          : `<div class="flex items-center justify-center w-full h-full bg-gradient-to-br from-indigo-100 to-blue-50 text-4xl">${l.type === 'Sale' ? '🏠' : '🏢'}</div>`;
+
+        // Biểu tượng trái tim: Đã lưu = Tim tô màu đỏ đặc (Filled); Chưa lưu = Tim rỗng (Outline)
+        const heartIconHtml = isFav
+          ? `<svg class="w-5 h-5 fill-red-500 text-red-500 drop-shadow transition-transform active:scale-125" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>`
+          : `<svg class="w-5 h-5 fill-none stroke-current text-gray-500 hover:text-red-500 stroke-2 transition-transform active:scale-125" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>`;
+
+        return `
+          <article class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-md hover:border-indigo-200 transition-all cursor-pointer group flex flex-col md:flex-row relative" onclick="viewDetail(${l.id})">
+            <!-- Cột ảnh (Bên trái trên PC/iPad, trên cùng trên Mobile) -->
+            <div class="relative w-full md:w-72 lg:w-80 h-52 sm:h-60 md:h-auto shrink-0 overflow-hidden bg-gray-100">
+              ${imgHtml}
+              <span class="absolute top-3 left-3 px-3 py-1 rounded-full text-xs font-bold shadow-md ${l.type === 'Sale' ? 'bg-emerald-600 text-white' : 'bg-blue-600 text-white'}">
+                ${l.type === 'Sale' ? 'Cần bán' : 'Cho thuê'}
+              </span>
+              ${imgCount > 1 ? `
+              <span class="absolute bottom-3 right-3 bg-black/60 backdrop-blur-md text-white text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1 shadow">
+                <span class="material-symbols-outlined text-xs">photo_camera</span> ${imgCount} ảnh
+              </span>
+              ` : ''}
+              <!-- Nút Lưu yêu thích nhanh: Đổi giữa tim đỏ đặc và tim rỗng -->
+              <button type="button" onclick="event.stopPropagation(); toggleCardFavorite(${l.id})" 
+                class="absolute top-3 right-3 w-9 h-9 rounded-full bg-white/95 hover:bg-white flex items-center justify-center shadow-md transition-all active:scale-90 z-20" title="${isFav ? 'Bỏ lưu tin' : 'Lưu tin yêu thích'}">
+                ${heartIconHtml}
+              </button>
+            </div>
+
+            <!-- Cột thông tin chi tiết (Bên phải) -->
+            <div class="p-4 sm:p-5 flex-1 flex flex-col justify-between">
+              <div>
+                <div class="flex items-start justify-between gap-2">
+                  <h3 class="text-base font-bold text-gray-900 group-hover:text-indigo-600 transition-colors line-clamp-2">
+                    ${l.title}
+                  </h3>
+                  <span class="text-lg font-black text-red-600 shrink-0">
+                    ${formatPrice(l.price)}
+                  </span>
+                </div>
+
+                <!-- Địa chỉ -->
+                <p class="text-xs text-gray-500 mt-2 flex items-center gap-1">
+                  <span class="material-symbols-outlined text-sm text-gray-400">location_on</span>
+                  <span>${l.address ? l.address + ', ' : ''}${l.district ? l.district + ', ' : ''}${l.city || 'Toàn quốc'}</span>
+                </p>
+
+                <!-- Các thông số chi tiết theo hàng -->
+                <div class="flex flex-wrap items-center gap-x-4 gap-y-2 mt-3 pt-3 border-t border-gray-100 text-xs text-gray-600 font-medium">
+                  ${l.area ? `<span class="flex items-center gap-1 font-bold text-gray-800"><span class="material-symbols-outlined text-sm text-indigo-500">square_foot</span>${l.area} m²</span>` : ''}
+                  ${l.bedrooms ? `<span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm text-gray-400">bed</span>${l.bedrooms} PN</span>` : ''}
+                  ${l.bathrooms ? `<span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm text-gray-400">bathtub</span>${l.bathrooms} PT</span>` : ''}
+                  ${l.direction ? `<span class="flex items-center gap-1 bg-amber-50 text-amber-800 px-2 py-0.5 rounded-md font-semibold border border-amber-200/60"><span class="material-symbols-outlined text-sm">explore</span>Hướng ${l.direction}</span>` : ''}
+                </div>
+              </div>
+
+              <!-- Chân thẻ: Nút so sánh & Ngày đăng -->
+              <div class="flex items-center justify-between mt-4 pt-3 border-t border-gray-100 text-xs">
+                <div class="flex items-center gap-3">
+                  <span class="text-gray-400 flex items-center gap-1">
+                    <span class="material-symbols-outlined text-xs">schedule</span>
+                    ${new Date(l.createdAt).toLocaleDateString('vi-VN')}
+                  </span>
+                  <!-- Nút thêm vào so sánh -->
+                  <button onclick="event.stopPropagation(); toggleCompare(${l.id})" 
+                    class="inline-flex items-center gap-1 text-[11px] font-semibold px-2 py-0.5 rounded border transition-colors ${isCompared ? 'bg-purple-100 text-purple-700 border-purple-300' : 'bg-gray-50 text-gray-500 hover:text-purple-600 border-gray-200'}">
+                    <span class="material-symbols-outlined text-xs">balance</span> ${isCompared ? 'Đã chọn so sánh' : '+ So sánh'}
+                  </button>
+                </div>
+                <span class="text-indigo-600 font-bold flex items-center gap-0.5 group-hover:translate-x-1 transition-transform">
+                  Chi tiết <span class="material-symbols-outlined text-sm">arrow_forward</span>
+                </span>
+              </div>
+            </div>
+          </article>
+        `;
+      }).join('');
+    }
+
+    // Toggle Favorite từ danh sách thẻ
+    function toggleCardFavorite(id) {
+      const numId = Number(id);
+      let favs = JSON.parse(localStorage.getItem('fav_listings') || '[]').map(Number);
+      if (favs.includes(numId)) {
+        favs = favs.filter(x => x !== numId);
+      } else {
+        favs.push(numId);
+      }
+      localStorage.setItem('fav_listings', JSON.stringify(favs));
+      renderListings(allCurrentListings);
+    }
+
+    // Tab xem các tin đã lưu yêu thích (Use Case: Lưu BĐS yêu thích)
+    async function loadSavedListingsTab() {
+      const favs = JSON.parse(localStorage.getItem('fav_listings') || '[]').map(Number);
+      const titleEl = document.getElementById('section-title');
+      const countEl = document.getElementById('listings-count');
+      const container = document.getElementById('listings');
+
+      titleEl.innerHTML = '❤️ Danh sách BĐS đã lưu yêu thích';
+
+      // Cập nhật trạng thái active cho chip nút
+      document.querySelectorAll('.filter-type-chip').forEach(c => c.className = 'filter-type-chip px-3.5 py-1.5 rounded-full text-xs font-semibold bg-gray-100 text-gray-600 hover:bg-gray-200');
+
+      if (favs.length === 0) {
+        container.innerHTML = `
+          <div class="text-center py-12 bg-white rounded-2xl border p-6 shadow-sm">
+            <span class="text-5xl block mb-2">💔</span>
+            <h3 class="font-bold text-gray-800 text-base">Bạn chưa lưu bất động sản nào</h3>
+            <p class="text-xs text-gray-400 mt-1 max-w-sm mx-auto">Bấm vào biểu tượng trái tim ❤️ ở góc trên mỗi tin đăng để lưu lại và đối chiếu bất kỳ lúc nào.</p>
+            <button onclick="resetFilters()" class="mt-4 px-5 py-2 bg-indigo-600 text-white rounded-xl text-xs font-bold shadow-sm hover:bg-indigo-700">
+              Khám phá danh sách BĐS ngay
+            </button>
+          </div>
+        `;
+        countEl.textContent = '0 tin đã lưu';
+        return;
+      }
+
+      try {
+        const res = await fetch('/api/listings');
+        const data = await res.json();
+        const savedData = data.filter(l => favs.includes(Number(l.id)));
+        renderListings(savedData);
+        countEl.textContent = `${savedData.length} tin đã lưu`;
+      } catch {
+        container.innerHTML = '<p class="text-red-500 text-center py-6">Lỗi tải tin đã lưu</p>';
+      }
+    }
+
+    // So sánh BĐS (Use Case: So sánh BĐS)
+    function toggleCompare(id) {
+      if (compareList.includes(id)) {
+        compareList = compareList.filter(x => x !== id);
+      } else {
+        if (compareList.length >= 3) {
+          alert('Chỉ có thể so sánh tối đa 3 bất động sản cùng lúc!');
+          return;
+        }
+        compareList.push(id);
+      }
+
+      const badge = document.getElementById('btnCompareBadge');
+      const countEl = document.getElementById('compareCount');
+      if (compareList.length > 0) {
+        badge.classList.remove('hidden');
+        countEl.textContent = compareList.length;
+      } else {
+        badge.classList.add('hidden');
+      }
+
+      renderListings(allCurrentListings);
+    }
+
+    async function openCompareModal() {
+      if (compareList.length < 2) {
+        alert('Vui lòng chọn ít nhất 2 bất động sản để so sánh!');
+        return;
+      }
+
+      const modal = document.getElementById('compareModal');
+      const content = document.getElementById('compareTableContent');
+      modal.classList.remove('hidden');
+      content.innerHTML = '<div class="text-center py-8 text-gray-400">Đang tải dữ liệu so sánh...</div>';
+
+      try {
+        const res = await fetch('/api/listings');
+        const all = await res.json();
+        const items = all.filter(l => compareList.includes(l.id));
+
+        content.innerHTML = `
+          <div class="overflow-x-auto">
+            <table class="w-full text-xs text-left border-collapse border border-gray-200">
+              <thead>
+                <tr class="bg-gray-100 text-gray-700">
+                  <th class="p-3 border font-bold">Tiêu chí so sánh</th>
+                  ${items.map(it => `
+                    <th class="p-3 border font-bold text-center max-w-[200px]">
+                      <div class="font-extrabold text-sm text-gray-900 line-clamp-2">${it.title}</div>
+                      <a href="property_detail.html?id=${it.id}" target="_blank" class="text-indigo-600 hover:underline block mt-1 font-normal">Xem chi tiết ↗</a>
+                    </th>
+                  `).join('')}
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-200">
+                <tr>
+                  <td class="p-3 border font-bold bg-gray-50">💰 Mức giá</td>
+                  ${items.map(it => `<td class="p-3 border text-center font-black text-red-600 text-sm">${formatPrice(it.price)}</td>`).join('')}
+                </tr>
+                <tr>
+                  <td class="p-3 border font-bold bg-gray-50">📐 Diện tích</td>
+                  ${items.map(it => `<td class="p-3 border text-center font-bold">${it.area ? it.area + ' m²' : '--'}</td>`).join('')}
+                </tr>
+                <tr>
+                  <td class="p-3 border font-bold bg-gray-50">🏷️ Đơn giá / m²</td>
+                  ${items.map(it => {
+                    const unitPrice = (it.price && it.area && it.area > 0) ? (it.price / it.area / 1000000).toFixed(1) + ' tr/m²' : '--';
+                    return `<td class="p-3 border text-center font-bold text-indigo-700">${unitPrice}</td>`;
+                  }).join('')}
+                </tr>
+                <tr>
+                  <td class="p-3 border font-bold bg-gray-50">🧭 Hướng nhà</td>
+                  ${items.map(it => `<td class="p-3 border text-center">${it.direction ? 'Hướng ' + it.direction : 'Chưa rõ'}</td>`).join('')}
+                </tr>
+                <tr>
+                  <td class="p-3 border font-bold bg-gray-50">🛏️ Phòng ngủ</td>
+                  ${items.map(it => `<td class="p-3 border text-center">${it.bedrooms || '--'} PN</td>`).join('')}
+                </tr>
+                <tr>
+                  <td class="p-3 border font-bold bg-gray-50">🛁 Phòng tắm</td>
+                  ${items.map(it => `<td class="p-3 border text-center">${it.bathrooms || '--'} PT</td>`).join('')}
+                </tr>
+                <tr>
+                  <td class="p-3 border font-bold bg-gray-50">📍 Vị trí</td>
+                  ${items.map(it => `<td class="p-3 border text-center">${it.district ? it.district + ', ' : ''}${it.city || ''}</td>`).join('')}
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        `;
+      } catch {
+        content.innerHTML = '<p class="text-red-500 text-center py-6">Lỗi tải dữ liệu so sánh</p>';
+      }
+    }
+
+    function closeCompareModal() {
+      document.getElementById('compareModal').classList.add('hidden');
+    }
+
+    function clearCompare() {
+      compareList = [];
+      document.getElementById('btnCompareBadge').classList.add('hidden');
+      closeCompareModal();
+      renderListings(allCurrentListings);
+    }
+
+    // Xem danh sách tin của chính mình (Ad1, Ad2, Sequence Diagram 3)
+    async function loadMyListingsTab() {
+      const container = document.getElementById('listings');
+      const countEl = document.getElementById('listings-count');
+      const titleEl = document.getElementById('section-title');
+      titleEl.textContent = 'Quản lý tin đăng của tôi';
+      container.innerHTML = '<div class="text-center py-10 text-gray-400">Đang tải tin đăng của bạn...</div>';
+
+      try {
+        const res = await fetch('/api/listings/my-listings', {
+          headers: { 'Authorization': 'Bearer ' + token }
+        });
+        const data = await res.json();
+        countEl.textContent = `${data.length} tin của bạn`;
+
+        if (!data || data.length === 0) {
+          container.innerHTML = `
+            <div class="text-center py-12 bg-white rounded-2xl border p-6">
+              <p class="font-bold text-gray-700">Bạn chưa đăng tin nào.</p>
+              <button onclick="showCreateForm()" class="mt-3 px-5 py-2 bg-indigo-600 text-white rounded-xl text-xs font-bold">
+                + Đăng tin mới ngay
+              </button>
+            </div>
+          `;
+          return;
+        }
+
+        container.innerHTML = data.map(l => {
+          let statusBadge = '';
+          if (l.status === 'Approved') statusBadge = '<span class="px-2.5 py-1 bg-emerald-100 text-emerald-800 rounded-full text-xs font-bold">🟢 Đã duyệt (Đang hiển thị)</span>';
+          else if (l.status === 'Pending') statusBadge = '<span class="px-2.5 py-1 bg-amber-100 text-amber-800 rounded-full text-xs font-bold">🟡 Chờ Admin duyệt</span>';
+          else if (l.status === 'Rejected') statusBadge = `<span class="px-2.5 py-1 bg-red-100 text-red-800 rounded-full text-xs font-bold" title="${l.rejectReason || ''}">🔴 Bị từ chối: ${l.rejectReason || ''}</span>`;
+          else if (l.status === 'Sold') statusBadge = '<span class="px-2.5 py-1 bg-purple-100 text-purple-800 rounded-full text-xs font-bold">🟣 Đã bán</span>';
+          else if (l.status === 'Rented') statusBadge = '<span class="px-2.5 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-bold">🔵 Đã cho thuê</span>';
+          else statusBadge = `<span class="px-2.5 py-1 bg-gray-100 text-gray-700 rounded-full text-xs font-bold">${l.status}</span>`;
+
+          return `
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-5 flex flex-col md:flex-row gap-4 items-start">
+              <div class="w-full md:w-44 h-32 bg-gray-100 rounded-xl overflow-hidden shrink-0">
+                ${l.imageUrls ? `<img src="${l.imageUrls.split(',')[0]}" class="w-full h-full object-cover"/>` : '<div class="w-full h-full flex items-center justify-center text-3xl">🏠</div>'}
+              </div>
+              <div class="flex-1">
+                <div class="flex flex-wrap items-center gap-2 mb-1">
+                  ${statusBadge}
+                  <span class="text-xs text-gray-400">Lượt xem: <strong>${l.viewCount || 0}</strong></span>
+                </div>
+                <h3 class="font-bold text-gray-900 text-base mt-1">${l.title}</h3>
+                <div class="text-lg font-black text-red-600 mt-1">${formatPrice(l.price)}</div>
+                <p class="text-xs text-gray-500 mt-1">📍 ${l.address ? l.address + ', ' : ''}${l.city}</p>
+                <div class="text-xs text-gray-400 mt-2">Ngày tạo: ${new Date(l.createdAt).toLocaleDateString('vi-VN')}</div>
+              </div>
+              <div class="flex flex-wrap md:flex-col gap-2 w-full md:w-auto shrink-0 justify-end">
+                <button onclick="pushListing(${l.id})" class="flex-1 md:flex-none px-4 py-2 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white rounded-xl text-xs font-bold flex items-center justify-center gap-1 shadow-sm">
+                  🚀 Đẩy tin lên đầu
+                </button>
+                <button onclick="markStatus(${l.id}, 'Sold')" class="flex-1 md:flex-none px-3.5 py-1.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl text-xs font-semibold">
+                  Đã bán
+                </button>
+                <button onclick="markStatus(${l.id}, 'Rented')" class="flex-1 md:flex-none px-3.5 py-1.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl text-xs font-semibold">
+                  Đã cho thuê
+                </button>
+                <button onclick="viewDetail(${l.id})" class="flex-1 md:flex-none px-3.5 py-1.5 text-indigo-600 hover:bg-indigo-50 rounded-xl text-xs font-semibold text-center">
+                  Xem chi tiết
+                </button>
+              </div>
+            </div>
+          `;
+        }).join('');
+      } catch (err) {
+        container.innerHTML = '<p class="text-red-500 text-center py-6">Lỗi tải tin của bạn</p>';
+      }
+    }
+
+    // Đẩy tin (Sequence Diagram 3 & Ad6)
+    async function pushListing(id) {
+      try {
+        const res = await fetch('/api/listings/' + id + '/push', {
+          method: 'PUT',
+          headers: { 'Authorization': 'Bearer ' + token }
+        });
+        const data = await res.json();
+        alert(data.message || 'Đã đẩy tin thành công!');
+        loadMyListingsTab();
+      } catch (err) {
+        alert('Lỗi khi đẩy tin');
+      }
+    }
+
+    // Đổi trạng thái tin
+    async function markStatus(id, newStatus) {
+      try {
+        const res = await fetch('/api/listings/' + id + '/status', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+          body: JSON.stringify({ status: newStatus })
+        });
+        const data = await res.json();
+        alert(data.message || 'Đã cập nhật trạng thái tin!');
+        loadMyListingsTab();
+      } catch (err) {
+        alert('Lỗi cập nhật');
+      }
+    }
+
+    let selectedBeds = 0;
+    let selectedMinPrice = null;
+    let selectedMaxPrice = null;
+    let selectedMinArea = null;
+    let selectedMaxArea = null;
+    let searchDebounceTimer = null;
+
+    function handleSearchInputDebounced() {
+      const val = document.getElementById('searchInput').value;
+      const clearBtn = document.getElementById('btnClearSearch');
+      if (val.trim().length > 0) {
+        clearBtn.classList.remove('hidden');
+      } else {
+        clearBtn.classList.add('hidden');
+      }
+
+      clearTimeout(searchDebounceTimer);
+      searchDebounceTimer = setTimeout(() => {
+        executeSearch();
+      }, 350);
+    }
+
+    function clearSearchInput() {
+      document.getElementById('searchInput').value = '';
+      document.getElementById('btnClearSearch').classList.add('hidden');
+      executeSearch();
+    }
+
+    function toggleAdvancedFilter() {
+      const box = document.getElementById('advancedFilterBox');
+      const btn = document.getElementById('btnToggleFilter');
+      box.classList.toggle('hidden');
+      if (!box.classList.contains('hidden')) {
+        btn.classList.add('bg-indigo-50', 'text-indigo-600', 'border-indigo-300');
+      } else {
+        btn.classList.remove('bg-indigo-50', 'text-indigo-600', 'border-indigo-300');
+      }
+    }
+
+    function quickFilterType(type, evt) {
+      currentFilter = type;
+      document.querySelectorAll('.filter-type-chip').forEach(c => {
+        c.className = 'filter-type-chip px-3.5 py-1.5 rounded-full text-xs font-semibold bg-gray-100 text-gray-600 hover:bg-gray-200';
       });
+      const targetBtn = evt ? evt.currentTarget : window.event?.target;
+      if (targetBtn) {
+        targetBtn.className = 'filter-type-chip px-3.5 py-1.5 rounded-full text-xs font-bold bg-indigo-600 text-white shadow-sm';
+      }
+      executeSearch();
+    }
+
+    function handlePriceRangeSelect(range) {
+      if (!range) {
+        selectedMinPrice = null;
+        selectedMaxPrice = null;
+      } else {
+        const parts = range.split('-');
+        selectedMinPrice = parseFloat(parts[0]) || null;
+        selectedMaxPrice = parseFloat(parts[1]) || null;
+      }
+      executeSearch();
+    }
+
+    function handleAreaRangeSelect(range) {
+      if (!range) {
+        selectedMinArea = null;
+        selectedMaxArea = null;
+      } else {
+        const parts = range.split('-');
+        selectedMinArea = parseFloat(parts[0]) || null;
+        selectedMaxArea = parseFloat(parts[1]) || null;
+      }
+      executeSearch();
+    }
+
+    function setFilterBeds(n) {
+      selectedBeds = n;
+      document.querySelectorAll('.bed-chip').forEach((c, idx) => {
+        if (idx === n) {
+          c.className = 'bed-chip px-2.5 py-1 rounded-md font-bold bg-white text-indigo-600 shadow-sm';
+        } else {
+          c.className = 'bed-chip px-2.5 py-1 rounded-md text-gray-600 hover:text-gray-900';
+        }
+      });
+      executeSearch();
+    }
+
+    function updateFilterUI() {
+      const tagsContainer = document.getElementById('activeFiltersContainer');
+      const tagsList = document.getElementById('activeFilterTags');
+      const badge = document.getElementById('filterCountBadge');
+      
+      const tags = [];
+      const keyword = document.getElementById('searchInput')?.value?.trim();
+      const city = document.getElementById('f_city')?.value?.trim();
+      const priceSelect = document.getElementById('f_priceRange');
+      const areaSelect = document.getElementById('f_areaRange');
+      const direction = document.getElementById('f_direction')?.value?.trim();
+
+      if (keyword) tags.push({ label: `Từ khóa: "${keyword}"`, clear: () => clearSearchInput() });
+      if (city) tags.push({ label: `Khu vực: ${city}`, clear: () => { document.getElementById('f_city').value = ''; executeSearch(); } });
+      if (priceSelect && priceSelect.value) {
+        const text = priceSelect.options[priceSelect.selectedIndex].text;
+        tags.push({ label: `Giá: ${text}`, clear: () => { priceSelect.value = ''; handlePriceRangeSelect(''); } });
+      }
+      if (areaSelect && areaSelect.value) {
+        const text = areaSelect.options[areaSelect.selectedIndex].text;
+        tags.push({ label: `Diện tích: ${text}`, clear: () => { areaSelect.value = ''; handleAreaRangeSelect(''); } });
+      }
+      if (direction) tags.push({ label: `Hướng: ${direction}`, clear: () => { document.getElementById('f_direction').value = ''; executeSearch(); } });
+      if (selectedBeds > 0) tags.push({ label: `Phòng ngủ: ${selectedBeds}+ PN`, clear: () => setFilterBeds(0) });
+      if (currentFilter) tags.push({ label: `Nhu cầu: ${currentFilter === 'Sale' ? 'Mua bán' : 'Cho thuê'}`, clear: () => quickFilterType(null) });
+
+      if (tags.length > 0) {
+        tagsContainer.classList.remove('hidden');
+        tagsList.innerHTML = tags.map((t, idx) => `
+          <span class="inline-flex items-center gap-1 bg-indigo-50 text-indigo-700 border border-indigo-200 px-2.5 py-0.5 rounded-full text-xs font-semibold">
+            ${t.label}
+            <button onclick="window.activeFiltersClear[${idx}]()" class="hover:text-red-500 font-bold ml-0.5">✕</button>
+          </span>
+        `).join('');
+        window.activeFiltersClear = tags.map(t => t.clear);
+
+        badge.textContent = tags.length;
+        badge.classList.remove('hidden');
+      } else {
+        tagsContainer.classList.add('hidden');
+        tagsList.innerHTML = '';
+        badge.classList.add('hidden');
+      }
+    }
+
+    function resetFilters() {
+      document.getElementById('searchInput').value = '';
+      document.getElementById('btnClearSearch').classList.add('hidden');
+      document.getElementById('f_city').value = '';
+      document.getElementById('f_priceRange').value = '';
+      document.getElementById('f_areaRange').value = '';
+      document.getElementById('f_direction').value = '';
+      document.getElementById('sortBy').value = 'priority';
+      selectedBeds = 0;
+      selectedMinPrice = null;
+      selectedMaxPrice = null;
+      selectedMinArea = null;
+      selectedMaxArea = null;
+      currentFilter = null;
+      setFilterBeds(0);
+      document.querySelectorAll('.filter-type-chip').forEach((c, idx) => {
+        if (idx === 0) c.className = 'filter-type-chip px-3.5 py-1.5 rounded-full text-xs font-bold bg-indigo-600 text-white shadow-sm';
+        else c.className = 'filter-type-chip px-3.5 py-1.5 rounded-full text-xs font-semibold bg-gray-100 text-gray-600 hover:bg-gray-200';
+      });
+      executeSearch();
+    }
+
+    // TÌM KIẾM & LỌC NÂNG CAO (Theo Sơ đồ Use Case Tìm kiếm & Tra cứu)
+    async function executeSearch() {
+      updateFilterUI();
+      const keyword = document.getElementById('searchInput').value.trim();
+      const city = document.getElementById('f_city')?.value?.trim() || '';
+      const direction = document.getElementById('f_direction')?.value?.trim() || '';
+      const sortBy = document.getElementById('sortBy')?.value || 'priority';
+
+      const titleEl = document.getElementById('section-title');
+      if (titleEl) titleEl.textContent = 'Kết quả tìm kiếm & Lọc bất động sản';
+
+      const params = new URLSearchParams();
+      if (keyword) params.append('keyword', keyword);
+      if (city) params.append('city', city);
+      if (currentFilter) params.append('type', currentFilter === 'Sale' ? 0 : 1);
+      if (selectedMinPrice) params.append('minPrice', selectedMinPrice);
+      if (selectedMaxPrice) params.append('maxPrice', selectedMaxPrice);
+      if (selectedMinArea) params.append('minArea', selectedMinArea);
+      if (selectedMaxArea) params.append('maxArea', selectedMaxArea);
+      if (selectedBeds > 0) params.append('bedrooms', selectedBeds);
+      if (direction) params.append('direction', direction);
+      if (sortBy) params.append('sortBy', sortBy);
+
+      try {
+        const res = await fetch('/api/listings/search?' + params.toString());
+        if (!res.ok) throw new Error('API search error');
+        const data = await res.json();
+        renderListings(data);
+      } catch (err) {
+        // Fallback sang /api/listings nếu endpoint search chưa được VS reload
+        try {
+          const resFallback = await fetch('/api/listings');
+          const dataFallback = await resFallback.json();
+          renderListings(dataFallback);
+        } catch {
+          document.getElementById('listings').innerHTML = '<p class="text-red-500 text-center py-8">Lỗi tìm kiếm dữ liệu. Hãy khởi động lại Backend trong Visual Studio (F5).</p>';
+        }
+      }
+    }
+
+    // Tải danh sách từ API
+    async function loadListings() {
+      executeSearch();
+    }
+
+    function viewDetail(id) {
+      window.location.href = 'property_detail.html?id=' + id;
+    }
+
+    function showCreateForm() {
+      if (currentUserRole === 'Buyer' || currentUserRole === 'Tenant') {
+        alert('Tài khoản của bạn là Người mua (Buyer), không có quyền đăng tin.\n\nTương tự như sàn Shopee, muốn đăng tin bán bạn cần tạo hoặc đăng nhập tài khoản Người bán (Seller) hoặc Môi giới (Agent)!');
+        return;
+      }
+      document.getElementById('createForm').classList.remove('hidden');
+      document.getElementById('toggleCreateBtn').classList.add('hidden');
+    }
+
+    function hideCreateForm() {
+      document.getElementById('createForm').classList.add('hidden');
+      document.getElementById('toggleCreateBtn').classList.remove('hidden');
+    }
+
+    // ĐĂNG TIN BẤT ĐỘNG SẢN
+    async function createListing() {
+      const msgEl = document.getElementById('create-msg');
+      const submitBtn = document.getElementById('btnSubmitListing');
+      
+      const title = document.getElementById('c_title').value.trim();
+      const city = document.getElementById('c_city').value.trim();
+      const priceRaw = document.getElementById('c_price').value.trim();
+      const price = parseFloat(priceRaw);
+
+      if (!title) {
+        alert('⚠️ Vui lòng nhập Tiêu đề tin đăng!');
+        document.getElementById('c_title').focus();
+        return;
+      }
+      if (!priceRaw || isNaN(price) || price <= 0) {
+        alert('⚠️ Vui lòng nhập Giá bất động sản hợp lệ (chỉ nhập số)!');
+        document.getElementById('c_price').focus();
+        return;
+      }
+      if (!city) {
+        alert('⚠️ Vui lòng nhập Tỉnh/Thành phố!');
+        document.getElementById('c_city').focus();
+        return;
+      }
+
+      msgEl.textContent = '⏳ Đang lưu tin đăng vào hệ thống...';
+      msgEl.className = 'mt-3 text-sm text-indigo-600 font-semibold';
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Đang đăng...';
+      }
+
+      try {
+        const currentToken = localStorage.getItem('accessToken');
+        if (!currentToken) {
+          alert('Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại!');
+          window.location.href = 'signin.html';
+          return;
+        }
+
+        const res = await fetch('/api/listings', {
+          method: 'POST',
+          headers: { 
+            'Content-Type': 'application/json', 
+            'Authorization': 'Bearer ' + currentToken 
+          },
+          body: JSON.stringify({
+            title: title,
+            description: document.getElementById('c_desc').value.trim(),
+            type: document.getElementById('c_type').value,
+            price: price,
+            address: document.getElementById('c_address').value.trim(),
+            city: city,
+            district: document.getElementById('c_district').value.trim(),
+            direction: document.getElementById('c_direction').value,
+            area: parseFloat(document.getElementById('c_area').value) || 0,
+            bedrooms: parseInt(document.getElementById('c_bed').value) || 0,
+            bathrooms: parseInt(document.getElementById('c_bath').value) || 0,
+            imageUrls: document.getElementById('c_image').value.trim()
+          })
+        });
+
+        const data = await res.json().catch(() => ({}));
+
+        if (res.ok) {
+          alert('🎉 Chúc mừng! Tin bất động sản đã được đăng thành công!');
+          
+          // Reset form
+          document.getElementById('c_title').value = '';
+          document.getElementById('c_desc').value = '';
+          document.getElementById('c_price').value = '';
+          document.getElementById('c_address').value = '';
+          document.getElementById('c_city').value = '';
+          document.getElementById('c_district').value = '';
+          document.getElementById('c_area').value = '';
+          document.getElementById('c_bed').value = '';
+          document.getElementById('c_bath').value = '';
+          document.getElementById('c_image').value = '';
+          document.getElementById('c_direction').value = '';
+          document.getElementById('priceHint').textContent = '';
+          document.getElementById('imagePreviewContainer').classList.add('hidden');
+
+          hideCreateForm(); 
+          msgEl.textContent = '';
+          loadListings(); 
+        } else if (res.status === 403) {
+          alert('🚫 ' + (data.message || 'Tài khoản Người mua không có quyền đăng tin!'));
+          hideCreateForm();
+        } else if (res.status === 401) {
+          alert('Phiên đăng nhập đã hết hạn. Đang chuyển về trang đăng nhập...');
+          localStorage.removeItem('accessToken');
+          window.location.href = 'signin.html';
+        } else {
+          alert('Lỗi: ' + (data.message || 'Không thể đăng tin'));
+          msgEl.textContent = '❌ Lỗi: ' + (data.message || 'Không thể đăng tin');
+          msgEl.className = 'mt-3 text-sm text-red-500 font-semibold';
+        }
+      } catch (err) {
+        alert('Lỗi kết nối tới máy chủ: ' + err.message);
+        msgEl.textContent = '❌ Lỗi kết nối: ' + err.message;
+        msgEl.className = 'mt-3 text-sm text-red-500 font-semibold';
+      } finally {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Đăng tin ngay';
+        }
+      }
+    }
+
+    document.getElementById('searchInput').addEventListener('keypress', e => {
+      if (e.key === 'Enter') searchListings();
     });
-  })();
-</script></main><nav class="fixed bottom-0 w-full z-50 pb-safe bg-surface-container-lowest/80 backdrop-blur-xl shadow-[0_-2px_12px_rgba(0,0,0,0.04)]" data-active-classes="text-on-surface font-semibold"><div class="flex justify-around items-center h-16 px-space-xs"><a class="flex flex-col items-center justify-center min-w-[56px] min-h-[44px] gap-1 text-on-surface-variant hover:text-on-surface transition-colors" data-path="home-property-search" href="#"><span class="material-symbols-outlined text-[24px]">real_estate_agent</span><span class="font-label-sm text-label-sm">Explore</span></a><a class="flex flex-col items-center justify-center min-w-[56px] min-h-[44px] gap-1 text-on-surface-variant hover:text-on-surface transition-colors" data-path="create-new-listing" href="#"><div class="w-12 h-12 rounded-full bg-secondary text-on-secondary flex items-center justify-center shadow-[0_4px_16px_-2px_rgba(144,77,0,0.35)]"><span class="material-symbols-outlined text-[26px]">add</span></div><span class="font-label-sm text-label-sm mt-1">Create</span></a><a class="flex flex-col items-center justify-center min-w-[56px] min-h-[44px] gap-1 text-on-surface-variant hover:text-on-surface transition-colors" data-path="saved-properties" href="#"><span class="material-symbols-outlined text-[24px]">favorite</span><span class="font-label-sm text-label-sm">Saved</span></a><a class="flex flex-col items-center justify-center min-w-[56px] min-h-[44px] gap-1 text-on-surface-variant hover:text-on-surface transition-colors" data-path="user-profile" href="#"><span class="material-symbols-outlined text-[24px]">person</span><span class="font-label-sm text-label-sm">Profile</span></a></div></nav></body></html>
+
+    // Tự động mở tab Tin đã lưu nếu chuyển từ Hồ sơ sang (?tab=saved)
+    const searchParams = new URLSearchParams(window.location.search);
+    if (searchParams.get('tab') === 'saved') {
+      setTimeout(() => loadSavedListingsTab(), 200);
+    } else {
+      loadListings();
+    }
+  </script>
+
+  <!-- MODAL SO SÁNH BẤT ĐỘNG SẢN (Use Case: So sánh BĐS) -->
+  <div id="compareModal" class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-3 sm:p-4 hidden backdrop-blur-sm">
+    <div class="bg-white rounded-3xl max-w-5xl w-full p-4 sm:p-6 shadow-2xl max-h-[92vh] flex flex-col">
+      <div class="flex items-center justify-between pb-4 border-b">
+        <div class="flex items-center gap-2">
+          <span class="material-symbols-outlined text-purple-600 text-2xl">balance</span>
+          <div>
+            <h3 class="font-extrabold text-gray-900 text-lg">Bảng So Sánh Bất Động Sản</h3>
+            <p class="text-xs text-gray-500">Đối chiếu mức giá, diện tích, đơn giá m² và tiện ích giữa các BĐS</p>
+          </div>
+        </div>
+        <button onclick="closeCompareModal()" class="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-gray-600 font-bold">✕</button>
+      </div>
+
+      <div id="compareTableContent" class="py-4 overflow-y-auto flex-1">
+        <!-- Render động -->
+      </div>
+
+      <div class="flex items-center justify-between pt-4 border-t">
+        <button onclick="clearCompare()" class="px-4 py-2 text-xs font-bold text-red-600 hover:bg-red-50 rounded-xl transition-colors">
+          Xóa danh sách so sánh
+        </button>
+        <button onclick="closeCompareModal()" class="px-6 py-2.5 bg-gray-900 hover:bg-black text-white text-xs font-bold rounded-xl shadow">
+          Đóng lại
+        </button>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

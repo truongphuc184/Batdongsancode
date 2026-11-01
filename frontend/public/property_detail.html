@@ -1,324 +1,502 @@
 <!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Chi tiết BĐS - Bất Động Sản</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@400,0" rel="stylesheet"/>
+  <style>body{font-family:'Inter',sans-serif;}</style>
+</head>
+<body class="bg-gray-100 min-h-screen pb-24 text-gray-800">
+  <!-- Header -->
+  <header class="bg-white shadow-sm sticky top-0 z-50">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-2 sm:gap-3">
+        <a href="home_property_search.html" class="w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center hover:bg-gray-100 transition-colors">
+          <span class="material-symbols-outlined text-xl">arrow_back</span>
+        </a>
+        <span class="font-bold text-gray-900 text-sm sm:text-base">Chi tiết bất động sản</span>
+      </div>
+      <a href="home_property_search.html" class="text-xs font-semibold text-indigo-600 hover:underline">Về danh sách</a>
+    </div>
+  </header>
 
-<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/><meta content="mobile_stack" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Manrope:wght@600;700&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{width:100vw;margin:0;padding:0;}body{overscroll-behavior:none;}.pb-safe{padding-bottom:env(safe-area-inset-bottom,0px);}.pt-safe{padding-top:env(safe-area-inset-top,0px);}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { colors: { "primary-fixed": "#dae2fd", "on-primary-container": "#7c839b", "surface-container-highest": "#e0e3e5", "surface-tint": "#565e74", "secondary-fixed-dim": "#ffb77d", "inverse-on-surface": "#eff1f3", "surface-container": "#eceef0", "on-secondary-fixed": "#2f1500", "tertiary-fixed-dim": "#b9c7e0", "tertiary": "#000000", "primary-container": "#131b2e", "on-error-container": "#93000a", "on-surface-variant": "#45464d", "secondary-fixed": "#ffdcc3", "secondary-container": "#fe932c", "outline-variant": "#c6c6cd", "surface-container-low": "#f2f4f6", "on-tertiary": "#ffffff", "error": "#ba1a1a", "on-primary": "#ffffff", "surface-bright": "#f7f9fb", "outline": "#76777d", "tertiary-fixed": "#d5e3fd", "on-tertiary-fixed-variant": "#3a485c", "on-surface": "#191c1e", "on-tertiary-container": "#76859b", "surface": "#f7f9fb", "on-secondary-container": "#663500", "on-error": "#ffffff", "error-container": "#ffdad6", "secondary": "#904d00", "inverse-surface": "#2d3133", "on-background": "#191c1e", "surface-container-high": "#e6e8ea", "on-secondary-fixed-variant": "#6e3900", "primary-fixed-dim": "#bec6e0", "surface-variant": "#e0e3e5", "tertiary-container": "#0d1c2f", "primary": "#000000", "on-primary-fixed-variant": "#3f465c", "surface-dim": "#d8dadc", "on-tertiary-fixed": "#0d1c2f", "inverse-primary": "#bec6e0", "on-primary-fixed": "#131b2e", "on-secondary": "#ffffff", "background": "#f7f9fb", "surface-container-lowest": "#ffffff" }, borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, spacing: { "space-xs": "0.25rem", "space-md": "1rem", "gutter": "1rem", "space-sm": "0.5rem", "space-xl": "2rem", "space-lg": "1.5rem", "margin": "1.25rem", "gutter-sm": "0.75rem", "margin-lg": "1.75rem" }, fontFamily: { "label-sm": ["Inter"], "body-lg": ["Inter"], "label-md": ["Inter"], "headline-md": ["Manrope"], "headline-lg": ["Manrope"], "display-lg": ["Manrope"], "headline-lg-mobile": ["Manrope"], "body-sm": ["Inter"], "body-md": ["Inter"], "headline-sm": ["Manrope"] }, fontSize: { "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.04em", "fontWeight": "600" }], "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }], "label-md": ["13px", { "lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "500" }], "headline-md": ["22px", { "lineHeight": "30px", "letterSpacing": "-0.015em", "fontWeight": "600" }], "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.025em", "fontWeight": "600" }], "display-lg": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.03em", "fontWeight": "700" }], "headline-lg-mobile": ["26px", { "lineHeight": "34px", "letterSpacing": "-0.02em", "fontWeight": "600" }], "body-sm": ["12px", { "lineHeight": "18px", "fontWeight": "400" }], "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }], "headline-sm": ["18px", { "lineHeight": "26px", "letterSpacing": "-0.01em", "fontWeight": "600" }] } } } };</script><style>
-    body {
-      min-height: max(884px, 100dvh);
+  <div id="content" class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 mt-4 sm:mt-6">
+    <div class="text-gray-400 text-center py-16 bg-white rounded-2xl shadow-sm border">Đang tải chi tiết...</div>
+  </div>
+
+  <!-- Bottom Nav -->
+  <nav class="fixed bottom-0 w-full bg-white border-t border-gray-200 z-50 shadow-lg">
+    <div class="flex justify-around items-center h-16 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+      <a href="home_property_search.html" class="flex flex-col items-center text-indigo-600">
+        <span class="material-symbols-outlined text-2xl">travel_explore</span>
+        <span class="text-[11px] mt-0.5 font-bold">Khám phá</span>
+      </a>
+      <a href="user_profile.html" class="flex flex-col items-center text-gray-500 hover:text-indigo-600">
+        <span class="material-symbols-outlined text-2xl">account_circle</span>
+        <span class="text-[11px] mt-0.5 font-semibold">Hồ sơ</span>
+      </a>
+    </div>
+  </nav>
+
+  <script>
+    const token = localStorage.getItem('accessToken');
+    if (!token) window.location.href = 'signin.html';
+
+    function formatPrice(price) {
+      if (!price || price <= 0) return 'Thương lượng';
+      if (price >= 1000000000) {
+        const ty = price / 1000000000;
+        return (Number.isInteger(ty) ? ty : ty.toFixed(2).replace(/\.?0+$/, '')) + ' tỷ';
+      }
+      if (price >= 1000000) {
+        const tr = price / 1000000;
+        return (Number.isInteger(tr) ? tr : tr.toFixed(1).replace(/\.?0+$/, '')) + ' triệu';
+      }
+      return price.toLocaleString('vi-VN') + ' đ';
     }
-  </style>
-  </head><body class="bg-surface font-body-md text-body-md text-on-surface antialiased"><header class="fixed top-0 w-full z-50 pt-safe bg-surface-container-lowest/80 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="h-16 px-margin flex items-center justify-between gap-space-sm"><div class="flex items-center gap-space-sm min-w-0"><button aria-label="Go back" class="w-11 h-11 -ml-space-sm flex items-center justify-center text-on-surface hover:bg-surface-container rounded-full transition-colors" onclick="history.back()" type="button"><span class="material-symbols-outlined text-[24px]">arrow_back_ios_new</span></button><img alt="Havenly Logo" class="h-7 w-auto object-contain shrink-0" src="https://lh3.googleusercontent.com/aida/AEtjO1XoiYaOUYQIJOlGgy5QrLJDTjXSighpy2CqKXz0MKKbcCIg25e3ZNwWqdtf3yzSaot_6le7i0nQIZh-5WWsTQQpYE4PJaa7LCgbIps_EsW-E2_mpsHp_0uvwVEcBDFGXSL3B12BvPr9bYawKo3v5yxETRTNa8NRtjhHAkrR--xs0xFq8434oYUqWs5wCJWkoXmH37qxxZESIwwxOdBv1yy7mgGUN24AZA1_7anTcR_lSw"/><h1 class="font-headline-sm text-headline-sm text-on-surface truncate">Property Details</h1></div><div class="flex items-center gap-space-xs shrink-0"><button aria-label="Notifications" class="w-11 h-11 rounded-full flex items-center justify-center text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors" type="button"><span class="material-symbols-outlined text-[22px]">notifications</span></button><button aria-label="View user profile" class="w-11 h-11 flex items-center justify-center" type="button"><img alt="Profile" class="w-8 h-8 rounded-full object-cover shadow-[0_2px_8px_-2px_rgba(15,23,42,0.1)]" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB-WUVGzrVbS9a42Kup1PPEHSz22lZDqcdUyGy3hVLTWGdmnpm7Kq97kzsHYxaS77FSV6ClNYPDRlpfdi-FaUiWDE7Gt2TtIANzGpW1_-hH41r1x9sDsnNx9KIAMb3TpO3oQi6P7IuMNDLuE_K3nF9KC0RFG4jZfPJTtYkWLrOhwDv4F6VDp-vggIN87nYPFyDltS4KSdnUQR0hM9ylyHm7g5p4FRV-qp5-P5qSBgbw"/></button></div></div></header><main class="flex flex-col relative w-full pt-16 pb-safe bg-surface min-h-screen"><div class="flex flex-col w-full pb-24">
-<!-- Hero Gallery Section (imageCarousel) -->
-<section aria-label="Property gallery" class="relative w-full overflow-hidden bg-surface-container-high">
-<div class="flex w-full overflow-x-auto snap-x snap-mandatory scroll-smooth no-scrollbar" id="carouselWrapper" style="scrollbar-width: none; -ms-overflow-style: none;">
-<div class="min-w-full w-full h-80 relative snap-start shrink-0">
-<img class="w-full h-full object-cover" data-alt="Expansive modern minimalist glass pavilion villa exterior at dusk with warm architectural illumination, cantilevered concrete rooflines, and still infinity plunge pool reflecting evening canyon twilight in Beverly Hills." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDOU-OLcoQ_AGQGhBH851s9n4lkdtmb-XoRfLEmQEjbEr7B-7XkxOHAnFR61HGwbGwzqLVMCLCiphuOjFy77U-FRDFF3u-Bj4adR0y_YVUfgGQ-zBzJXtJFlbI_Sh6cyU6OYF4YrFusNsyS3_slDhp5sDVb5VSsp5nOqr6NufqG7X_Tn8MLn7L3cFyCECJ0nkvGo5TkLDE5p5dpKY7b2rXuZky4aYnyDa5Ke-R-FH99"/>
-<div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/25 pointer-events-none"></div>
-</div>
-<div class="min-w-full w-full h-80 relative snap-start shrink-0">
-<img class="w-full h-full object-cover" data-alt="Ultra-luxury open-plan living room with floor-to-ceiling glass curtain walls, bespoke Italian walnut cabinetry, custom travertine fireplace, and panoramic canyon vistas." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCv8UvJcQ01hxwfCmn3dYopEajeiH5sQpKOwhpke3ho7KSFnqv6natDeican_buRVZvj-m23kg3u6tlKqDIVpegrZTypnwbPukzN0ptaMk7UM1di8Zxamh9LrwBycpLhnsCv9MyagG9XHLRZe6xn7ZUsg7zV5ggsvzbuAAdof5LAVUgdlifLNgW0yA20OO_GsPxQIQaJMNoWQTLmT2iMfSnZ_9zBc5BkTbGeoS9JAFR"/>
-<div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/25 pointer-events-none"></div>
-</div>
-<div class="min-w-full w-full h-80 relative snap-start shrink-0">
-<img class="w-full h-full object-cover" data-alt="Architectural master bedroom suite overlooking private cantilevered cedar terrace and zen gardens, bathed in warm soft morning sunlight." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBzlhu9eB16O5PxRhD-LFnRt2NY5-uawBh4o0tv1pzd8tzg3akOIVVohxy00zRmJO9Q1nLhwODXnSnYNy3F6sgJIyt0yAUPwfh8y8cS52tfx-RKamWm7xuLalMhKgVKQNkpwTJ4u5C7WZ1KHcwGiqYi1q2YGpip55upNXVPyQCK55bYHyEAbl6RRKTLBUmZB78I4F7C-o1I2Yo_-QeIS9tb1J9mGp1h8MKBbr2CEnmu"/>
-<div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/25 pointer-events-none"></div>
-</div>
-</div>
-<!-- Gallery Overlays & Controls -->
-<div class="absolute top-4 left-margin right-margin flex items-center justify-between pointer-events-none">
-<div class="flex items-center gap-space-xs pointer-events-auto">
-<span class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-black/60 backdrop-blur-md text-white font-label-sm text-label-sm shadow-md">
-<span class="material-symbols-outlined text-[14px]">view_in_ar</span>
-          3D VIRTUAL TOUR
-        </span>
-</div>
-<div class="flex items-center gap-space-xs pointer-events-auto">
-<button aria-label="Share property" class="w-10 h-10 rounded-full bg-black/60 backdrop-blur-md text-white flex items-center justify-center transition-transform active:scale-95 shadow-md" id="shareBtn" type="button">
-<span class="material-symbols-outlined text-[20px]">share</span>
-</button>
-<button aria-label="Save to favorites" class="w-10 h-10 rounded-full bg-black/60 backdrop-blur-md text-white flex items-center justify-center transition-transform active:scale-95 shadow-md" id="favoriteHeroBtn" type="button">
-<span class="material-symbols-outlined text-[20px]" id="heroFavIcon">favorite_border</span>
-</button>
-</div>
-</div>
-<!-- Floating Counter & Floorplan tag -->
-<div class="absolute bottom-4 left-margin right-margin flex items-center justify-between pointer-events-none">
-<span class="px-2.5 py-1 rounded-full bg-black/70 backdrop-blur-md text-white font-label-sm text-label-sm tracking-widest shadow-sm">
-<span id="currentSlide">1</span>/8 PHOTOS
-      </span>
-<button class="pointer-events-auto flex items-center gap-1 px-3 py-1 rounded-full bg-surface-container-lowest/90 backdrop-blur-md text-on-surface font-label-sm text-label-sm shadow-md active:scale-95 transition-transform" type="button">
-<span class="material-symbols-outlined text-[16px] text-secondary">architecture</span>
-        FLOOR PLAN
-      </button>
-</div>
-</section>
-<!-- Core Details Section -->
-<div class="px-margin pt-space-lg flex flex-col gap-space-md">
-<!-- Verified Status & Title -->
-<div class="flex flex-col gap-space-xs">
-<div class="flex items-center gap-2">
-<span class="px-2 py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm tracking-wide">
-          EXCLUSIVE LISTING
-        </span>
-<span class="flex items-center gap-1 text-on-surface-variant font-label-sm text-label-sm">
-<span class="material-symbols-outlined text-[16px] text-secondary">verified</span>
-          VERIFIED BY ARCHITECT
-        </span>
-</div>
-<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface tracking-tight">The Glass Pavilion Residence</h2>
-<div class="flex items-center gap-1.5 text-on-surface-variant">
-<span class="material-symbols-outlined text-[18px]">location_on</span>
-<span class="font-body-md text-body-md truncate">742 Evergreen Terrace, Beverly Hills, CA 90210</span>
-</div>
-</div>
-<!-- Price Structure Card -->
-<div class="p-space-md rounded-xl bg-surface-container-lowest shadow-sm flex items-center justify-between">
-<div class="flex flex-col">
-<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Acquisition Price</span>
-<div class="flex items-baseline gap-2">
-<span class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface font-bold">$1,850,000</span>
-<span class="font-label-md text-label-md text-on-surface-variant font-normal">est. $8,420/mo</span>
-</div>
-</div>
-<button class="px-3 py-2 rounded-lg bg-surface-container-low text-on-surface font-label-sm text-label-sm flex items-center gap-1 active:scale-95 transition-transform" type="button">
-<span class="material-symbols-outlined text-[16px]">calculate</span>
-        Mortgage
-      </button>
-</div>
-<!-- Key Property Specifications Grid (Bento) -->
-<div class="grid grid-cols-4 gap-2">
-<div class="flex flex-col items-center justify-center p-3 rounded-xl bg-surface-container-lowest shadow-sm text-center">
-<span class="material-symbols-outlined text-secondary text-[22px] mb-1">aspect_ratio</span>
-<span class="font-headline-sm text-headline-sm text-on-surface">380</span>
-<span class="font-label-sm text-label-sm text-on-surface-variant">m² Living</span>
-</div>
-<div class="flex flex-col items-center justify-center p-3 rounded-xl bg-surface-container-lowest shadow-sm text-center">
-<span class="material-symbols-outlined text-secondary text-[22px] mb-1">bed</span>
-<span class="font-headline-sm text-headline-sm text-on-surface">4</span>
-<span class="font-label-sm text-label-sm text-on-surface-variant">Bedrooms</span>
-</div>
-<div class="flex flex-col items-center justify-center p-3 rounded-xl bg-surface-container-lowest shadow-sm text-center">
-<span class="material-symbols-outlined text-secondary text-[22px] mb-1">bathtub</span>
-<span class="font-headline-sm text-headline-sm text-on-surface">3.5</span>
-<span class="font-label-sm text-label-sm text-on-surface-variant">Baths</span>
-</div>
-<div class="flex flex-col items-center justify-center p-3 rounded-xl bg-surface-container-lowest shadow-sm text-center">
-<span class="material-symbols-outlined text-secondary text-[22px] mb-1">garage</span>
-<span class="font-headline-sm text-headline-sm text-on-surface">2</span>
-<span class="font-label-sm text-label-sm text-on-surface-variant">Garages</span>
-</div>
-</div>
-<!-- Architectural Narrative Description -->
-<div class="p-space-md rounded-xl bg-surface-container-lowest shadow-sm flex flex-col gap-space-xs">
-<h3 class="font-headline-sm text-headline-sm text-on-surface">Curated Narrative</h3>
-<p class="font-body-md text-body-md text-on-surface-variant line-clamp-3 transition-all duration-300" id="descContainer">
-        An architecturally celebrated sanctuary featuring floor-to-ceiling glass walls, expansive private terrace, bespoke Italian kitchen cabinetry, infinity plunge pool, and panoramic canyon views. Designed by acclaimed masters of organic modernism, this residence harmonizes sustainable mass timber accents with raw board-formed concrete slabs to cultivate effortless luxury.
-      </p>
-<button class="self-start text-secondary font-label-md text-label-md flex items-center gap-0.5 pt-1" id="toggleDescBtn" type="button">
-<span>Read more</span>
-<span class="material-symbols-outlined text-[16px]" id="descIcon">expand_more</span>
-</button>
-</div>
-<!-- Curated Amenities Highlights -->
-<div class="p-space-md rounded-xl bg-surface-container-lowest shadow-sm flex flex-col gap-space-sm">
-<h3 class="font-headline-sm text-headline-sm text-on-surface">Bespoke Features</h3>
-<div class="grid grid-cols-2 gap-space-sm">
-<div class="flex items-center gap-2">
-<div class="w-8 h-8 rounded-lg bg-surface-container-low flex items-center justify-center text-on-surface">
-<span class="material-symbols-outlined text-[18px]">pool</span>
-</div>
-<span class="font-body-md text-body-md text-on-surface">Infinity Plunge Pool</span>
-</div>
-<div class="flex items-center gap-2">
-<div class="w-8 h-8 rounded-lg bg-surface-container-low flex items-center justify-center text-on-surface">
-<span class="material-symbols-outlined text-[18px]">wine_bar</span>
-</div>
-<span class="font-body-md text-body-md text-on-surface">Climate Wine Cellar</span>
-</div>
-<div class="flex items-center gap-2">
-<div class="w-8 h-8 rounded-lg bg-surface-container-low flex items-center justify-center text-on-surface">
-<span class="material-symbols-outlined text-[18px]">energy_savings_leaf</span>
-</div>
-<span class="font-body-md text-body-md text-on-surface">Solar Microgrid</span>
-</div>
-<div class="flex items-center gap-2">
-<div class="w-8 h-8 rounded-lg bg-surface-container-low flex items-center justify-center text-on-surface">
-<span class="material-symbols-outlined text-[18px]">shield</span>
-</div>
-<span class="font-body-md text-body-md text-on-surface">Integrated Smart Sec</span>
-</div>
-</div>
-</div>
-<!-- Architectural Concierge / Representation -->
-<div class="p-space-md rounded-xl bg-surface-container-lowest shadow-sm flex items-center justify-between">
-<div class="flex items-center gap-space-sm">
-<div class="relative">
-<img class="w-12 h-12 rounded-full object-cover shadow-sm" data-alt="Professional headshot of a seasoned luxury architectural broker wearing a tailored charcoal suit, warm natural studio lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCFGojDhgR7zOGINU338ahk517B9jwTl6PzpIVcvhX5Sivbsu4SWP4nlbkuo4xSEkRAu5e6JdXxslO3W_DqF4xW-2ugEB6U2WYZ9cNUY_AATbnRBHNxJwXyaOmA2lPA5DQGSmewD7DuwsHLvlSN7KGLwhuVHnkJ33Bp1AiPKNtq3ImxweLSk6J3zbOQ9Eot4qQPRBD5cWNftmsGIV3rL3wk2WNEkWraVjS6QOVNLRWv"/>
-<span class="absolute bottom-0 right-0 w-3.5 h-3.5 bg-secondary rounded-full flex items-center justify-center text-white text-[10px]">
-<span class="material-symbols-outlined text-[10px]">check</span>
-</span>
-</div>
-<div class="flex flex-col">
-<div class="flex items-center gap-1">
-<span class="font-headline-sm text-headline-sm text-on-surface">Elena Rostova</span>
-</div>
-<span class="font-body-sm text-body-sm text-on-surface-variant">Principal Director • Beverly Hills Guild</span>
-</div>
-</div>
-<button class="px-3 py-2 rounded-lg bg-surface-container-high text-on-surface font-label-sm text-label-sm active:scale-95 transition-transform flex items-center gap-1" id="scheduleShortcutBtn" type="button">
-<span class="material-symbols-outlined text-[16px]">calendar_today</span>
-        Tour
-      </button>
-</div>
-<!-- Location & Geographic Context -->
-<div class="p-space-md rounded-xl bg-surface-container-lowest shadow-sm flex flex-col gap-space-sm">
-<div class="flex items-center justify-between">
-<div>
-<h3 class="font-headline-sm text-headline-sm text-on-surface">Location Context</h3>
-<p class="font-body-sm text-body-sm text-on-surface-variant">Beverly Crest • Private Enclave</p>
-</div>
-<a class="flex items-center gap-1 font-label-md text-label-md text-secondary" href="#directions" id="directionsBtn">
-<span>Get Directions</span>
-<span class="material-symbols-outlined text-[16px]">near_me</span>
-</a>
-</div>
-<!-- Interactive Map Preview -->
-<div class="relative w-full h-44 rounded-lg overflow-hidden shadow-inner group">
-<div class="w-full h-full bg-cover bg-center" data-location="742 Evergreen Terrace, Beverly Hills, CA 90210" style=""></div>
-<div class="absolute inset-0 bg-black/10"></div>
-<div class="absolute inset-0 flex items-center justify-center pointer-events-none">
-<div class="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center shadow-xl animate-bounce">
-<span class="material-symbols-outlined text-[20px]">villa</span>
-</div>
-</div>
-<div class="absolute bottom-2 left-2 px-2.5 py-1 rounded bg-black/70 backdrop-blur-md text-white font-label-sm text-label-sm">
-          9.4 WalkScore to Canyon Trails
-        </div>
-</div>
-</div>
-</div>
-<!-- Sticky Bottom High-Contrast Action Bar -->
-<div class="fixed bottom-0 left-0 right-0 z-40 bg-surface-container-lowest/95 backdrop-blur-xl px-margin py-3 shadow-[0_-8px_30px_rgba(15,23,42,0.08)]">
-<div class="max-w-lg mx-auto flex items-center gap-space-sm">
-<button aria-label="Save to Favorites" class="w-12 h-12 rounded-xl bg-surface-container-low text-on-surface flex items-center justify-center transition-transform active:scale-90 shadow-sm shrink-0" id="favoriteActionBtn" type="button">
-<span class="material-symbols-outlined text-[24px]" id="barFavIcon">favorite_border</span>
-</button>
-<button class="flex-1 h-12 rounded-xl bg-primary text-on-primary font-headline-sm text-headline-sm flex items-center justify-center gap-2 active:scale-[0.98] transition-all shadow-md" id="contactOwnerBtn" type="button">
-<span class="material-symbols-outlined text-[20px]">mail</span>
-<span>Contact Owner</span>
-</button>
-</div>
-</div>
-</div>
-<script>
-  (() => {
-    // Description toggle interaction
-    const desc = document.getElementById('descContainer');
-    const toggleBtn = document.getElementById('toggleDescBtn');
-    const descIcon = document.getElementById('descIcon');
-    let isExpanded = false;
 
-    if (toggleBtn && desc) {
-      toggleBtn.addEventListener('click', () => {
-        isExpanded = !isExpanded;
-        if (isExpanded) {
-          desc.classList.remove('line-clamp-3');
-          toggleBtn.querySelector('span:first-child').innerText = 'Read less';
-          descIcon.innerText = 'expand_less';
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get('id');
+
+    if (!id) {
+      document.getElementById('content').innerHTML = '<p class="text-center text-gray-500 py-12">Không tìm thấy mã tin đăng</p>';
+    } else {
+      fetch('/api/listings/' + id)
+        .then(r => { if (!r.ok) throw new Error(); return r.json(); })
+        .then(l => {
+          const rawImages = (l.imageUrls && l.imageUrls.trim().length > 0)
+            ? l.imageUrls.split(',').map(s => s.trim()).filter(s => s.length > 0)
+            : [];
+          window.propertyImages = rawImages.length > 0 ? rawImages : ['https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1200&q=80'];
+          window.currentImageIdx = 0;
+
+          document.getElementById('content').innerHTML = `
+            <div class="bg-white rounded-3xl shadow-sm border border-gray-200 overflow-hidden mb-8">
+              <!-- BỘ SƯU TẬP ẢNH (GALLERY & SLIDER NHIỀU ẢNH) -->
+              <div class="relative bg-gray-900 group">
+                <!-- Ảnh to chính -->
+                <div class="w-full h-64 sm:h-80 md:h-[420px] lg:h-[480px] overflow-hidden flex items-center justify-center bg-black/10">
+                  <img id="mainGalleryImage" src="${window.propertyImages[0]}" alt="${l.title}" 
+                    class="w-full h-full object-cover transition-all duration-300"
+                    onerror="this.src='https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1200&q=80'"/>
+                </div>
+
+                <!-- Tag Loại BĐS -->
+                <span class="absolute top-4 left-4 px-3.5 py-1.5 rounded-full text-xs font-bold shadow-md ${l.type === 'Sale' ? 'bg-emerald-600 text-white' : 'bg-blue-600 text-white'}">
+                  ${l.type === 'Sale' ? 'Cần bán' : 'Cho thuê'}
+                </span>
+
+                <!-- Đếm số lượng ảnh -->
+                <span id="galleryCounter" class="absolute bottom-4 right-4 bg-black/70 backdrop-blur-md text-white text-xs font-bold px-3 py-1 rounded-full shadow flex items-center gap-1.5">
+                  <span class="material-symbols-outlined text-sm">photo_library</span>
+                  <span id="counterText">1 / ${window.propertyImages.length} ảnh</span>
+                </span>
+
+                <!-- Nút trượt ảnh Trước / Sau nếu có nhiều ảnh -->
+                ${window.propertyImages.length > 1 ? `
+                <button onclick="prevImage()" class="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/40 hover:bg-black/75 text-white flex items-center justify-center backdrop-blur-md transition-all shadow-md">
+                  <span class="material-symbols-outlined">chevron_left</span>
+                </button>
+                <button onclick="nextImage()" class="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/40 hover:bg-black/75 text-white flex items-center justify-center backdrop-blur-md transition-all shadow-md">
+                  <span class="material-symbols-outlined">chevron_right</span>
+                </button>
+                ` : ''}
+              </div>
+
+              <!-- Hàng ảnh nhỏ Thumbnails phía dưới -->
+              ${window.propertyImages.length > 1 ? `
+              <div class="p-3 bg-gray-50 border-t border-b border-gray-100 flex items-center gap-2.5 overflow-x-auto" id="thumbnailBar">
+                ${window.propertyImages.map((img, i) => `
+                  <button onclick="selectGalleryImage(${i})" class="gallery-thumb relative w-20 h-14 rounded-xl overflow-hidden shrink-0 border-2 transition-all ${i === 0 ? 'border-indigo-600 shadow-md ring-2 ring-indigo-200' : 'border-gray-200 opacity-60 hover:opacity-100'}">
+                    <img src="${img}" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/100x70?text=Anh'"/>
+                  </button>
+                `).join('')}
+              </div>
+              ` : ''}
+
+              <!-- Nội dung chi tiết BĐS -->
+              <div class="p-4 sm:p-6 md:p-8">
+                <h1 class="text-xl sm:text-2xl md:text-3xl font-black text-gray-900 leading-snug">${l.title}</h1>
+                <p class="text-xs sm:text-sm text-gray-500 mt-2 flex items-center gap-1.5">
+                  <span class="material-symbols-outlined text-base text-gray-400">location_on</span>
+                  ${l.address ? l.address + ', ' : ''}${l.district ? l.district + ', ' : ''}${l.city}
+                </p>
+
+                <!-- Mức giá -->
+                <div class="mt-4 p-4 bg-indigo-50/50 rounded-xl border border-indigo-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                  <div>
+                    <span class="text-xs text-indigo-700 font-medium">Mức giá niêm yết:</span>
+                    <div class="text-3xl font-black text-red-600">${formatPrice(l.price)}</div>
+                    <span class="text-xs text-gray-500">${l.price ? l.price.toLocaleString('vi-VN') + ' VNĐ' : ''}</span>
+                  </div>
+                  ${l.direction ? `<div class="text-right"><span class="text-xs text-gray-500">Hướng nhà:</span><div class="text-sm font-bold text-gray-800">🧭 Hướng ${l.direction}</div></div>` : ''}
+                </div>
+
+                <!-- Thông số 3 cột -->
+                <div class="grid grid-cols-3 gap-3 mt-5 py-4 border-t border-b border-gray-100">
+                  <div class="text-center p-3 bg-gray-50 rounded-xl">
+                    <span class="text-xs text-gray-500">Diện tích</span>
+                    <div class="text-xl font-black text-gray-900 mt-0.5">${l.area ? l.area + ' m²' : '--'}</div>
+                  </div>
+                  <div class="text-center p-3 bg-gray-50 rounded-xl">
+                    <span class="text-xs text-gray-500">Phòng ngủ</span>
+                    <div class="text-xl font-black text-gray-900 mt-0.5">${l.bedrooms || '--'} PN</div>
+                  </div>
+                  <div class="text-center p-3 bg-gray-50 rounded-xl">
+                    <span class="text-xs text-gray-500">Phòng tắm</span>
+                    <div class="text-xl font-black text-gray-900 mt-0.5">${l.bathrooms || '--'} PT</div>
+                  </div>
+                </div>
+
+                <!-- Mô tả -->
+                ${l.description ? `
+                <div class="mt-6">
+                  <h3 class="text-base font-bold text-gray-900 mb-2">Mô tả bất động sản</h3>
+                  <div class="text-sm text-gray-700 leading-relaxed whitespace-pre-line bg-gray-50 p-4 rounded-xl border">${l.description}</div>
+                </div>` : ''}
+
+                <!-- Chi tiết khác -->
+                <div class="mt-6">
+                  <h3 class="text-base font-bold text-gray-900 mb-2">Đặc điểm bất động sản</h3>
+                  <div class="grid grid-cols-2 gap-2 text-xs">
+                    <div class="bg-gray-50 rounded-xl p-3 border"><span class="text-gray-400">Hướng phong thủy:</span><br><strong class="text-gray-800 text-sm">${l.direction ? 'Hướng ' + l.direction : 'Không xác định'}</strong></div>
+                    <div class="bg-gray-50 rounded-xl p-3 border"><span class="text-gray-400">Trạng thái:</span><br><strong class="text-emerald-600 text-sm">${l.status}</strong></div>
+                    <div class="bg-gray-50 rounded-xl p-3 border"><span class="text-gray-400">Người đăng tin:</span><br><strong class="text-gray-800 text-sm">${l.ownerName || 'Thành viên BĐS'}</strong></div>
+                    <div class="bg-gray-50 rounded-xl p-3 border"><span class="text-gray-400">Ngày đăng:</span><br><strong class="text-gray-800 text-sm">${new Date(l.createdAt).toLocaleDateString('vi-VN')}</strong></div>
+                  </div>
+                </div>
+
+                <!-- Nút hành động chính: Lưu yêu thích & Báo cáo vi phạm -->
+                <div class="mt-6 flex items-center justify-between gap-3 pt-4 border-t border-gray-100 flex-wrap">
+                  <div class="flex items-center gap-2">
+                    <button id="btnFavorite" onclick="toggleFavorite(${l.id})" class="px-4 py-2 bg-gray-50 hover:bg-red-50 text-gray-700 hover:text-red-600 rounded-xl font-bold text-xs transition-colors flex items-center gap-1.5 border border-gray-200">
+                      <span class="flex items-center" id="favIcon"></span>
+                      <span id="favText">Lưu tin yêu thích</span>
+                    </button>
+                    <button onclick="openReportModal(${l.id})" class="px-4 py-2 bg-gray-50 hover:bg-amber-50 text-gray-500 hover:text-amber-700 rounded-xl font-semibold text-xs transition-colors flex items-center gap-1 border border-gray-200">
+                      <span class="material-symbols-outlined text-base">flag</span> Báo cáo vi phạm
+                    </button>
+                  </div>
+                  <button onclick="deleteListing(${l.id})" class="px-3.5 py-2 bg-red-50 text-red-600 rounded-xl font-semibold text-xs hover:bg-red-100 transition-colors flex items-center gap-1 border border-red-200">
+                    <span class="material-symbols-outlined text-base">delete</span> Xóa tin
+                  </button>
+                </div>
+
+                <!-- VỊ TRÍ TRÊN BẢN ĐỒ (Use case: Xem chi tiết BĐS -> Xem vị trí trên bản đồ) -->
+                <div class="mt-6">
+                  <h3 class="text-base font-bold text-gray-900 mb-2 flex items-center gap-1.5">
+                    <span class="material-symbols-outlined text-indigo-600">map</span> Vị trí trên bản đồ
+                  </h3>
+                  <div class="w-full h-64 rounded-2xl overflow-hidden border border-gray-200 shadow-inner bg-gray-100">
+                    <iframe 
+                      width="100%" 
+                      height="100%" 
+                      style="border:0" 
+                      loading="lazy" 
+                      allowfullscreen 
+                      src="https://maps.google.com/maps?q=${encodeURIComponent((l.address ? l.address + ', ' : '') + (l.district ? l.district + ', ' : '') + (l.city || 'Việt Nam'))}&t=&z=15&ie=UTF8&iwloc=&output=embed">
+                    </iframe>
+                  </div>
+                </div>
+
+                <!-- FORM ĐĂNG KÝ XEM NHÀ & TƯ VẤN (Sơ đồ CRM: Tiếp nhận thông tin khách quan tâm -> Lead) -->
+                <div class="mt-8 bg-gradient-to-br from-indigo-50/70 to-blue-50/70 p-6 rounded-2xl border border-indigo-100">
+                  <div class="flex items-center gap-2 mb-2">
+                    <span class="material-symbols-outlined text-indigo-600">contact_mail</span>
+                    <h3 class="text-base font-extrabold text-indigo-950">Đăng ký xem nhà & Nhận tư vấn trực tiếp</h3>
+                  </div>
+                  <p class="text-xs text-gray-600 mb-4">Để lại thông tin để chủ bất động sản hoặc môi giới liên hệ lại và đặt lịch hẹn xem thực tế.</p>
+                  
+                  <div class="space-y-3">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      <div>
+                        <label class="block text-[11px] font-bold text-gray-700 uppercase mb-1">Họ và tên <span class="text-red-500">*</span></label>
+                        <input type="text" id="lead_name" placeholder="VD: Nguyễn Văn A" 
+                          class="w-full px-3.5 py-2.5 bg-white border border-gray-300 rounded-xl outline-none text-xs font-semibold focus:ring-2 focus:ring-indigo-500"/>
+                      </div>
+                      <div>
+                        <label class="block text-[11px] font-bold text-gray-700 uppercase mb-1">Số điện thoại <span class="text-red-500">*</span></label>
+                        <input type="tel" id="lead_phone" placeholder="VD: 0912 345 678" 
+                          class="w-full px-3.5 py-2.5 bg-white border border-gray-300 rounded-xl outline-none text-xs font-semibold focus:ring-2 focus:ring-indigo-500"/>
+                      </div>
+                    </div>
+                    <div>
+                      <label class="block text-[11px] font-bold text-gray-700 uppercase mb-1">Email (không bắt buộc)</label>
+                      <input type="email" id="lead_email" placeholder="VD: email@example.com" 
+                        class="w-full px-3.5 py-2.5 bg-white border border-gray-300 rounded-xl outline-none text-xs focus:ring-2 focus:ring-indigo-500"/>
+                    </div>
+                    <div>
+                      <label class="block text-[11px] font-bold text-gray-700 uppercase mb-1">Lời nhắn / Thời gian hẹn xem nhà</label>
+                      <textarea id="lead_notes" rows="2" placeholder="VD: Tôi muốn xem nhà vào sáng thứ 7 tuần này lúc 9h..." 
+                        class="w-full px-3.5 py-2 bg-white border border-gray-300 rounded-xl outline-none text-xs focus:ring-2 focus:ring-indigo-500"></textarea>
+                    </div>
+                    <button onclick="submitLead(${l.id})" id="btnSubmitLead"
+                      class="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold text-xs shadow-md transition-all flex items-center justify-center gap-1.5">
+                      <span class="material-symbols-outlined text-base">send</span> Gửi thông tin tư vấn
+                    </button>
+                    <p id="leadMsg" class="text-xs font-semibold mt-1 text-center"></p>
+                  </div>
+                </div>
+
+                <!-- Chân trang chi tiết: Quay lại -->
+                <div class="mt-8 text-center">
+                  <button onclick="history.back()" class="px-8 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl font-semibold text-xs transition-colors">
+                    ← Quay lại danh sách
+                  </button>
+                </div>
+              </div>
+            </div>
+          `;
+          checkIfFavorited(l.id);
+        })
+        .catch(() => {
+          document.getElementById('content').innerHTML = '<p class="text-center text-red-500 py-12">Không tìm thấy thông tin tin đăng này</p>';
+        });
+    }
+
+    // HÀM ĐIỀU KHIỂN BỘ SƯU TẬP NHIỀU ẢNH (IMAGE GALLERY)
+    function selectGalleryImage(idx) {
+      if (!window.propertyImages || window.propertyImages.length === 0) return;
+      window.currentImageIdx = idx;
+      const mainImg = document.getElementById('mainGalleryImage');
+      const counterText = document.getElementById('counterText');
+
+      if (mainImg) mainImg.src = window.propertyImages[idx];
+      if (counterText) counterText.textContent = `${idx + 1} / ${window.propertyImages.length} ảnh`;
+
+      // Cập nhật viền active cho thumbnails
+      document.querySelectorAll('.gallery-thumb').forEach((thumb, i) => {
+        if (i === idx) {
+          thumb.className = 'gallery-thumb relative w-20 h-14 rounded-xl overflow-hidden shrink-0 border-2 border-indigo-600 shadow-md ring-2 ring-indigo-200 transition-all';
         } else {
-          desc.classList.add('line-clamp-3');
-          toggleBtn.querySelector('span:first-child').innerText = 'Read more';
-          descIcon.innerText = 'expand_more';
+          thumb.className = 'gallery-thumb relative w-20 h-14 rounded-xl overflow-hidden shrink-0 border-2 border-gray-200 opacity-60 hover:opacity-100 transition-all';
         }
       });
     }
 
-    // Carousel indicator tracking
-    const carousel = document.getElementById('carouselWrapper');
-    const currentSlide = document.getElementById('currentSlide');
-    if (carousel && currentSlide) {
-      carousel.addEventListener('scroll', () => {
-        const index = Math.round(carousel.scrollLeft / carousel.clientWidth) + 1;
-        currentSlide.innerText = index;
-      });
+    function prevImage() {
+      if (!window.propertyImages || window.propertyImages.length <= 1) return;
+      const newIdx = (window.currentImageIdx - 1 + window.propertyImages.length) % window.propertyImages.length;
+      selectGalleryImage(newIdx);
     }
 
-    // Interactive Favorites Synchronization
-    let isFavorite = false;
-    const heroFavBtn = document.getElementById('favoriteHeroBtn');
-    const actionFavBtn = document.getElementById('favoriteActionBtn');
-    const heroIcon = document.getElementById('heroFavIcon');
-    const barIcon = document.getElementById('barFavIcon');
-
-    function toggleFavorite() {
-      isFavorite = !isFavorite;
-      const fillSettings = isFavorite ? "'FILL' 1" : "'FILL' 0";
-      const iconName = isFavorite ? 'favorite' : 'favorite_border';
-      const colorClass = isFavorite ? 'text-secondary-container' : 'text-on-surface';
-
-      if (heroIcon) {
-        heroIcon.innerText = iconName;
-        heroIcon.style.fontVariationSettings = fillSettings;
-        heroIcon.style.color = isFavorite ? '#fe932c' : '#ffffff';
-      }
-
-      if (barIcon) {
-        barIcon.innerText = iconName;
-        barIcon.style.fontVariationSettings = fillSettings;
-        barIcon.style.color = isFavorite ? '#fe932c' : 'inherit';
-      }
-
-      // Mock POST /api/favorites payload
-      fetch('/api/favorites', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ propertyId: 'glass-pavilion-742', favorite: isFavorite })
-      }).catch(() => {});
+    function nextImage() {
+      if (!window.propertyImages || window.propertyImages.length <= 1) return;
+      const newIdx = (window.currentImageIdx + 1) % window.propertyImages.length;
+      selectGalleryImage(newIdx);
     }
 
-    if (heroFavBtn) heroFavBtn.addEventListener('click', toggleFavorite);
-    if (actionFavBtn) actionFavBtn.addEventListener('click', toggleFavorite);
+    // Bấm phím mũi tên trái / phải trên bàn phím để chuyển ảnh
+    document.addEventListener('keydown', e => {
+      if (e.key === 'ArrowLeft') prevImage();
+      if (e.key === 'ArrowRight') nextImage();
+    });
 
-    // Contact Owner Interaction
-    const contactBtn = document.getElementById('contactOwnerBtn');
-    if (contactBtn) {
-      contactBtn.addEventListener('click', () => {
-        contactBtn.disabled = true;
-        const origContent = contactBtn.innerHTML;
-        contactBtn.innerHTML = '<span class="material-symbols-outlined animate-spin text-[20px]">progress_activity</span><span>Inquiring...</span>';
-        
-        fetch('/api/contacts', {
+    async function deleteListing(listingId) {
+      if (!confirm('Bạn có chắc chắn muốn xóa tin đăng này không?')) return;
+      try {
+        const res = await fetch('/api/listings/' + listingId, {
+          method: 'DELETE',
+          headers: { 'Authorization': 'Bearer ' + token }
+        });
+        if (res.ok) {
+          alert('Đã xóa tin đăng thành công!');
+          window.location.href = 'home_property_search.html';
+        } else {
+          alert('Không thể xóa tin đăng');
+        }
+      } catch (err) {
+        alert('Lỗi khi xóa tin');
+      }
+    }
+
+    // 1. Quản lý Yêu thích (Favorites) - Use case Lưu BĐS yêu thích
+    function getFavorites() {
+      try {
+        return JSON.parse(localStorage.getItem('fav_listings') || '[]').map(Number);
+      } catch { return []; }
+    }
+
+    function checkIfFavorited(listingId) {
+      const numId = Number(listingId);
+      const favs = getFavorites();
+      const isFav = favs.includes(numId);
+      const icon = document.getElementById('favIcon');
+      const text = document.getElementById('favText');
+      const btn = document.getElementById('btnFavorite');
+      if (!icon || !text || !btn) return;
+      if (isFav) {
+        icon.innerHTML = `<svg class="w-4 h-4 fill-red-500 text-red-500 drop-shadow inline-block animate-pulse" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>`;
+        text.textContent = 'Đã lưu yêu thích';
+        btn.className = 'px-4 py-2 bg-red-50 text-red-600 rounded-xl font-bold text-xs transition-all flex items-center gap-1.5 border border-red-200 shadow-sm';
+      } else {
+        icon.innerHTML = `<svg class="w-4 h-4 fill-none stroke-current text-gray-500 stroke-2 inline-block" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>`;
+        text.textContent = 'Lưu tin yêu thích';
+        btn.className = 'px-4 py-2 bg-gray-50 hover:bg-red-50 text-gray-700 hover:text-red-600 rounded-xl font-bold text-xs transition-all flex items-center gap-1.5 border border-gray-200';
+      }
+    }
+
+    function toggleFavorite(listingId) {
+      const numId = Number(listingId);
+      let favs = getFavorites();
+      if (favs.includes(numId)) {
+        favs = favs.filter(x => x !== numId);
+      } else {
+        favs.push(numId);
+      }
+      localStorage.setItem('fav_listings', JSON.stringify(favs));
+      checkIfFavorited(numId);
+    }
+
+    // 2. Gửi yêu cầu tư vấn / Đặt lịch xem nhà (Lead CRM)
+    async function submitLead(listingId) {
+      const name = document.getElementById('lead_name').value.trim();
+      const phone = document.getElementById('lead_phone').value.trim();
+      const email = document.getElementById('lead_email').value.trim();
+      const notes = document.getElementById('lead_notes').value.trim();
+      const msgEl = document.getElementById('leadMsg');
+      const btn = document.getElementById('btnSubmitLead');
+
+      if (!name || !phone) {
+        alert('Vui lòng nhập Họ tên và Số điện thoại để gửi yêu cầu!');
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = 'Đang gửi...';
+
+      try {
+        const res = await fetch('/api/leads', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            propertyId: 'glass-pavilion-742',
-            timestamp: new Date().toISOString()
+            listingId: listingId,
+            customerName: name,
+            customerPhone: phone,
+            customerEmail: email,
+            notes: notes
           })
-        }).finally(() => {
-          setTimeout(() => {
-            contactBtn.disabled = false;
-            contactBtn.innerHTML = '<span class="material-symbols-outlined text-[20px]">check</span><span>Inquiry Sent</span>';
-            setTimeout(() => {
-              contactBtn.innerHTML = origContent;
-            }, 2500);
-          }, 600);
         });
-      });
+
+        const data = await res.json();
+        if (res.ok) {
+          msgEl.textContent = '🎉 ' + data.message;
+          msgEl.className = 'text-xs font-bold text-emerald-600 mt-2 text-center';
+          document.getElementById('lead_name').value = '';
+          document.getElementById('lead_phone').value = '';
+          document.getElementById('lead_email').value = '';
+          document.getElementById('lead_notes').value = '';
+          alert('🎉 Yêu cầu của bạn đã được chuyển tới chủ tin đăng!');
+        } else {
+          msgEl.textContent = '⚠️ ' + (data.message || 'Lỗi khi gửi yêu cầu');
+          msgEl.className = 'text-xs font-bold text-red-600 mt-2 text-center';
+        }
+      } catch (err) {
+        msgEl.textContent = 'Lỗi kết nối máy chủ';
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<span class="material-symbols-outlined text-base">send</span> Gửi thông tin tư vấn';
+      }
     }
 
-    // Share Feedback Micro-interaction
-    const shareBtn = document.getElementById('shareBtn');
-    if (shareBtn) {
-      shareBtn.addEventListener('click', async () => {
-        if (navigator.share) {
-          try {
-            await navigator.share({
-              title: 'The Glass Pavilion Residence',
-              text: 'Explore this $1,850,000 architectural masterpiece in Beverly Hills.',
-              url: window.location.href,
-            });
-          } catch(e) {}
-        }
-      });
+    // 3. Báo cáo vi phạm (Report Listing)
+    let currentReportListingId = null;
+
+    function openReportModal(listingId) {
+      currentReportListingId = listingId;
+      document.getElementById('reportModal').classList.remove('hidden');
     }
-  })();
-</script></main></body></html>
+
+    function closeReportModal() {
+      document.getElementById('reportModal').classList.add('hidden');
+    }
+
+    async function sendReport() {
+      const reason = document.getElementById('reportReason').value;
+      const details = document.getElementById('reportDetails').value.trim();
+      const reporterName = document.getElementById('reporterName').value.trim();
+      const reporterPhone = document.getElementById('reporterPhone').value.trim();
+
+      if (!reason) {
+        alert('Vui lòng chọn lý do vi phạm');
+        return;
+      }
+
+      try {
+        const res = await fetch('/api/reports', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            listingId: currentReportListingId,
+            reason: reason,
+            details: details,
+            reporterName: reporterName,
+            reporterPhone: reporterPhone
+          })
+        });
+
+        const data = await res.json();
+        alert(data.message || 'Đã gửi báo cáo vi phạm!');
+        closeReportModal();
+      } catch (err) {
+        alert('Lỗi khi gửi báo cáo');
+      }
+    }
+  </script>
+
+  <!-- MODAL BÁO CÁO VI PHẠM (Use case: Báo cáo tin đăng vi phạm) -->
+  <div id="reportModal" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-3 sm:p-4 hidden backdrop-blur-sm">
+    <div class="bg-white rounded-2xl max-w-md w-full p-4 sm:p-6 shadow-2xl max-h-[90vh] overflow-y-auto">
+      <div class="flex items-center justify-between pb-3 border-b mb-4">
+        <div class="flex items-center gap-2">
+          <span class="material-symbols-outlined text-red-600">report</span>
+          <h3 class="font-bold text-gray-900 text-base">Báo cáo tin đăng vi phạm</h3>
+        </div>
+        <button onclick="closeReportModal()" class="text-gray-400 hover:text-gray-600 text-xl font-bold">✕</button>
+      </div>
+
+      <div class="space-y-3">
+        <div>
+          <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Lý do vi phạm <span class="text-red-500">*</span></label>
+          <select id="reportReason" class="w-full px-3 py-2 bg-gray-50 border rounded-xl text-xs font-semibold outline-none">
+            <option value="Tin ảo / Đã bán / Không có thật">Tin ảo / Đã bán / Không có thật</option>
+            <option value="Sai giá niêm yết">Sai giá niêm yết (kê giá hoặc giá ảo)</option>
+            <option value="Sai địa chỉ / Vị trí">Sai địa chỉ / Vị trí thực tế</option>
+            <option value="Lừa đảo / Mạo danh chủ nhà">Lừa đảo / Mạo danh chủ nhà</option>
+            <option value="Hình ảnh trùng lặp / phản cảm">Hình ảnh trùng lặp / sai thực tế</option>
+            <option value="Không liên lạc được số điện thoại">Không liên lạc được số điện thoại</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Mô tả thêm (nếu có)</label>
+          <textarea id="reportDetails" rows="2" placeholder="Ghi chú chi tiết hơn về vi phạm..." class="w-full px-3 py-2 bg-gray-50 border rounded-xl text-xs outline-none"></textarea>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Họ tên của bạn</label>
+            <input type="text" id="reporterName" placeholder="Tùy chọn" class="w-full px-3 py-2 bg-gray-50 border rounded-xl text-xs outline-none"/>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Số điện thoại</label>
+            <input type="tel" id="reporterPhone" placeholder="Tùy chọn" class="w-full px-3 py-2 bg-gray-50 border rounded-xl text-xs outline-none"/>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-end gap-2 mt-5 pt-3 border-t">
+        <button onclick="closeReportModal()" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-semibold rounded-xl">
+          Hủy bỏ
+        </button>
+        <button onclick="sendReport()" class="px-5 py-2 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded-xl shadow">
+          Gửi báo cáo
+        </button>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
