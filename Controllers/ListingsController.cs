@@ -308,10 +308,22 @@ public class ListingsController : ControllerBase
         if (!userId.HasValue)
             return Unauthorized(new { message = "Phiên đăng nhập không hợp lệ" });
 
+        // Kiểm tra quyền từ Database: Người mua (Buyer) và Người thuê (Tenant) không được phép đăng tin
+        var user = await _context.Users.FindAsync(userId.Value);
+        if (user == null)
+            return Unauthorized(new { message = "Không tìm thấy thông tin tài khoản người dùng" });
+
+        if (user.Role == Role.Buyer || user.Role == Role.Tenant)
+        {
+            return StatusCode(403, new { 
+                message = "Tài khoản Người mua (Buyer) không có quyền đăng tin. Tương tự như sàn Shopee, bạn cần đăng ký tài khoản Người bán (Seller) hoặc Môi giới (Agent) để đăng tin bất động sản!" 
+            });
+        }
+
         if (!Enum.TryParse<PropertyType>(request.Type, true, out var pType))
             pType = PropertyType.Sale;
 
-        var role = User.FindFirst("role")?.Value;
+        var role = user.Role.ToString();
 
         // Theo Sequence Diagram 1: Tin đăng của Seller/Landlord/Agent tạo ra ở trạng thái Chờ duyệt (Pending)
         // Nếu là Admin thì duyệt luôn (Approved)
@@ -375,6 +387,16 @@ public class ListingsController : ControllerBase
     [Authorize]
     public async Task<IActionResult> UploadImage([FromForm] List<IFormFile>? files, IFormFile? file)
     {
+        var userId = GetCurrentUserId();
+        if (userId.HasValue)
+        {
+            var user = await _context.Users.FindAsync(userId.Value);
+            if (user != null && (user.Role == Role.Buyer || user.Role == Role.Tenant))
+            {
+                return StatusCode(403, new { message = "Tài khoản Người mua không có quyền tải ảnh đăng tin." });
+            }
+        }
+
         var allFiles = new List<IFormFile>();
         if (files != null && files.Count > 0) allFiles.AddRange(files);
         if (file != null && !allFiles.Contains(file)) allFiles.Add(file);

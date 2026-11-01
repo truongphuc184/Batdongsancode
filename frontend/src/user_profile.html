@@ -50,7 +50,7 @@
 
     <!-- Menu -->
     <div class="bg-white rounded-2xl shadow-sm mt-4 overflow-hidden">
-      <a href="home_property_search.html" class="flex items-center gap-4 px-6 py-4 hover:bg-gray-50 border-b border-gray-100">
+      <a id="myListingsMenu" href="home_property_search.html" class="flex items-center gap-4 px-6 py-4 hover:bg-gray-50 border-b border-gray-100">
         <span class="material-symbols-outlined text-indigo-600">real_estate_agent</span>
         <span class="font-medium text-gray-800">Tin đăng của tôi</span>
         <span class="material-symbols-outlined text-gray-400 ml-auto">chevron_right</span>
@@ -157,6 +157,12 @@
       if (uRole === 'Admin') {
         const adminBtn = document.getElementById('adminPortalBtn');
         if (adminBtn) adminBtn.classList.remove('hidden');
+      }
+
+      // Nếu là Buyer hoặc Tenant -> Ẩn menu "Tin đăng của tôi" (Người mua không đăng tin)
+      if (['Buyer', 'Tenant'].includes(uRole)) {
+        const myListingLink = document.getElementById('myListingsMenu');
+        if (myListingLink) myListingLink.classList.add('hidden');
       }
 
       // Nếu là Seller, Landlord, Agent, Admin -> Mở CRM
