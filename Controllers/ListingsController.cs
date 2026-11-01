@@ -35,8 +35,8 @@ public class ListingsController : ControllerBase
 
         var listings = await query
             .OrderByDescending(l => l.PriorityTime ?? DateTime.MinValue)
-            .ThenByDescending(l => l.IsVip)
-            .ThenByDescending(l => l.CreatedAt)
+            .ThenByDescending(l => l.IsVip ?? false)
+            .ThenByDescending(l => l.CreatedAt ?? DateTime.MinValue)
             .ToListAsync();
 
         return Ok(listings.Select(l => MapToListingDto(l)));
@@ -82,13 +82,13 @@ public class ListingsController : ControllerBase
             query = query.Where(l => l.Price <= maxPrice.Value);
 
         if (minArea.HasValue && minArea.Value > 0)
-            query = query.Where(l => l.Area >= minArea.Value);
+            query = query.Where(l => (l.Area ?? 0) >= minArea.Value);
 
         if (maxArea.HasValue && maxArea.Value > 0)
-            query = query.Where(l => l.Area <= maxArea.Value);
+            query = query.Where(l => (l.Area ?? 0) <= maxArea.Value);
 
         if (bedrooms.HasValue && bedrooms.Value > 0)
-            query = query.Where(l => l.Bedrooms >= bedrooms.Value);
+            query = query.Where(l => (l.Bedrooms ?? 0) >= bedrooms.Value);
 
         if (!string.IsNullOrWhiteSpace(direction))
             query = query.Where(l => l.Direction == direction);
@@ -98,11 +98,11 @@ public class ListingsController : ControllerBase
         {
             "price_asc" => query.OrderBy(l => l.Price),
             "price_desc" => query.OrderByDescending(l => l.Price),
-            "area_desc" => query.OrderByDescending(l => l.Area),
-            "newest" => query.OrderByDescending(l => l.CreatedAt),
+            "area_desc" => query.OrderByDescending(l => l.Area ?? 0),
+            "newest" => query.OrderByDescending(l => l.CreatedAt ?? DateTime.MinValue),
             _ => query.OrderByDescending(l => l.PriorityTime ?? DateTime.MinValue)
-                      .ThenByDescending(l => l.IsVip)
-                      .ThenByDescending(l => l.CreatedAt)
+                      .ThenByDescending(l => l.IsVip ?? false)
+                      .ThenByDescending(l => l.CreatedAt ?? DateTime.MinValue)
         };
 
         var results = await query.ToListAsync();
@@ -120,7 +120,7 @@ public class ListingsController : ControllerBase
         if (listing == null) return NotFound(new { message = "Không tìm thấy bất động sản" });
 
         // Tăng viewCount
-        listing.ViewCount += 1;
+        listing.ViewCount = (listing.ViewCount ?? 0) + 1;
         await _context.SaveChangesAsync();
 
         return Ok(new
@@ -162,7 +162,7 @@ public class ListingsController : ControllerBase
 
         var listings = await _context.Listings
             .Where(l => l.OwnerId == userId.Value)
-            .OrderByDescending(l => l.CreatedAt)
+            .OrderByDescending(l => l.CreatedAt ?? DateTime.MinValue)
             .ToListAsync();
 
         return Ok(listings.Select(l => MapToListingDto(l)));
@@ -180,7 +180,7 @@ public class ListingsController : ControllerBase
         var listings = await _context.Listings
             .Include(l => l.Owner)
             .Where(l => l.Status == ListingStatus.Pending)
-            .OrderByDescending(l => l.CreatedAt)
+            .OrderByDescending(l => l.CreatedAt ?? DateTime.MinValue)
             .ToListAsync();
 
         return Ok(listings.Select(l => MapToListingDto(l)));
@@ -430,25 +430,25 @@ public class ListingsController : ControllerBase
         {
             l.Id,
             l.Title,
-            l.Description,
-            l.Address,
-            l.City,
-            l.District,
-            l.Direction,
+            Description = l.Description ?? "",
+            Address = l.Address ?? "",
+            City = l.City ?? "",
+            District = l.District ?? "",
+            Direction = l.Direction ?? "",
             l.Price,
-            l.Area,
-            l.Bedrooms,
-            l.Bathrooms,
-            l.ImageUrls,
-            l.IsVip,
-            l.IsVerified,
-            l.ViewCount,
+            Area = l.Area ?? 0,
+            Bedrooms = l.Bedrooms ?? 0,
+            Bathrooms = l.Bathrooms ?? 0,
+            ImageUrls = l.ImageUrls ?? "",
+            IsVip = l.IsVip ?? false,
+            IsVerified = l.IsVerified ?? true,
+            ViewCount = l.ViewCount ?? 0,
             l.PriorityTime,
-            l.RejectReason,
+            RejectReason = l.RejectReason ?? "",
             Type = l.Type.ToString(),
             Status = l.Status.ToString(),
             l.OwnerId,
-            l.CreatedAt,
+            CreatedAt = l.CreatedAt ?? DateTime.UtcNow,
             l.UpdatedAt,
             OwnerName = l.Owner?.FullName
         };

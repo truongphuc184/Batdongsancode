@@ -31,39 +31,39 @@ public class Listing
     [MaxLength(100)]
     public string District { get; set; } = string.Empty;
 
-    public double Area { get; set; } // m2
+    public double? Area { get; set; } = 0; // m2
 
-    public int Bedrooms { get; set; }
+    public int? Bedrooms { get; set; } = 0;
 
-    public int Bathrooms { get; set; }
+    public int? Bathrooms { get; set; } = 0;
 
     [MaxLength(50)]
-    public string Direction { get; set; } = string.Empty; // Đông, Tây, Nam, Bắc...
+    public string? Direction { get; set; } = string.Empty; // Đông, Tây, Nam, Bắc...
 
     [MaxLength(1000)]
-    public string ImageUrls { get; set; } = string.Empty; // comma-separated
+    public string? ImageUrls { get; set; } = string.Empty; // comma-separated
 
     [Required]
     public ListingStatus Status { get; set; } = ListingStatus.Pending;
 
-    public int ViewCount { get; set; } = 0;
+    public int? ViewCount { get; set; } = 0;
 
-    public bool IsVip { get; set; } = false;
+    public bool? IsVip { get; set; } = false;
 
-    public bool IsVerified { get; set; } = false;
+    public bool? IsVerified { get; set; } = true;
 
     public DateTime? PriorityTime { get; set; }
 
     [MaxLength(500)]
-    public string RejectReason { get; set; } = string.Empty;
+    public string? RejectReason { get; set; } = string.Empty;
 
     public int OwnerId { get; set; }
 
     [ForeignKey(nameof(OwnerId))]
     public User? Owner { get; set; }
 
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public DateTime? CreatedAt { get; set; } = DateTime.UtcNow;
 
-    public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+    public DateTime? UpdatedAt { get; set; }
 }
 

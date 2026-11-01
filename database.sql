@@ -94,6 +94,14 @@ BEGIN
     -- Chuẩn hóa dữ liệu cũ không để NULL hoặc sai Status
     UPDATE Listings SET Status = 'Approved' WHERE Status = 'Active';
     UPDATE Listings SET Direction = N'Đông Nam' WHERE Direction IS NULL OR Direction = '';
+    UPDATE Listings SET ViewCount = 0 WHERE ViewCount IS NULL;
+    UPDATE Listings SET IsVip = 0 WHERE IsVip IS NULL;
+    UPDATE Listings SET IsVerified = 1 WHERE IsVerified IS NULL;
+    UPDATE Listings SET Area = 0 WHERE Area IS NULL;
+    UPDATE Listings SET Bedrooms = 0 WHERE Bedrooms IS NULL;
+    UPDATE Listings SET Bathrooms = 0 WHERE Bathrooms IS NULL;
+    UPDATE Listings SET CreatedAt = GETDATE() WHERE CreatedAt IS NULL;
+    UPDATE Listings SET UpdatedAt = GETDATE() WHERE UpdatedAt IS NULL;
     DELETE FROM Listings WHERE Title IN ('NTP', 'NTTT') OR Price < 1000000;
 END
 GO
