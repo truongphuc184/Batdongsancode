@@ -1,15 +1,17 @@
 namespace Batdongsancode.Models
 {
+    [Flags]
     public enum Role
     {
-        Buyer,      // Người mua
-        Tenant,     // Người thuê
-        Seller,     // Người bán
-        Landlord,   // Người cho thuê
-        Agent,      // Môi giới
-        Broker = Agent, // Tương thích ngược
-        Agency,
-        Admin       // Quản trị viên
+        None = 0,
+        Buyer = 1,      // Người mua
+        Tenant = 2,     // Người thuê
+        Seller = 4,     // Người bán
+        Landlord = 8,   // Người cho thuê
+        Agent = 16,     // Môi giới
+        Broker = 16,    // Tương thích ngược
+        Agency = 32,
+        Admin = 64      // Quản trị viên
     }
 
     public enum PropertyType

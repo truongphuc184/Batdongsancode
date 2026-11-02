@@ -313,10 +313,24 @@
       }
     }
 
-    // 1. Quản lý Yêu thích (Favorites) - Use case Lưu BĐS yêu thích
+    // 1. Quản lý Yêu thích (Favorites) - Cô lập theo từng tài khoản
+    function getFavStorageKey() {
+      const t = localStorage.getItem('accessToken') || localStorage.getItem('token');
+      if (t) {
+        try {
+          const base64Url = t.split('.')[1];
+          const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+          const p = JSON.parse(decodeURIComponent(atob(base64).split('').map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join('')));
+          const uid = p?.sub || p?.nameid || p?.email;
+          if (uid) return 'fav_listings_' + uid;
+        } catch {}
+      }
+      return 'fav_listings_guest';
+    }
+
     function getFavorites() {
       try {
-        return JSON.parse(localStorage.getItem('fav_listings') || '[]').map(Number);
+        return JSON.parse(localStorage.getItem(getFavStorageKey()) || '[]').map(Number);
       } catch { return []; }
     }
 
@@ -347,7 +361,7 @@
       } else {
         favs.push(numId);
       }
-      localStorage.setItem('fav_listings', JSON.stringify(favs));
+      localStorage.setItem(getFavStorageKey(), JSON.stringify(favs));
       checkIfFavorited(numId);
     }
 

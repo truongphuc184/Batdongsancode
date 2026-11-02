@@ -49,14 +49,33 @@
             class="w-full px-4 py-2.5 bg-gray-50/80 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-indigo-500 focus:bg-white focus:border-transparent outline-none text-sm font-medium"/>
         </div>
         <div>
-          <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Vai trò trong hệ thống (Actor)</label>
-          <select id="role" class="w-full px-4 py-2.5 bg-gray-50/80 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-indigo-500 focus:bg-white focus:border-transparent outline-none text-sm font-bold text-indigo-900 cursor-pointer">
-            <option value="Buyer">🛒 Người mua Bất động sản</option>
-            <option value="Tenant">🔑 Người thuê nhà / căn hộ</option>
-            <option value="Seller">🏠 Người bán (Chủ nhà)</option>
-            <option value="Landlord">🏢 Người cho thuê</option>
-            <option value="Agent">👔 Môi giới Bất động sản chuyên nghiệp</option>
-          </select>
+          <div class="flex items-center justify-between mb-1">
+            <label class="block text-xs font-bold text-gray-700 uppercase">Nhu cầu & Vai trò</label>
+            <span class="text-[11px] text-indigo-600 font-semibold">(Có thể chọn nhiều mục)</span>
+          </div>
+          <p class="text-[11px] text-gray-500 mb-2">Bạn có thể vừa mua vừa bán hoặc vừa thuê vừa cho thuê:</p>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+            <label class="flex items-center gap-2 p-2.5 rounded-xl border border-gray-200 hover:border-indigo-300 bg-gray-50/70 cursor-pointer transition-all has-[:checked]:bg-indigo-50/80 has-[:checked]:border-indigo-500 has-[:checked]:text-indigo-950">
+              <input type="checkbox" name="roleCheckbox" value="Buyer" class="rounded text-indigo-600 focus:ring-indigo-500 w-4 h-4 cursor-pointer" checked>
+              <span class="font-semibold">🛒 Mua Bất động sản</span>
+            </label>
+            <label class="flex items-center gap-2 p-2.5 rounded-xl border border-gray-200 hover:border-indigo-300 bg-gray-50/70 cursor-pointer transition-all has-[:checked]:bg-indigo-50/80 has-[:checked]:border-indigo-500 has-[:checked]:text-indigo-950">
+              <input type="checkbox" name="roleCheckbox" value="Seller" class="rounded text-indigo-600 focus:ring-indigo-500 w-4 h-4 cursor-pointer">
+              <span class="font-semibold">🏠 Bán BĐS (Đăng tin)</span>
+            </label>
+            <label class="flex items-center gap-2 p-2.5 rounded-xl border border-gray-200 hover:border-indigo-300 bg-gray-50/70 cursor-pointer transition-all has-[:checked]:bg-indigo-50/80 has-[:checked]:border-indigo-500 has-[:checked]:text-indigo-950">
+              <input type="checkbox" name="roleCheckbox" value="Tenant" class="rounded text-indigo-600 focus:ring-indigo-500 w-4 h-4 cursor-pointer">
+              <span class="font-semibold">🔑 Thuê nhà / Căn hộ</span>
+            </label>
+            <label class="flex items-center gap-2 p-2.5 rounded-xl border border-gray-200 hover:border-indigo-300 bg-gray-50/70 cursor-pointer transition-all has-[:checked]:bg-indigo-50/80 has-[:checked]:border-indigo-500 has-[:checked]:text-indigo-950">
+              <input type="checkbox" name="roleCheckbox" value="Landlord" class="rounded text-indigo-600 focus:ring-indigo-500 w-4 h-4 cursor-pointer">
+              <span class="font-semibold">🏢 Cho thuê BĐS</span>
+            </label>
+            <label class="flex items-center gap-2 p-2.5 rounded-xl border border-gray-200 hover:border-indigo-300 bg-gray-50/70 cursor-pointer transition-all has-[:checked]:bg-indigo-50/80 has-[:checked]:border-indigo-500 has-[:checked]:text-indigo-950 sm:col-span-2">
+              <input type="checkbox" name="roleCheckbox" value="Agent" class="rounded text-indigo-600 focus:ring-indigo-500 w-4 h-4 cursor-pointer">
+              <span class="font-semibold">👔 Môi giới chuyên nghiệp (Agent / Broker)</span>
+            </label>
+          </div>
         </div>
 
         <div id="error-msg" class="text-red-500 text-xs font-semibold bg-red-50 p-2.5 rounded-xl border border-red-200 hidden"></div>
@@ -81,6 +100,14 @@
       const btn = document.getElementById('reg-btn');
       const errDiv = document.getElementById('error-msg');
       const succDiv = document.getElementById('success-msg');
+
+      const checkedRoles = Array.from(document.querySelectorAll('input[name="roleCheckbox"]:checked')).map(cb => cb.value);
+      if (checkedRoles.length === 0) {
+        errDiv.textContent = 'Vui lòng chọn ít nhất 1 nhu cầu / vai trò của bạn.';
+        errDiv.classList.remove('hidden');
+        return;
+      }
+
       btn.innerHTML = '<span class="material-symbols-outlined text-sm animate-spin">sync</span> Đang tạo tài khoản...';
       btn.disabled = true;
       errDiv.classList.add('hidden');
@@ -94,7 +121,8 @@
             fullName: document.getElementById('fullName').value.trim(),
             email: document.getElementById('email').value.trim(),
             password: document.getElementById('password').value,
-            role: document.getElementById('role').value
+            role: checkedRoles[0],
+            roles: checkedRoles
           })
         });
         const data = await res.json();

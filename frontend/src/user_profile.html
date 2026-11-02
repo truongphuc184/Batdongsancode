@@ -29,7 +29,12 @@
       <div class="w-20 h-20 bg-indigo-600 rounded-full flex items-center justify-center mx-auto text-white text-3xl font-bold" id="avatar">U</div>
       <h2 class="text-xl font-bold text-gray-800 mt-4" id="fullName">Đang tải...</h2>
       <p class="text-gray-500" id="email"></p>
-      <span class="inline-block mt-2 px-3 py-1 rounded-full text-sm font-medium bg-indigo-100 text-indigo-700" id="role"></span>
+      <div class="flex items-center justify-center gap-2 mt-2">
+        <span class="inline-block px-3.5 py-1 rounded-full text-xs font-bold bg-indigo-50 text-indigo-700 border border-indigo-200" id="role"></span>
+        <button type="button" onclick="openSwitchRoleModal()" class="px-2.5 py-1 text-[11px] font-bold text-indigo-600 hover:text-indigo-800 bg-white hover:bg-indigo-50 border border-indigo-200 rounded-full transition-all flex items-center gap-0.5 shadow-xs cursor-pointer" title="Đổi sang vai trò khác">
+          <span class="material-symbols-outlined text-xs">sync_alt</span> Đổi vai trò
+        </button>
+      </div>
 
       <!-- Trạng thái gói hội viên (Chỉ hiển thị cho Seller, Landlord, Agent, Admin - Ẩn với Người mua) -->
       <div id="packagePushBox" class="mt-4 pt-4 border-t border-gray-100 flex items-center justify-around text-xs">
@@ -55,7 +60,7 @@
 
     <!-- Menu -->
     <div class="bg-white rounded-2xl shadow-sm mt-4 overflow-hidden">
-      <a id="myListingsMenu" href="home_property_search.html" class="flex items-center gap-4 px-6 py-4 hover:bg-gray-50 border-b border-gray-100">
+      <a id="myListingsMenu" href="home_property_search.html?tab=my" class="flex items-center gap-4 px-6 py-4 hover:bg-gray-50 border-b border-gray-100">
         <span class="material-symbols-outlined text-indigo-600">real_estate_agent</span>
         <span class="font-medium text-gray-800">Tin đăng của tôi</span>
         <span class="material-symbols-outlined text-gray-400 ml-auto">chevron_right</span>
@@ -73,6 +78,46 @@
         <span class="font-medium text-gray-800">Gói dịch vụ & Lượt đẩy tin</span>
         <span class="material-symbols-outlined text-gray-400 ml-auto">chevron_right</span>
       </a>
+    </div>
+
+    <!-- HÀNH ĐỘNG DÀNH CHO TÀI KHOẢN CÓ QUYỀN ĐĂNG TIN (Seller, Landlord, Agent) -->
+    <div id="sellerActionsBox" class="bg-gradient-to-r from-indigo-50 to-blue-50 border border-indigo-200 rounded-2xl p-4 sm:p-5 mt-4 hidden">
+      <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+        <div>
+          <h4 class="font-bold text-gray-900 text-sm flex items-center gap-2">
+            <span class="material-symbols-outlined text-indigo-600">storefront</span>
+            <span id="sellerDashboardTitle">Bảng điều khiển Người bán</span>
+          </h4>
+          <p class="text-xs text-gray-600 mt-0.5" id="sellerDashboardDesc">Bạn đang có quyền đăng tin BĐS và tiếp nhận khách hàng quan tâm.</p>
+        </div>
+        <div class="flex items-center gap-2 flex-wrap sm:flex-nowrap">
+          <a href="home_property_search.html?action=create" class="flex-1 sm:flex-none px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold text-xs shadow-md transition-all flex items-center justify-center gap-1.5 shrink-0">
+            <span class="material-symbols-outlined text-base">add_circle</span> Đăng tin mới ngay
+          </a>
+          <button type="button" onclick="openSwitchRoleModal()" class="flex-1 sm:flex-none px-3.5 py-2.5 bg-white hover:bg-gray-100 text-gray-700 border border-gray-300 rounded-xl font-bold text-xs transition-all flex items-center justify-center gap-1 shrink-0 cursor-pointer shadow-sm" title="Đổi sang vai trò khác">
+            <span class="material-symbols-outlined text-base">swap_horiz</span> Đổi vai trò khác ▾
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- BANNER DÀNH CHO TÀI KHOẢN NGƯỜI MUA / THUÊ -->
+    <div id="buyerUpgradeBanner" class="bg-gradient-to-r from-amber-500/10 via-orange-500/10 to-amber-500/5 border border-amber-300 rounded-2xl p-5 mt-4 hidden">
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div class="flex items-center gap-3.5">
+          <div class="w-12 h-12 bg-gradient-to-tr from-amber-500 to-orange-500 text-white rounded-2xl flex items-center justify-center shrink-0 shadow-md">
+            <span class="material-symbols-outlined text-2xl">storefront</span>
+          </div>
+          <div>
+            <h4 class="font-bold text-gray-900 text-sm sm:text-base">Bạn muốn chuyển vai trò khác để Đăng tin?</h4>
+            <p class="text-xs text-gray-600 mt-0.5">Không cần tạo Gmail mới! Bạn có thể chuyển sang Người bán, Cho thuê hoặc Môi giới bất kỳ lúc nào.</p>
+          </div>
+        </div>
+        <button type="button" onclick="openSwitchRoleModal()" class="w-full sm:w-auto px-5 py-2.5 bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white font-bold text-xs rounded-xl shadow-md shadow-amber-500/20 transition-all shrink-0 flex items-center justify-center gap-1.5 cursor-pointer">
+          <span class="material-symbols-outlined text-base">swap_horiz</span>
+          <span>Chọn vai trò khác ▾</span>
+        </button>
+      </div>
     </div>
 
     <!-- KHU VỰC BẤT ĐỘNG SẢN ĐÃ LƯU YÊU THÍCH NGAY TRONG HỒ SƠ (Mặc định ẩn, bấm vào Menu để mở ra) -->
@@ -124,6 +169,112 @@
       <span class="material-symbols-outlined">logout</span>
       Đăng xuất
     </button>
+  </div>
+
+  <!-- MODAL CHỌN NHIỀU VAI TRÒ HỆ THỐNG (ACTOR ROLE SWITCHER) -->
+  <div id="switchRoleModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-7 shadow-2xl relative max-h-[90vh] overflow-y-auto">
+      <div class="flex items-center justify-between pb-3.5 border-b border-gray-100 mb-3">
+        <div>
+          <h3 class="font-black text-gray-900 text-base sm:text-lg flex items-center gap-2">
+            <span class="material-symbols-outlined text-indigo-600">switch_account</span> Chọn vai trò của bạn
+          </h3>
+          <p class="text-xs text-gray-500 mt-0.5">Tích chọn các vai trò phù hợp (có thể chọn cùng lúc vừa Mua, vừa Bán, vừa Thuê...)</p>
+        </div>
+        <button onclick="closeSwitchRoleModal()" class="text-gray-400 hover:text-gray-600 p-1">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+
+      <form id="switchRoleForm" onsubmit="handleMultiRoleSubmit(event)" class="space-y-2.5">
+        <!-- Option 1: Buyer -->
+        <label class="w-full text-left p-3.5 rounded-2xl border border-gray-200 hover:border-indigo-400 bg-white has-[:checked]:bg-emerald-50/60 has-[:checked]:border-emerald-500 transition-all flex items-start gap-3.5 cursor-pointer">
+          <input type="checkbox" name="switchRoleCheckbox" value="Buyer" class="mt-1 w-4 h-4 rounded text-indigo-600 focus:ring-indigo-500 cursor-pointer">
+          <div class="w-9 h-9 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0 font-bold text-base">
+            🛒
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-sm text-gray-900">Người mua BĐS (Buyer)</span>
+              <span class="text-[10px] px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-bold">Tìm mua</span>
+            </div>
+            <p class="text-xs text-gray-500 mt-0.5">Tìm kiếm BĐS, lọc tin, thả tim lưu tin, đặt lịch hẹn xem nhà.</p>
+          </div>
+        </label>
+
+        <!-- Option 2: Seller -->
+        <label class="w-full text-left p-3.5 rounded-2xl border border-gray-200 hover:border-indigo-400 bg-white has-[:checked]:bg-blue-50/60 has-[:checked]:border-blue-500 transition-all flex items-start gap-3.5 cursor-pointer">
+          <input type="checkbox" name="switchRoleCheckbox" value="Seller" class="mt-1 w-4 h-4 rounded text-indigo-600 focus:ring-indigo-500 cursor-pointer">
+          <div class="w-9 h-9 rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center shrink-0 font-bold text-base">
+            🏠
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-sm text-gray-900">Người bán (Seller - Chủ nhà)</span>
+              <span class="text-[10px] px-2 py-0.5 rounded-full bg-blue-100 text-blue-800 font-bold">Bán nhà đất</span>
+            </div>
+            <p class="text-xs text-gray-500 mt-0.5">Đăng tin bán nhà, đẩy tin tìm khách, quản lý khách hàng quan tâm (CRM).</p>
+          </div>
+        </label>
+
+        <!-- Option 3: Tenant -->
+        <label class="w-full text-left p-3.5 rounded-2xl border border-gray-200 hover:border-indigo-400 bg-white has-[:checked]:bg-purple-50/60 has-[:checked]:border-purple-500 transition-all flex items-start gap-3.5 cursor-pointer">
+          <input type="checkbox" name="switchRoleCheckbox" value="Tenant" class="mt-1 w-4 h-4 rounded text-indigo-600 focus:ring-indigo-500 cursor-pointer">
+          <div class="w-9 h-9 rounded-xl bg-purple-100 text-purple-700 flex items-center justify-center shrink-0 font-bold text-base">
+            🔑
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-sm text-gray-900">Người thuê nhà (Tenant)</span>
+              <span class="text-[10px] px-2 py-0.5 rounded-full bg-purple-100 text-purple-800 font-bold">Tìm thuê</span>
+            </div>
+            <p class="text-xs text-gray-500 mt-0.5">Tìm thuê căn hộ, phòng trọ, mặt bằng kinh doanh, lưu tin yêu thích.</p>
+          </div>
+        </label>
+
+        <!-- Option 4: Landlord -->
+        <label class="w-full text-left p-3.5 rounded-2xl border border-gray-200 hover:border-indigo-400 bg-white has-[:checked]:bg-amber-50/60 has-[:checked]:border-amber-500 transition-all flex items-start gap-3.5 cursor-pointer">
+          <input type="checkbox" name="switchRoleCheckbox" value="Landlord" class="mt-1 w-4 h-4 rounded text-indigo-600 focus:ring-indigo-500 cursor-pointer">
+          <div class="w-9 h-9 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center shrink-0 font-bold text-base">
+            🏢
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-sm text-gray-900">Người cho thuê (Landlord)</span>
+              <span class="text-[10px] px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 font-bold">Cho thuê</span>
+            </div>
+            <p class="text-xs text-gray-500 mt-0.5">Đăng tin cho thuê căn hộ, phòng trọ, văn phòng, quản lý khách thuê.</p>
+          </div>
+        </label>
+
+        <!-- Option 5: Agent -->
+        <label class="w-full text-left p-3.5 rounded-2xl border border-gray-200 hover:border-indigo-400 bg-white has-[:checked]:bg-indigo-50/60 has-[:checked]:border-indigo-500 transition-all flex items-start gap-3.5 cursor-pointer">
+          <input type="checkbox" name="switchRoleCheckbox" value="Agent" class="mt-1 w-4 h-4 rounded text-indigo-600 focus:ring-indigo-500 cursor-pointer">
+          <div class="w-9 h-9 rounded-xl bg-indigo-100 text-indigo-700 flex items-center justify-center shrink-0 font-bold text-base">
+            👔
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-sm text-gray-900">Môi giới chuyên nghiệp (Agent / Broker)</span>
+              <span class="text-[10px] px-2 py-0.5 rounded-full bg-indigo-100 text-indigo-800 font-bold">Chuyên nghiệp</span>
+            </div>
+            <p class="text-xs text-gray-500 mt-0.5">Đăng cả tin Bán & Thuê, đẩy tin, quản lý CRM khách hàng tiềm năng.</p>
+          </div>
+        </label>
+
+        <div id="switchRoleErrorMsg" class="text-xs font-semibold text-red-500 bg-red-50 p-2.5 rounded-xl border border-red-200 hidden"></div>
+
+        <div class="mt-4 pt-3 border-t flex items-center justify-end gap-2.5">
+          <button type="button" onclick="closeSwitchRoleModal()" class="px-4 py-2.5 text-xs font-bold text-gray-600 hover:bg-gray-100 rounded-xl transition-colors cursor-pointer">
+            Đóng lại
+          </button>
+          <button type="submit" id="btnConfirmSwitchRole" class="px-6 py-2.5 bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 text-white font-bold text-xs rounded-xl shadow-md shadow-indigo-500/25 transition-all flex items-center gap-1.5 cursor-pointer">
+            <span class="material-symbols-outlined text-sm">check_circle</span>
+            <span>Cập nhật vai trò</span>
+          </button>
+        </div>
+      </form>
+    </div>
   </div>
 
   <!-- MODAL CHỈNH SỬA THÔNG TIN CÁ NHÂN -->
@@ -185,8 +336,10 @@
   </nav>
 
   <script>
-    const token = localStorage.getItem('accessToken');
+    const token = localStorage.getItem('accessToken') || localStorage.getItem('token');
     if (!token) window.location.href = 'signin.html';
+
+    let currentUserRole = '';
 
     const roleMap = { 
       Admin: 'Quản trị viên Hệ thống', 
@@ -212,7 +365,100 @@
       }
     }
 
-    // 1. Hiển thị thông tin người dùng ngay lập tức từ Token (0ms, không thể bị lỗi)
+    // Cô lập danh sách tin yêu thích theo từng tài khoản (Tránh tài khoản mới bị lẫn tin cũ)
+    function getFavStorageKey() {
+      if (token) {
+        try {
+          const p = parseJwt(token);
+          const uid = p?.sub || p?.nameid || p?.email;
+          if (uid) return 'fav_listings_' + uid;
+        } catch {}
+      }
+      return 'fav_listings_guest';
+    }
+
+    // Định dạng nhãn hiển thị khi người dùng chọn nhiều vai trò (ví dụ: Người mua & Người bán)
+    function formatRoleDisplay(roleStr) {
+      if (!roleStr) return 'Người dùng';
+      const roleMapVi = {
+        Buyer: 'Người mua BĐS',
+        Tenant: 'Người thuê nhà',
+        Seller: 'Người bán (Chủ nhà)',
+        Landlord: 'Người cho thuê',
+        Agent: 'Môi giới BĐS',
+        Broker: 'Môi giới BĐS',
+        Admin: 'Quản trị viên'
+      };
+      const parts = roleStr.split(',').map(s => s.trim()).filter(Boolean);
+      if (parts.length === 1) {
+        return roleMapVi[parts[0]] || parts[0];
+      }
+      const shortNames = {
+        Buyer: 'Người mua',
+        Seller: 'Người bán',
+        Tenant: 'Người thuê',
+        Landlord: 'Cho thuê',
+        Agent: 'Môi giới',
+        Broker: 'Môi giới',
+        Admin: 'Quản trị viên'
+      };
+      const viParts = parts.map(p => shortNames[p] || p);
+      return viParts.length > 0 ? viParts.join(' & ') : roleStr;
+    }
+
+    // Áp dụng vai trò trên giao diện: Phân tách rõ ràng giữa Người mua và Người bán
+    function applyProfileRole(uRole) {
+      currentUserRole = uRole || '';
+      const canPost = (currentUserRole.includes('Seller') || currentUserRole.includes('Landlord') || currentUserRole.includes('Agent') || currentUserRole.includes('Admin'));
+
+      const myListingLink = document.getElementById('myListingsMenu');
+      const pkgPushBox = document.getElementById('packagePushBox');
+      const upgradeBtn = document.getElementById('upgradePackageBtn');
+      const menuPkg = document.getElementById('menuPackagesLink');
+      const upgradeBanner = document.getElementById('buyerUpgradeBanner');
+      const sellerActionsBox = document.getElementById('sellerActionsBox');
+      const crmBox = document.getElementById('crmSection');
+
+      if (!canPost) {
+        // Chỉ có vai trò Người mua/thuê: Ẩn đăng tin, hiển thị Banner đổi vai trò
+        if (myListingLink) myListingLink.classList.add('hidden');
+        if (pkgPushBox) pkgPushBox.classList.add('hidden');
+        if (upgradeBtn) upgradeBtn.classList.add('hidden');
+        if (menuPkg) menuPkg.classList.add('hidden');
+        if (upgradeBanner) upgradeBanner.classList.remove('hidden');
+        if (sellerActionsBox) sellerActionsBox.classList.add('hidden');
+        if (crmBox) crmBox.classList.add('hidden');
+      } else {
+        // Có vai trò Bán / Cho thuê / Môi giới / Admin: Hiển thị đầy đủ công cụ
+        if (myListingLink) myListingLink.classList.remove('hidden');
+        if (pkgPushBox) pkgPushBox.classList.remove('hidden');
+        if (upgradeBtn) upgradeBtn.classList.remove('hidden');
+        if (menuPkg) menuPkg.classList.remove('hidden');
+        if (upgradeBanner) upgradeBanner.classList.add('hidden');
+        if (sellerActionsBox) {
+          sellerActionsBox.classList.remove('hidden');
+          const titleEl = document.getElementById('sellerDashboardTitle');
+          const descEl = document.getElementById('sellerDashboardDesc');
+          if (currentUserRole.includes('Agent')) {
+            if (titleEl) titleEl.textContent = 'Bảng điều khiển Môi giới chuyên nghiệp (Agent)';
+            if (descEl) descEl.textContent = 'Bạn có quyền đăng cả tin bán & cho thuê, quản lý nhiều BĐS và phân hệ CRM.';
+          } else if (currentUserRole.includes('Landlord') && !currentUserRole.includes('Seller')) {
+            if (titleEl) titleEl.textContent = 'Bảng điều khiển Người cho thuê (Landlord)';
+            if (descEl) descEl.textContent = 'Bạn có quyền đăng tin cho thuê căn hộ, phòng trọ, mặt bằng và quản lý khách thuê.';
+          } else {
+            if (titleEl) titleEl.textContent = 'Bảng điều khiển Người bán / Đăng tin BĐS';
+            if (descEl) descEl.textContent = 'Bạn có quyền đăng tin BĐS và tiếp nhận khách hàng quan tâm (CRM).';
+          }
+        }
+        if (crmBox) {
+          crmBox.classList.remove('hidden');
+          loadMyLeads();
+        }
+        loadSubscriptionStatus();
+      }
+    }
+
+    // 1. Hiển thị thông tin người dùng ngay lập tức từ Token (0ms)
     const payload = parseJwt(token);
     if (payload) {
       const uName = payload.name || payload.FullName || 'Người dùng';
@@ -221,42 +467,19 @@
 
       document.getElementById('fullName').textContent = uName;
       document.getElementById('email').textContent = uEmail;
-      document.getElementById('role').textContent = roleMap[uRole] || uRole;
+      document.getElementById('role').textContent = formatRoleDisplay(uRole);
       document.getElementById('avatar').textContent = uName ? uName[0].toUpperCase() : 'U';
 
-      // Nếu là Admin -> Hiển thị nút vào trang Quản trị kiểm duyệt tin ngay
-      if (uRole === 'Admin') {
+      if (uRole.includes('Admin')) {
         const adminBtn = document.getElementById('adminPortalBtn');
         if (adminBtn) adminBtn.classList.remove('hidden');
       }
 
-      // Nếu là Buyer hoặc Tenant -> Ẩn menu "Tin đăng của tôi", Gói dịch vụ & Lượt đẩy tin
-      if (['Buyer', 'Tenant'].includes(uRole)) {
-        const myListingLink = document.getElementById('myListingsMenu');
-        if (myListingLink) myListingLink.classList.add('hidden');
-
-        const pkgPushBox = document.getElementById('packagePushBox');
-        if (pkgPushBox) pkgPushBox.classList.add('hidden');
-
-        const upgradeBtn = document.getElementById('upgradePackageBtn');
-        if (upgradeBtn) upgradeBtn.classList.add('hidden');
-
-        const menuPkg = document.getElementById('menuPackagesLink');
-        if (menuPkg) menuPkg.classList.add('hidden');
-      }
-
-      // Nếu là Seller, Landlord, Agent, Admin -> Mở CRM
-      if (['Seller', 'Landlord', 'Agent', 'Broker', 'Admin'].includes(uRole)) {
-        const crmBox = document.getElementById('crmSection');
-        if (crmBox) {
-          crmBox.classList.remove('hidden');
-          loadMyLeads();
-        }
-      }
+      applyProfileRole(uRole);
     }
 
-    // 2. Tải thêm trạng thái gói hội viên & lượt đẩy tin (Chỉ tải nếu KHÔNG phải Người mua)
-    if (payload && !['Buyer', 'Tenant'].includes(payload.role || payload.Role)) {
+    // 2. Tải thêm trạng thái gói hội viên & lượt đẩy tin
+    function loadSubscriptionStatus() {
       fetch('/api/subscriptions/my-status', { headers: { 'Authorization': 'Bearer ' + token } })
         .then(r => r.json())
         .then(s => {
@@ -268,30 +491,108 @@
         .catch(() => {});
     }
 
-    // 3. Cập nhật thêm thông tin từ server nếu cần
+    // 3. Đồng bộ lại dữ liệu mới nhất từ server
     fetch('/api/auth/me', { headers: { 'Authorization': 'Bearer ' + token } })
       .then(r => r.ok ? r.json() : null)
       .then(u => {
         if (u) {
           document.getElementById('fullName').textContent = u.fullName || 'Người dùng';
           document.getElementById('email').textContent = u.email || '';
-          document.getElementById('role').textContent = roleMap[u.role] || u.role;
+          document.getElementById('role').textContent = formatRoleDisplay(u.role);
           document.getElementById('avatar').textContent = u.fullName ? u.fullName[0].toUpperCase() : 'U';
-          if (u.role === 'Admin') {
+          if (u.role && u.role.includes('Admin')) {
             const adminBtn = document.getElementById('adminPortalBtn');
             if (adminBtn) adminBtn.classList.remove('hidden');
           }
-          if (['Buyer', 'Tenant'].includes(u.role)) {
-            const pushBox = document.getElementById('packagePushBox');
-            if (pushBox) pushBox.classList.add('hidden');
-            const upBtn = document.getElementById('upgradePackageBtn');
-            if (upBtn) upBtn.classList.add('hidden');
-            const menuPkg = document.getElementById('menuPackagesLink');
-            if (menuPkg) menuPkg.classList.add('hidden');
-          }
+          applyProfileRole(u.role);
         }
       })
       .catch(() => {});
+
+    // Mở / Đóng modal chọn nhiều vai trò hệ thống
+    function openSwitchRoleModal() {
+      const userRoles = (currentUserRole || '').split(',').map(s => s.trim()).filter(Boolean);
+      document.querySelectorAll('input[name="switchRoleCheckbox"]').forEach(cb => {
+        cb.checked = userRoles.includes(cb.value);
+      });
+      const errEl = document.getElementById('switchRoleErrorMsg');
+      if (errEl) errEl.classList.add('hidden');
+      document.getElementById('switchRoleModal')?.classList.remove('hidden');
+    }
+
+    function closeSwitchRoleModal() {
+      document.getElementById('switchRoleModal')?.classList.add('hidden');
+    }
+
+    // Xử lý gửi danh sách nhiều vai trò được chọn
+    async function handleMultiRoleSubmit(e) {
+      e.preventDefault();
+      const checkedBoxes = Array.from(document.querySelectorAll('input[name="switchRoleCheckbox"]:checked'));
+      const selectedRoles = checkedBoxes.map(cb => cb.value);
+      const errEl = document.getElementById('switchRoleErrorMsg');
+      const btn = document.getElementById('btnConfirmSwitchRole');
+
+      if (selectedRoles.length === 0) {
+        if (errEl) {
+          errEl.textContent = 'Vui lòng chọn ít nhất 1 vai trò.';
+          errEl.classList.remove('hidden');
+        }
+        return;
+      }
+
+      btn.disabled = true;
+      btn.innerHTML = '<span class="material-symbols-outlined text-sm animate-spin">sync</span> Đang lưu...';
+
+      try {
+        const res = await fetch('/api/auth/upgrade-role', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
+          },
+          body: JSON.stringify({
+            targetRole: selectedRoles[0],
+            targetRoles: selectedRoles
+          })
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          if (errEl) {
+            errEl.textContent = data.message || 'Cập nhật thất bại.';
+            errEl.classList.remove('hidden');
+          }
+          btn.disabled = false;
+          btn.innerHTML = '<span class="material-symbols-outlined text-sm">check_circle</span><span>Cập nhật vai trò</span>';
+          return;
+        }
+
+        const newToken = data.accessToken || data.token;
+        if (newToken) {
+          localStorage.setItem('accessToken', newToken);
+          localStorage.setItem('token', newToken);
+        }
+        if (data.roles) {
+          localStorage.setItem('user_roles', JSON.stringify(data.roles));
+        }
+        if (data.roleLabel) {
+          localStorage.setItem('user_role_label', data.roleLabel);
+        }
+
+        alert('🎉 ' + data.message);
+        window.location.reload();
+      } catch (err) {
+        if (errEl) {
+          errEl.textContent = 'Lỗi kết nối máy chủ: ' + err.message;
+          errEl.classList.remove('hidden');
+        }
+        btn.disabled = false;
+        btn.innerHTML = '<span class="material-symbols-outlined text-sm">check_circle</span><span>Cập nhật vai trò</span>';
+      }
+    }
+
+    function upgradeToSeller() {
+      openSwitchRoleModal();
+    }
 
     // ====================================================================
     // 4. CHỨC NĂNG CHỈNH SỬA THÔNG TIN CÁ NHÂN
@@ -379,7 +680,8 @@
       const container = document.getElementById('savedListingsContainer');
       const badge = document.getElementById('savedCountBadge');
       const sectionBadge = document.getElementById('savedSectionCount');
-      const favs = JSON.parse(localStorage.getItem('fav_listings') || '[]').map(Number);
+      const storageKey = getFavStorageKey();
+      const favs = JSON.parse(localStorage.getItem(storageKey) || '[]').map(Number);
       if (badge) badge.textContent = favs.length;
       if (sectionBadge) sectionBadge.textContent = favs.length;
 
@@ -445,9 +747,10 @@
 
     function removeFavoriteInProfile(id) {
       const numId = Number(id);
-      let favs = JSON.parse(localStorage.getItem('fav_listings') || '[]').map(Number);
+      const storageKey = getFavStorageKey();
+      let favs = JSON.parse(localStorage.getItem(storageKey) || '[]').map(Number);
       favs = favs.filter(x => x !== numId);
-      localStorage.setItem('fav_listings', JSON.stringify(favs));
+      localStorage.setItem(storageKey, JSON.stringify(favs));
       loadSavedListingsInProfile();
     }
 
@@ -472,7 +775,8 @@
 
     // Cập nhật số lượng tin đã lưu lên badge khi mở trang hồ sơ
     (function updateSavedBadgeInit() {
-      const favs = JSON.parse(localStorage.getItem('fav_listings') || '[]').map(Number);
+      const storageKey = getFavStorageKey();
+      const favs = JSON.parse(localStorage.getItem(storageKey) || '[]').map(Number);
       const badge = document.getElementById('savedCountBadge');
       if (badge) badge.textContent = favs.length;
     })();
@@ -556,6 +860,7 @@
 
     function logout() {
       localStorage.removeItem('accessToken');
+      localStorage.removeItem('token');
       window.location.href = 'signin.html';
     }
   </script>

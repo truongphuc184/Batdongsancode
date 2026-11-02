@@ -313,10 +313,11 @@ public class ListingsController : ControllerBase
         if (user == null)
             return Unauthorized(new { message = "Không tìm thấy thông tin tài khoản người dùng" });
 
-        if (user.Role == Role.Buyer || user.Role == Role.Tenant)
+        bool canPost = user.Role.HasFlag(Role.Seller) || user.Role.HasFlag(Role.Landlord) || user.Role.HasFlag(Role.Agent) || user.Role.HasFlag(Role.Admin);
+        if (!canPost)
         {
             return StatusCode(403, new { 
-                message = "Tài khoản Người mua (Buyer) không có quyền đăng tin. Tương tự như sàn Shopee, bạn cần đăng ký tài khoản Người bán (Seller) hoặc Môi giới (Agent) để đăng tin bất động sản!" 
+                message = "Tài khoản của bạn chưa có quyền đăng tin. Vui lòng vào Hồ sơ cá nhân tích thêm vai trò Người bán hoặc Cho thuê để đăng tin bất động sản!" 
             });
         }
 
@@ -391,9 +392,13 @@ public class ListingsController : ControllerBase
         if (userId.HasValue)
         {
             var user = await _context.Users.FindAsync(userId.Value);
-            if (user != null && (user.Role == Role.Buyer || user.Role == Role.Tenant))
+            if (user != null)
             {
-                return StatusCode(403, new { message = "Tài khoản Người mua không có quyền tải ảnh đăng tin." });
+                bool canUpload = user.Role.HasFlag(Role.Seller) || user.Role.HasFlag(Role.Landlord) || user.Role.HasFlag(Role.Agent) || user.Role.HasFlag(Role.Admin);
+                if (!canUpload)
+                {
+                    return StatusCode(403, new { message = "Tài khoản Người mua không có quyền tải ảnh đăng tin." });
+                }
             }
         }
 

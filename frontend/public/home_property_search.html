@@ -25,6 +25,10 @@
         </div>
       </div>
       <div class="flex items-center gap-1.5 sm:gap-2.5">
+        <button onclick="showCreateForm()" id="headerCreateListingBtn" class="hidden px-3 sm:px-4 py-1.5 bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 text-white rounded-xl text-xs font-bold transition-all shadow-md items-center gap-1 shrink-0">
+          <span class="material-symbols-outlined text-sm">add_circle</span>
+          <span class="hidden sm:inline">Đăng tin</span>
+        </button>
         <a href="packages.html" class="px-2.5 sm:px-3 py-1.5 bg-gradient-to-r from-red-600 to-pink-600 hover:from-red-700 hover:to-pink-700 text-white rounded-xl text-xs font-bold transition-all flex items-center gap-1 shadow-sm shrink-0">
           <span>💎</span> <span class="hidden sm:inline">Gói Hội viên</span>
         </a>
@@ -420,7 +424,7 @@
   </nav>
 
   <script>
-    const token = localStorage.getItem('accessToken');
+    const token = localStorage.getItem('accessToken') || localStorage.getItem('token');
     if (!token) window.location.href = 'signin.html';
 
     let currentFilter = null;
@@ -439,40 +443,85 @@
       }
     }
 
-    // Phân quyền giao diện: Xóa/ẩn chức năng đăng tin đối với tài khoản Người mua (Buyer / Tenant)
+    // Cô lập danh sách tin yêu thích theo từng tài khoản (Tài khoản mới bắt đầu với 0 tin)
+    function getFavStorageKey() {
+      if (token) {
+        try {
+          const p = parseJwt(token);
+          const uid = p?.sub || p?.nameid || p?.email;
+          if (uid) return 'fav_listings_' + uid;
+        } catch {}
+      }
+      return 'fav_listings_guest';
+    }
+
+    // Định dạng nhãn hiển thị nhiều vai trò (ví dụ: Người mua & Người bán)
+    function formatRoleDisplay(roleStr) {
+      if (!roleStr) return 'Người dùng';
+      const roleMapVi = {
+        Buyer: 'Người mua',
+        Tenant: 'Người thuê',
+        Seller: 'Người bán',
+        Landlord: 'Cho thuê',
+        Agent: 'Môi giới',
+        Broker: 'Môi giới',
+        Admin: 'Quản trị viên'
+      };
+      const parts = roleStr.split(',').map(s => s.trim()).filter(Boolean);
+      const viParts = parts.map(p => roleMapVi[p] || p);
+      return viParts.length > 0 ? viParts.join(' & ') : roleStr;
+    }
+
+    // Phân quyền giao diện 2 chiều: Ẩn với Người mua thuần túy, Hiển thị đầy đủ cho Người bán/Môi giới/Admin
     function applyRoleRestrictions(role) {
-      currentUserRole = role;
-      if (role === 'Buyer' || role === 'Tenant') {
-        // 1. Xóa nút Đăng tin lớn ở đầu trang
-        const bannerWrap = document.getElementById('createListingBannerWrapper');
+      currentUserRole = role || '';
+      const canPost = (currentUserRole.includes('Seller') || currentUserRole.includes('Landlord') || currentUserRole.includes('Agent') || currentUserRole.includes('Admin'));
+
+      const bannerWrap = document.getElementById('createListingBannerWrapper');
+      const createForm = document.getElementById('createForm');
+      const navCreateBtn = document.getElementById('navCreateBtn');
+      const navSavedBtn = document.getElementById('navSavedBtn');
+      const emptyCreateBtn = document.getElementById('emptyStateCreateBtn');
+      const myTab = document.getElementById('btnMyListingsTab');
+      const headerBtn = document.getElementById('headerCreateListingBtn');
+
+      if (!canPost) {
         if (bannerWrap) bannerWrap.classList.add('hidden');
-
-        // 2. Ẩn form đăng tin nếu đang mở
-        const createForm = document.getElementById('createForm');
         if (createForm) createForm.classList.add('hidden');
-
-        // 3. Xóa nút Đăng tin ở thanh điều hướng dưới cùng (Bottom nav)
-        const navCreateBtn = document.getElementById('navCreateBtn');
         if (navCreateBtn) navCreateBtn.classList.add('hidden');
-
-        // 4. Thay bằng nút "Tin đã lưu" ở Bottom nav cho Người mua
-        const navSavedBtn = document.getElementById('navSavedBtn');
         if (navSavedBtn) navSavedBtn.classList.remove('hidden');
-
-        // 5. Ẩn nút Đăng tin ở Empty state
-        const emptyCreateBtn = document.getElementById('emptyStateCreateBtn');
         if (emptyCreateBtn) emptyCreateBtn.classList.add('hidden');
-
-        // 6. Ẩn tab "Tin của tôi" vì Buyer không được đăng tin
-        const myTab = document.getElementById('btnMyListingsTab');
         if (myTab) myTab.classList.add('hidden');
+        if (headerBtn) headerBtn.classList.add('hidden');
+      } else {
+        // Seller, Landlord, Agent, Admin -> Hiển thị đầy đủ chức năng đăng tin & quản lý tin
+        if (bannerWrap) bannerWrap.classList.remove('hidden');
+        if (navCreateBtn) navCreateBtn.classList.remove('hidden');
+        if (navSavedBtn) navSavedBtn.classList.add('hidden');
+        if (emptyCreateBtn) emptyCreateBtn.classList.remove('hidden');
+        if (myTab) myTab.classList.remove('hidden');
+        if (headerBtn) headerBtn.classList.remove('hidden');
       }
     }
 
-    // Nhận diện quyền ngay tức thì qua JWT token
+    // Nhận diện quyền ngay tức thì qua JWT token (0ms)
     const initialPayload = parseJwt(token);
     if (initialPayload && initialPayload.role) {
       applyRoleRestrictions(initialPayload.role);
+      const badgeEl = document.getElementById('userRoleBadge');
+      if (badgeEl) {
+        badgeEl.textContent = formatRoleDisplay(initialPayload.role).toUpperCase();
+        badgeEl.classList.remove('hidden');
+      }
+    }
+
+    // Kiểm tra tham số URL mở form đăng tin (ví dụ chuyển từ Hồ sơ cá nhân sang)
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('action') === 'create') {
+      setTimeout(() => {
+        showCreateForm();
+        window.scrollTo({ top: 300, behavior: 'smooth' });
+      }, 300);
     }
 
     // Lấy thông tin user đăng nhập
@@ -495,7 +544,7 @@
           document.getElementById('userDisplayName').textContent = u.fullName;
           const badgeEl = document.getElementById('userRoleBadge');
           if (badgeEl) {
-            badgeEl.textContent = roleMap[u.role] || u.role;
+            badgeEl.textContent = formatRoleDisplay(u.role).toUpperCase();
             badgeEl.classList.remove('hidden');
           }
         }
@@ -623,7 +672,7 @@
       const container = document.getElementById('listings');
       const emptyState = document.getElementById('empty-state');
       const countEl = document.getElementById('listings-count');
-      const savedIds = JSON.parse(localStorage.getItem('fav_listings') || '[]').map(Number);
+      const savedIds = JSON.parse(localStorage.getItem(getFavStorageKey()) || '[]').map(Number);
 
       if (!data || data.length === 0) {
         container.innerHTML = '';
@@ -725,19 +774,21 @@
     // Toggle Favorite từ danh sách thẻ
     function toggleCardFavorite(id) {
       const numId = Number(id);
-      let favs = JSON.parse(localStorage.getItem('fav_listings') || '[]').map(Number);
+      const storageKey = getFavStorageKey();
+      let favs = JSON.parse(localStorage.getItem(storageKey) || '[]').map(Number);
       if (favs.includes(numId)) {
         favs = favs.filter(x => x !== numId);
       } else {
         favs.push(numId);
       }
-      localStorage.setItem('fav_listings', JSON.stringify(favs));
+      localStorage.setItem(storageKey, JSON.stringify(favs));
       renderListings(allCurrentListings);
     }
 
     // Tab xem các tin đã lưu yêu thích (Use Case: Lưu BĐS yêu thích)
     async function loadSavedListingsTab() {
-      const favs = JSON.parse(localStorage.getItem('fav_listings') || '[]').map(Number);
+      const storageKey = getFavStorageKey();
+      const favs = JSON.parse(localStorage.getItem(storageKey) || '[]').map(Number);
       const titleEl = document.getElementById('section-title');
       const countEl = document.getElementById('listings-count');
       const container = document.getElementById('listings');

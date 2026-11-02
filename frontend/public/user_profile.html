@@ -1,188 +1,868 @@
 <!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Hồ sơ - Bất Động Sản</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@400,0" rel="stylesheet"/>
+  <style>body{font-family:'Inter',sans-serif;}</style>
+</head>
+<body class="bg-gray-50 min-h-screen pb-20">
+  <!-- Header -->
+  <header class="bg-white shadow-sm sticky top-0 z-50">
+    <div class="max-w-4xl lg:max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-2 sm:gap-3">
+        <a href="home_property_search.html" class="w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center hover:bg-gray-100 transition-colors">
+          <span class="material-symbols-outlined">arrow_back</span>
+        </a>
+        <span class="font-bold text-gray-900 text-sm sm:text-base">Hồ sơ cá nhân</span>
+      </div>
+      <a href="home_property_search.html" class="text-xs font-semibold text-indigo-600 hover:underline">Về trang chủ</a>
+    </div>
+  </header>
 
-<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/><meta content="mobile_tab" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Manrope:wght@600;700&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{width:100vw;margin:0;padding:0;}body{overscroll-behavior:none;}.pb-safe{padding-bottom:env(safe-area-inset-bottom,0px);}.pt-safe{padding-top:env(safe-area-inset-top,0px);}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { colors: { "primary-fixed": "#dae2fd", "on-primary-container": "#7c839b", "surface-container-highest": "#e0e3e5", "surface-tint": "#565e74", "secondary-fixed-dim": "#ffb77d", "inverse-on-surface": "#eff1f3", "surface-container": "#eceef0", "on-secondary-fixed": "#2f1500", "tertiary-fixed-dim": "#b9c7e0", "tertiary": "#000000", "primary-container": "#131b2e", "on-error-container": "#93000a", "on-surface-variant": "#45464d", "secondary-fixed": "#ffdcc3", "secondary-container": "#fe932c", "outline-variant": "#c6c6cd", "surface-container-low": "#f2f4f6", "on-tertiary": "#ffffff", "error": "#ba1a1a", "on-primary": "#ffffff", "surface-bright": "#f7f9fb", "outline": "#76777d", "tertiary-fixed": "#d5e3fd", "on-tertiary-fixed-variant": "#3a485c", "on-surface": "#191c1e", "on-tertiary-container": "#76859b", "surface": "#f7f9fb", "on-secondary-container": "#663500", "on-error": "#ffffff", "error-container": "#ffdad6", "secondary": "#904d00", "inverse-surface": "#2d3133", "on-background": "#191c1e", "surface-container-high": "#e6e8ea", "on-secondary-fixed-variant": "#6e3900", "primary-fixed-dim": "#bec6e0", "surface-variant": "#e0e3e5", "tertiary-container": "#0d1c2f", "primary": "#000000", "on-primary-fixed-variant": "#3f465c", "surface-dim": "#d8dadc", "on-tertiary-fixed": "#0d1c2f", "inverse-primary": "#bec6e0", "on-primary-fixed": "#131b2e", "on-secondary": "#ffffff", "background": "#f7f9fb", "surface-container-lowest": "#ffffff" }, borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, spacing: { "space-xs": "0.25rem", "space-md": "1rem", "gutter": "1rem", "space-sm": "0.5rem", "space-xl": "2rem", "space-lg": "1.5rem", "margin": "1.25rem", "gutter-sm": "0.75rem", "margin-lg": "1.75rem" }, fontFamily: { "label-sm": ["Inter"], "body-lg": ["Inter"], "label-md": ["Inter"], "headline-md": ["Manrope"], "headline-lg": ["Manrope"], "display-lg": ["Manrope"], "headline-lg-mobile": ["Manrope"], "body-sm": ["Inter"], "body-md": ["Inter"], "headline-sm": ["Manrope"] }, fontSize: { "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.04em", "fontWeight": "600" }], "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }], "label-md": ["13px", { "lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "500" }], "headline-md": ["22px", { "lineHeight": "30px", "letterSpacing": "-0.015em", "fontWeight": "600" }], "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.025em", "fontWeight": "600" }], "display-lg": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.03em", "fontWeight": "700" }], "headline-lg-mobile": ["26px", { "lineHeight": "34px", "letterSpacing": "-0.02em", "fontWeight": "600" }], "body-sm": ["12px", { "lineHeight": "18px", "fontWeight": "400" }], "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }], "headline-sm": ["18px", { "lineHeight": "26px", "letterSpacing": "-0.01em", "fontWeight": "600" }] } } } };</script><style>
-    body {
-      min-height: max(884px, 100dvh);
-    }
-  </style>
-  </head><body class="bg-surface font-body-md text-body-md text-on-surface antialiased"><header class="fixed top-0 w-full z-50 pt-safe bg-surface-container-lowest/80 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="h-16 px-margin flex items-center justify-between gap-space-sm"><div class="flex items-center gap-space-sm min-w-0"><img alt="Havenly Logo" class="h-8 w-auto object-contain shrink-0" src="https://lh3.googleusercontent.com/aida/AEtjO1XoiYaOUYQIJOlGgy5QrLJDTjXSighpy2CqKXz0MKKbcCIg25e3ZNwWqdtf3yzSaot_6le7i0nQIZh-5WWsTQQpYE4PJaa7LCgbIps_EsW-E2_mpsHp_0uvwVEcBDFGXSL3B12BvPr9bYawKo3v5yxETRTNa8NRtjhHAkrR--xs0xFq8434oYUqWs5wCJWkoXmH37qxxZESIwwxOdBv1yy7mgGUN24AZA1_7anTcR_lSw"/><div class="flex flex-col min-w-0"><span class="font-headline-sm text-headline-sm text-on-surface tracking-tight truncate">Havenly</span><span class="font-label-sm text-label-sm text-on-surface-variant truncate">Profile</span></div></div><div class="flex items-center gap-space-xs shrink-0"><button aria-label="Notifications" class="w-11 h-11 rounded-full flex items-center justify-center text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors" type="button"><span class="material-symbols-outlined text-[22px]">notifications</span></button><button aria-label="View user profile" class="w-11 h-11 flex items-center justify-center" type="button"><img alt="Profile" class="w-8 h-8 rounded-full object-cover shadow-[0_2px_8px_-2px_rgba(15,23,42,0.1)]" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB-WUVGzrVbS9a42Kup1PPEHSz22lZDqcdUyGy3hVLTWGdmnpm7Kq97kzsHYxaS77FSV6ClNYPDRlpfdi-FaUiWDE7Gt2TtIANzGpW1_-hH41r1x9sDsnNx9KIAMb3TpO3oQi6P7IuMNDLuE_K3nF9KC0RFG4jZfPJTtYkWLrOhwDv4F6VDp-vggIN87nYPFyDltS4KSdnUQR0hM9ylyHm7g5p4FRV-qp5-P5qSBgbw"/></button></div></div></header><main class="flex flex-col relative w-full pt-16 pb-24 bg-surface min-h-screen"><div class="flex flex-col w-full pb-8">
-<div class="px-margin pt-space-md flex flex-col gap-space-lg">
-<div class="relative overflow-hidden rounded-xl bg-surface-container-lowest p-space-lg shadow-sm">
-<div class="flex items-center gap-space-md">
-<div class="relative shrink-0">
-<img class="w-20 h-20 rounded-full object-cover shadow-md" data-alt="Editorial portrait of Sarah Jenkins, an elegant architectural broker in her mid-thirties with a warm, confident expression. Natural daylight, warm soft ambient lighting, clean minimal background with refined slate-toned architectural texture, sharp focus, professional portfolio style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBMMqsaAJ188XiYd84r01Xf3bLDtyy3mzON02nAB46a8dXoKyMX7PPWW8T4sdgIKd1zp-WvBVnO_0ElKbVWCwsQF9fX4FA7bjCYclZq5qIy5b0eqOlFD6j0b3ANdSxS45_2VEBeWYRBqLrCSsFHKjwsMQsyrU2uaxEoFNJKpWZl_5qNMRUMysmsgZnp8KroG2Rlg6Lu5FqEb1nbaaiC3rxRuBSu5tM5ZPdJum5x6s7P"/>
-<button aria-label="Change photo" class="absolute bottom-0 right-0 w-7 h-7 rounded-full bg-primary text-on-primary flex items-center justify-center shadow-md active:scale-90 transition-transform" type="button">
-<span class="material-symbols-outlined text-[15px]">photo_camera</span>
-</button>
-</div>
-<div class="flex flex-col min-w-0 flex-1">
-<div class="flex items-center gap-space-xs flex-wrap">
-<h1 class="font-headline-sm text-headline-sm text-on-surface truncate">Sarah Jenkins</h1>
-<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm">
-<span class="material-symbols-outlined text-[13px]" style="font-variation-settings: 'FILL' 1;">verified</span>
-              Verified Broker
-            </span>
-</div>
-<span class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">sarah.jenkins@havenlyrealty.com</span>
-<div class="flex items-center gap-1.5 mt-2 text-on-surface-variant font-label-sm text-label-sm">
-<span class="material-symbols-outlined text-[15px]">calendar_today</span>
-<span>Member since Oct 2022</span>
-</div>
-</div>
-</div>
-<div class="grid grid-cols-3 gap-space-xs mt-space-lg pt-space-md bg-surface-container-low rounded-lg p-space-sm text-center">
-<div class="flex flex-col py-1">
-<span class="font-headline-sm text-headline-sm text-on-surface font-semibold">12</span>
-<span class="font-label-sm text-label-sm text-on-surface-variant">Listings</span>
-</div>
-<div class="flex flex-col py-1">
-<span class="font-headline-sm text-headline-sm text-on-surface font-semibold">98%</span>
-<span class="font-label-sm text-label-sm text-on-surface-variant">Response</span>
-</div>
-<div class="flex flex-col py-1">
-<div class="flex items-center justify-center gap-0.5">
-<span class="font-headline-sm text-headline-sm text-on-surface font-semibold">4.9</span>
-<span class="material-symbols-outlined text-[16px] text-secondary" style="font-variation-settings: 'FILL' 1;">star</span>
-</div>
-<span class="font-label-sm text-label-sm text-on-surface-variant">Rating</span>
-</div>
-</div>
-</div>
-<form class="rounded-xl bg-surface-container-lowest p-space-lg shadow-sm flex flex-col gap-space-md" id="profile-form" onsubmit="event.preventDefault(); handleProfileUpdate();">
-<div class="flex items-center justify-between pb-space-xs">
-<div class="flex items-center gap-2">
-<span class="material-symbols-outlined text-secondary text-[20px]">badge</span>
-<span class="font-headline-sm text-headline-sm text-on-surface">Personal Information</span>
-</div>
-<span class="font-label-sm text-label-sm text-on-surface-variant">Mandatory verification</span>
-</div>
-<div class="flex flex-col gap-1.5">
-<label class="font-label-md text-label-md text-on-surface-variant flex items-center justify-between" for="profile-email">
-<span>Account Email</span>
-<span class="font-label-sm text-label-sm text-on-surface-variant flex items-center gap-1">
-<span class="material-symbols-outlined text-[14px]">lock</span>
-            System locked
-          </span>
-</label>
-<div class="flex items-center gap-space-sm px-space-md h-12 rounded-lg bg-surface-container text-on-surface-variant select-none">
-<span class="material-symbols-outlined text-[20px] text-on-surface-variant">alternate_email</span>
-<span class="font-body-md text-body-md text-on-surface-variant font-medium truncate flex-1" id="profile-email">sarah.jenkins@havenlyrealty.com</span>
-<span class="material-symbols-outlined text-[18px] text-on-surface-variant">lock</span>
-</div>
-</div>
-<div class="flex flex-col gap-1.5">
-<label class="font-label-md text-label-md text-on-surface font-medium" for="fullName">
-          Full Legal Name
+  <div class="max-w-4xl lg:max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 mt-4 sm:mt-6">
+    <!-- Profile Card -->
+    <div class="bg-white rounded-2xl shadow-sm p-6 text-center">
+      <div class="w-20 h-20 bg-indigo-600 rounded-full flex items-center justify-center mx-auto text-white text-3xl font-bold" id="avatar">U</div>
+      <h2 class="text-xl font-bold text-gray-800 mt-4" id="fullName">Đang tải...</h2>
+      <p class="text-gray-500" id="email"></p>
+      <div class="flex items-center justify-center gap-2 mt-2">
+        <span class="inline-block px-3.5 py-1 rounded-full text-xs font-bold bg-indigo-50 text-indigo-700 border border-indigo-200" id="role"></span>
+        <button type="button" onclick="openSwitchRoleModal()" class="px-2.5 py-1 text-[11px] font-bold text-indigo-600 hover:text-indigo-800 bg-white hover:bg-indigo-50 border border-indigo-200 rounded-full transition-all flex items-center gap-0.5 shadow-xs cursor-pointer" title="Đổi sang vai trò khác">
+          <span class="material-symbols-outlined text-xs">sync_alt</span> Đổi vai trò
+        </button>
+      </div>
+
+      <!-- Trạng thái gói hội viên (Chỉ hiển thị cho Seller, Landlord, Agent, Admin - Ẩn với Người mua) -->
+      <div id="packagePushBox" class="mt-4 pt-4 border-t border-gray-100 flex items-center justify-around text-xs">
+        <div>
+          <span class="text-gray-400">Gói dịch vụ:</span>
+          <div class="font-bold text-gray-900 mt-0.5" id="userPackageName">Đang tải...</div>
+        </div>
+        <div class="h-6 w-px bg-gray-200"></div>
+        <div>
+          <span class="text-gray-400">Lượt đẩy tin còn lại:</span>
+          <div class="font-extrabold text-indigo-600 mt-0.5" id="userPushesCount">-- lượt</div>
+        </div>
+      </div>
+      <a id="upgradePackageBtn" href="packages.html" class="mt-4 w-full py-2.5 bg-gradient-to-r from-red-600 to-pink-600 hover:from-red-700 hover:to-pink-700 text-white rounded-xl font-bold text-xs flex items-center justify-center gap-1.5 shadow-sm transition-all">
+        💎 Nâng cấp Gói Hội viên (Tiết kiệm 39%)
+      </a>
+
+      <!-- Nút Chỉnh sửa thông tin cá nhân (Dành cho tất cả người dùng, thay thế phần gói dịch vụ ở tài khoản Người mua) -->
+      <button onclick="openEditProfileModal()" class="mt-3 w-full py-2.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 rounded-xl font-bold text-xs flex items-center justify-center gap-1.5 transition-all">
+        <span class="material-symbols-outlined text-base">manage_accounts</span> Chỉnh sửa thông tin cá nhân
+      </button>
+    </div>
+
+    <!-- Menu -->
+    <div class="bg-white rounded-2xl shadow-sm mt-4 overflow-hidden">
+      <a id="myListingsMenu" href="home_property_search.html?tab=my" class="flex items-center gap-4 px-6 py-4 hover:bg-gray-50 border-b border-gray-100">
+        <span class="material-symbols-outlined text-indigo-600">real_estate_agent</span>
+        <span class="font-medium text-gray-800">Tin đăng của tôi</span>
+        <span class="material-symbols-outlined text-gray-400 ml-auto">chevron_right</span>
+      </a>
+      <button type="button" id="menuSavedLink" onclick="toggleSavedListingsSection()" class="w-full flex items-center gap-4 px-6 py-4 hover:bg-red-50/40 border-b border-gray-100 transition-colors text-left cursor-pointer">
+        <svg class="w-5 h-5 fill-red-500 text-red-500 shrink-0" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+        <span class="font-medium text-gray-800">Tin đã lưu yêu thích (<span id="savedCountBadge" class="font-bold text-red-600">0</span>)</span>
+        <span class="text-xs text-indigo-600 font-bold ml-auto flex items-center gap-1" id="savedToggleHint">
+          <span id="savedToggleText">Xem danh sách</span>
+          <span class="material-symbols-outlined text-sm transition-transform duration-200" id="savedArrowIcon">expand_more</span>
+        </span>
+      </button>
+      <a id="menuPackagesLink" href="packages.html" class="flex items-center gap-4 px-6 py-4 hover:bg-gray-50 border-b border-gray-100">
+        <span class="material-symbols-outlined text-amber-500">workspace_premium</span>
+        <span class="font-medium text-gray-800">Gói dịch vụ & Lượt đẩy tin</span>
+        <span class="material-symbols-outlined text-gray-400 ml-auto">chevron_right</span>
+      </a>
+    </div>
+
+    <!-- HÀNH ĐỘNG DÀNH CHO TÀI KHOẢN CÓ QUYỀN ĐĂNG TIN (Seller, Landlord, Agent) -->
+    <div id="sellerActionsBox" class="bg-gradient-to-r from-indigo-50 to-blue-50 border border-indigo-200 rounded-2xl p-4 sm:p-5 mt-4 hidden">
+      <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+        <div>
+          <h4 class="font-bold text-gray-900 text-sm flex items-center gap-2">
+            <span class="material-symbols-outlined text-indigo-600">storefront</span>
+            <span id="sellerDashboardTitle">Bảng điều khiển Người bán</span>
+          </h4>
+          <p class="text-xs text-gray-600 mt-0.5" id="sellerDashboardDesc">Bạn đang có quyền đăng tin BĐS và tiếp nhận khách hàng quan tâm.</p>
+        </div>
+        <div class="flex items-center gap-2 flex-wrap sm:flex-nowrap">
+          <a href="home_property_search.html?action=create" class="flex-1 sm:flex-none px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold text-xs shadow-md transition-all flex items-center justify-center gap-1.5 shrink-0">
+            <span class="material-symbols-outlined text-base">add_circle</span> Đăng tin mới ngay
+          </a>
+          <button type="button" onclick="openSwitchRoleModal()" class="flex-1 sm:flex-none px-3.5 py-2.5 bg-white hover:bg-gray-100 text-gray-700 border border-gray-300 rounded-xl font-bold text-xs transition-all flex items-center justify-center gap-1 shrink-0 cursor-pointer shadow-sm" title="Đổi sang vai trò khác">
+            <span class="material-symbols-outlined text-base">swap_horiz</span> Đổi vai trò khác ▾
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- BANNER DÀNH CHO TÀI KHOẢN NGƯỜI MUA / THUÊ -->
+    <div id="buyerUpgradeBanner" class="bg-gradient-to-r from-amber-500/10 via-orange-500/10 to-amber-500/5 border border-amber-300 rounded-2xl p-5 mt-4 hidden">
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div class="flex items-center gap-3.5">
+          <div class="w-12 h-12 bg-gradient-to-tr from-amber-500 to-orange-500 text-white rounded-2xl flex items-center justify-center shrink-0 shadow-md">
+            <span class="material-symbols-outlined text-2xl">storefront</span>
+          </div>
+          <div>
+            <h4 class="font-bold text-gray-900 text-sm sm:text-base">Bạn muốn chuyển vai trò khác để Đăng tin?</h4>
+            <p class="text-xs text-gray-600 mt-0.5">Không cần tạo Gmail mới! Bạn có thể chuyển sang Người bán, Cho thuê hoặc Môi giới bất kỳ lúc nào.</p>
+          </div>
+        </div>
+        <button type="button" onclick="openSwitchRoleModal()" class="w-full sm:w-auto px-5 py-2.5 bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white font-bold text-xs rounded-xl shadow-md shadow-amber-500/20 transition-all shrink-0 flex items-center justify-center gap-1.5 cursor-pointer">
+          <span class="material-symbols-outlined text-base">swap_horiz</span>
+          <span>Chọn vai trò khác ▾</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- KHU VỰC BẤT ĐỘNG SẢN ĐÃ LƯU YÊU THÍCH NGAY TRONG HỒ SƠ (Mặc định ẩn, bấm vào Menu để mở ra) -->
+    <div id="savedListingsSection" class="bg-white rounded-2xl shadow-sm mt-4 p-5 sm:p-6 border border-red-200 hidden">
+      <div class="flex items-center justify-between pb-3 border-b mb-4">
+        <div>
+          <h3 class="text-base font-bold text-gray-900 flex items-center gap-2">
+            <span class="material-symbols-outlined text-red-500">favorite</span>
+            Bất động sản đã lưu yêu thích (<span id="savedSectionCount">0</span>)
+          </h3>
+          <p class="text-xs text-gray-500 mt-0.5">Các căn nhà bạn đã bấm tim ❤️ để theo dõi</p>
+        </div>
+        <a href="home_property_search.html?tab=saved" class="text-xs text-indigo-600 font-bold hover:underline flex items-center gap-0.5">
+          Xem trên trang tìm kiếm ↗
+        </a>
+      </div>
+      <div id="savedListingsContainer" class="space-y-3">
+        <div class="text-center py-6 text-gray-400 text-xs">Đang tải danh sách BĐS đã lưu...</div>
+      </div>
+    </div>
+
+    <!-- KHÁCH HÀNG QUAN TÂM / CRM (Sơ đồ Use case 3 & Sơ đồ CRM: Tiếp nhận thông tin khách quan tâm) -->
+    <div id="crmSection" class="bg-white rounded-2xl shadow-sm mt-4 p-6 hidden border border-indigo-100">
+      <div class="flex items-center justify-between pb-3 border-b mb-4">
+        <div>
+          <h3 class="text-base font-bold text-gray-900 flex items-center gap-2">
+            <span class="material-symbols-outlined text-indigo-600">contact_phone</span>
+            Quản lý khách hàng tiềm năng (CRM Mini)
+          </h3>
+          <p class="text-xs text-gray-500 mt-0.5">Khách hàng để lại thông tin tư vấn & đặt lịch hẹn xem BĐS của bạn</p>
+        </div>
+        <button onclick="loadMyLeads()" class="px-3 py-1.5 bg-gray-100 hover:bg-gray-200 rounded-xl text-xs font-semibold text-gray-700 flex items-center gap-1">
+          <span class="material-symbols-outlined text-sm">refresh</span> Làm mới
+        </button>
+      </div>
+
+      <div id="leadsList" class="space-y-3">
+        <div class="text-center py-6 text-gray-400 text-xs">Đang tải danh sách khách hàng...</div>
+      </div>
+    </div>
+
+    <!-- Nút truy cập Trang Quản Trị dành riêng cho Admin -->
+    <a href="admin.html" id="adminPortalBtn" class="hidden w-full mt-4 py-3.5 bg-amber-500 hover:bg-amber-600 text-gray-900 font-bold rounded-2xl shadow-sm flex items-center justify-center gap-2 transition-colors">
+      <span class="material-symbols-outlined">admin_panel_settings</span> Trang Quản Trị & Kiểm Duyệt Tin
+    </a>
+
+    <!-- Logout -->
+    <button onclick="logout()" class="w-full mt-4 py-4 bg-white rounded-2xl shadow-sm text-red-500 font-medium hover:bg-red-50 transition-colors flex items-center justify-center gap-2">
+      <span class="material-symbols-outlined">logout</span>
+      Đăng xuất
+    </button>
+  </div>
+
+  <!-- MODAL CHỌN NHIỀU VAI TRÒ HỆ THỐNG (ACTOR ROLE SWITCHER) -->
+  <div id="switchRoleModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-7 shadow-2xl relative max-h-[90vh] overflow-y-auto">
+      <div class="flex items-center justify-between pb-3.5 border-b border-gray-100 mb-3">
+        <div>
+          <h3 class="font-black text-gray-900 text-base sm:text-lg flex items-center gap-2">
+            <span class="material-symbols-outlined text-indigo-600">switch_account</span> Chọn vai trò của bạn
+          </h3>
+          <p class="text-xs text-gray-500 mt-0.5">Tích chọn các vai trò phù hợp (có thể chọn cùng lúc vừa Mua, vừa Bán, vừa Thuê...)</p>
+        </div>
+        <button onclick="closeSwitchRoleModal()" class="text-gray-400 hover:text-gray-600 p-1">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+
+      <form id="switchRoleForm" onsubmit="handleMultiRoleSubmit(event)" class="space-y-2.5">
+        <!-- Option 1: Buyer -->
+        <label class="w-full text-left p-3.5 rounded-2xl border border-gray-200 hover:border-indigo-400 bg-white has-[:checked]:bg-emerald-50/60 has-[:checked]:border-emerald-500 transition-all flex items-start gap-3.5 cursor-pointer">
+          <input type="checkbox" name="switchRoleCheckbox" value="Buyer" class="mt-1 w-4 h-4 rounded text-indigo-600 focus:ring-indigo-500 cursor-pointer">
+          <div class="w-9 h-9 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0 font-bold text-base">
+            🛒
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-sm text-gray-900">Người mua BĐS (Buyer)</span>
+              <span class="text-[10px] px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-bold">Tìm mua</span>
+            </div>
+            <p class="text-xs text-gray-500 mt-0.5">Tìm kiếm BĐS, lọc tin, thả tim lưu tin, đặt lịch hẹn xem nhà.</p>
+          </div>
         </label>
-<div class="relative flex items-center">
-<span class="material-symbols-outlined absolute left-3 text-[20px] text-on-surface-variant pointer-events-none">person</span>
-<input class="w-full h-12 pl-10 pr-space-md rounded-lg bg-surface-container-low text-on-surface font-body-md text-body-md focus:bg-surface-container-lowest focus:outline-none transition-all placeholder:text-on-surface-variant" id="fullName" name="fullName" placeholder="First and last name" required="" type="text" value="Sarah Jenkins"/>
-</div>
-</div>
-<div class="flex flex-col gap-1.5">
-<div class="flex items-center justify-between">
-<label class="font-label-md text-label-md text-on-surface-variant" for="role-display">System Role</label>
-<span class="font-label-sm text-label-sm text-secondary flex items-center gap-1">
-<span class="material-symbols-outlined text-[14px]">info</span>
-            Role assigned by Admin
-          </span>
-</div>
-<div class="relative flex items-center px-space-md h-12 rounded-lg bg-surface-container text-on-surface" id="role-display">
-<span class="material-symbols-outlined text-[20px] text-on-surface-variant mr-space-sm">apartment</span>
-<div class="flex-1 flex items-center gap-2">
-<span class="font-body-md text-body-md font-semibold text-on-surface">Broker</span>
-<span class="px-2 py-0.5 rounded-full bg-surface-container-highest text-on-surface-variant font-label-sm text-label-sm">MLS Verified</span>
-</div>
-<span class="material-symbols-outlined text-[18px] text-on-surface-variant">lock</span>
-</div>
-<p class="font-body-sm text-body-sm text-on-surface-variant px-1">
-          To transition roles between Agency, Seller, or Broker, contact your designated syndicate compliance manager.
-        </p>
-</div>
-<div class="pt-space-xs">
-<button class="w-full h-12 rounded-lg bg-primary text-on-primary font-headline-sm text-headline-sm font-semibold flex items-center justify-center gap-2 shadow-md active:scale-[0.98] transition-all hover:bg-surface-tint" id="update-button" type="submit">
-<span class="material-symbols-outlined text-[20px]" id="update-icon">check_circle</span>
-<span id="update-label">Update Profile</span>
-</button>
-</div>
-</form>
-<div class="rounded-xl bg-surface-container-lowest p-space-lg shadow-sm flex flex-col gap-space-sm">
-<span class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider mb-1">Account &amp; Preferences</span>
-<a class="flex items-center justify-between p-space-sm rounded-lg hover:bg-surface-container-low transition-colors group" href="#">
-<div class="flex items-center gap-space-sm">
-<div class="w-10 h-10 rounded-lg bg-surface-container-low flex items-center justify-center text-on-surface group-hover:bg-secondary-fixed transition-colors">
-<span class="material-symbols-outlined text-[20px]">security</span>
-</div>
-<div class="flex flex-col">
-<span class="font-headline-sm text-headline-sm text-on-surface">Security &amp; Passwords</span>
-<span class="font-body-sm text-body-sm text-on-surface-variant">Two-factor enabled (Authy)</span>
-</div>
-</div>
-<span class="material-symbols-outlined text-on-surface-variant text-[20px]">chevron_right</span>
-</a>
-<a class="flex items-center justify-between p-space-sm rounded-lg hover:bg-surface-container-low transition-colors group" href="#">
-<div class="flex items-center gap-space-sm">
-<div class="w-10 h-10 rounded-lg bg-surface-container-low flex items-center justify-center text-on-surface group-hover:bg-secondary-fixed transition-colors">
-<span class="material-symbols-outlined text-[20px]">notifications_active</span>
-</div>
-<div class="flex flex-col">
-<span class="font-headline-sm text-headline-sm text-on-surface">Notifications</span>
-<span class="font-body-sm text-body-sm text-on-surface-variant">Listing inquiries, Instant push</span>
-</div>
-</div>
-<span class="material-symbols-outlined text-on-surface-variant text-[20px]">chevron_right</span>
-</a>
-<a class="flex items-center justify-between p-space-sm rounded-lg hover:bg-surface-container-low transition-colors group" href="#">
-<div class="flex items-center gap-space-sm">
-<div class="w-10 h-10 rounded-lg bg-surface-container-low flex items-center justify-center text-on-surface group-hover:bg-secondary-fixed transition-colors">
-<span class="material-symbols-outlined text-[20px]">policy</span>
-</div>
-<div class="flex flex-col">
-<span class="font-headline-sm text-headline-sm text-on-surface">Legal &amp; Privacy</span>
-<span class="font-body-sm text-body-sm text-on-surface-variant">Terms of syndicate brokerage</span>
-</div>
-</div>
-<span class="material-symbols-outlined text-on-surface-variant text-[20px]">chevron_right</span>
-</a>
-</div>
-<div class="flex flex-col items-center gap-space-sm pt-space-xs pb-space-md">
-<button class="inline-flex items-center gap-1.5 px-space-md py-space-sm rounded-full text-on-surface-variant hover:text-error hover:bg-error-container/30 transition-colors font-label-md text-label-md active:scale-95" type="button">
-<span class="material-symbols-outlined text-[18px]">logout</span>
-<span>Sign Out of Havenly</span>
-</button>
-<span class="font-body-sm text-body-sm text-on-surface-variant opacity-75">App Build 3.14.8 (Curated Estates)</span>
-</div>
-</div>
-</div>
-<script>
-  function handleProfileUpdate() {
-    const btn = document.getElementById('update-button');
-    const label = document.getElementById('update-label');
-    const icon = document.getElementById('update-icon');
-    const input = document.getElementById('fullName');
-    
-    if (!btn || !label || !icon) return;
 
-    btn.disabled = true;
-    label.textContent = 'Saving...';
-    icon.textContent = 'sync';
-    icon.classList.add('animate-spin');
+        <!-- Option 2: Seller -->
+        <label class="w-full text-left p-3.5 rounded-2xl border border-gray-200 hover:border-indigo-400 bg-white has-[:checked]:bg-blue-50/60 has-[:checked]:border-blue-500 transition-all flex items-start gap-3.5 cursor-pointer">
+          <input type="checkbox" name="switchRoleCheckbox" value="Seller" class="mt-1 w-4 h-4 rounded text-indigo-600 focus:ring-indigo-500 cursor-pointer">
+          <div class="w-9 h-9 rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center shrink-0 font-bold text-base">
+            🏠
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-sm text-gray-900">Người bán (Seller - Chủ nhà)</span>
+              <span class="text-[10px] px-2 py-0.5 rounded-full bg-blue-100 text-blue-800 font-bold">Bán nhà đất</span>
+            </div>
+            <p class="text-xs text-gray-500 mt-0.5">Đăng tin bán nhà, đẩy tin tìm khách, quản lý khách hàng quan tâm (CRM).</p>
+          </div>
+        </label>
 
-    setTimeout(() => {
-      icon.classList.remove('animate-spin');
-      icon.textContent = 'task_alt';
-      label.textContent = 'Profile Updated';
-      btn.classList.add('bg-secondary-container', 'text-on-secondary-container');
-      btn.classList.remove('bg-primary', 'text-on-primary');
+        <!-- Option 3: Tenant -->
+        <label class="w-full text-left p-3.5 rounded-2xl border border-gray-200 hover:border-indigo-400 bg-white has-[:checked]:bg-purple-50/60 has-[:checked]:border-purple-500 transition-all flex items-start gap-3.5 cursor-pointer">
+          <input type="checkbox" name="switchRoleCheckbox" value="Tenant" class="mt-1 w-4 h-4 rounded text-indigo-600 focus:ring-indigo-500 cursor-pointer">
+          <div class="w-9 h-9 rounded-xl bg-purple-100 text-purple-700 flex items-center justify-center shrink-0 font-bold text-base">
+            🔑
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-sm text-gray-900">Người thuê nhà (Tenant)</span>
+              <span class="text-[10px] px-2 py-0.5 rounded-full bg-purple-100 text-purple-800 font-bold">Tìm thuê</span>
+            </div>
+            <p class="text-xs text-gray-500 mt-0.5">Tìm thuê căn hộ, phòng trọ, mặt bằng kinh doanh, lưu tin yêu thích.</p>
+          </div>
+        </label>
 
-      setTimeout(() => {
+        <!-- Option 4: Landlord -->
+        <label class="w-full text-left p-3.5 rounded-2xl border border-gray-200 hover:border-indigo-400 bg-white has-[:checked]:bg-amber-50/60 has-[:checked]:border-amber-500 transition-all flex items-start gap-3.5 cursor-pointer">
+          <input type="checkbox" name="switchRoleCheckbox" value="Landlord" class="mt-1 w-4 h-4 rounded text-indigo-600 focus:ring-indigo-500 cursor-pointer">
+          <div class="w-9 h-9 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center shrink-0 font-bold text-base">
+            🏢
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-sm text-gray-900">Người cho thuê (Landlord)</span>
+              <span class="text-[10px] px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 font-bold">Cho thuê</span>
+            </div>
+            <p class="text-xs text-gray-500 mt-0.5">Đăng tin cho thuê căn hộ, phòng trọ, văn phòng, quản lý khách thuê.</p>
+          </div>
+        </label>
+
+        <!-- Option 5: Agent -->
+        <label class="w-full text-left p-3.5 rounded-2xl border border-gray-200 hover:border-indigo-400 bg-white has-[:checked]:bg-indigo-50/60 has-[:checked]:border-indigo-500 transition-all flex items-start gap-3.5 cursor-pointer">
+          <input type="checkbox" name="switchRoleCheckbox" value="Agent" class="mt-1 w-4 h-4 rounded text-indigo-600 focus:ring-indigo-500 cursor-pointer">
+          <div class="w-9 h-9 rounded-xl bg-indigo-100 text-indigo-700 flex items-center justify-center shrink-0 font-bold text-base">
+            👔
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-sm text-gray-900">Môi giới chuyên nghiệp (Agent / Broker)</span>
+              <span class="text-[10px] px-2 py-0.5 rounded-full bg-indigo-100 text-indigo-800 font-bold">Chuyên nghiệp</span>
+            </div>
+            <p class="text-xs text-gray-500 mt-0.5">Đăng cả tin Bán & Thuê, đẩy tin, quản lý CRM khách hàng tiềm năng.</p>
+          </div>
+        </label>
+
+        <div id="switchRoleErrorMsg" class="text-xs font-semibold text-red-500 bg-red-50 p-2.5 rounded-xl border border-red-200 hidden"></div>
+
+        <div class="mt-4 pt-3 border-t flex items-center justify-end gap-2.5">
+          <button type="button" onclick="closeSwitchRoleModal()" class="px-4 py-2.5 text-xs font-bold text-gray-600 hover:bg-gray-100 rounded-xl transition-colors cursor-pointer">
+            Đóng lại
+          </button>
+          <button type="submit" id="btnConfirmSwitchRole" class="px-6 py-2.5 bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 text-white font-bold text-xs rounded-xl shadow-md shadow-indigo-500/25 transition-all flex items-center gap-1.5 cursor-pointer">
+            <span class="material-symbols-outlined text-sm">check_circle</span>
+            <span>Cập nhật vai trò</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL CHỈNH SỬA THÔNG TIN CÁ NHÂN -->
+  <div id="editProfileModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl relative">
+      <div class="flex items-center justify-between pb-3 border-b border-gray-100">
+        <h3 class="font-black text-gray-900 text-base flex items-center gap-2">
+          <span class="material-symbols-outlined text-indigo-600">manage_accounts</span> Chỉnh Sửa Thông Tin Cá Nhân
+        </h3>
+        <button onclick="closeEditProfileModal()" class="text-gray-400 hover:text-gray-600">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+
+      <form id="editProfileForm" onsubmit="handleUpdateProfile(event)" class="mt-4 space-y-3.5">
+        <div>
+          <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Họ và tên</label>
+          <input type="text" id="edit_fullName" required placeholder="Nhập họ và tên mới"
+            class="w-full px-4 py-2.5 bg-gray-50 border border-gray-300 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 text-sm font-semibold"/>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Email đăng nhập</label>
+          <input type="email" id="edit_email" disabled
+            class="w-full px-4 py-2.5 bg-gray-100 text-gray-500 border border-gray-200 rounded-xl text-sm font-medium cursor-not-allowed"/>
+          <p class="text-[11px] text-gray-400 mt-0.5">Email tài khoản không thể thay đổi</p>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Mật khẩu mới (Tùy chọn)</label>
+          <input type="password" id="edit_newPassword" placeholder="Bỏ trống nếu không đổi mật khẩu"
+            class="w-full px-4 py-2.5 bg-gray-50 border border-gray-300 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 text-sm font-medium"/>
+        </div>
+
+        <div id="editProfileMsg" class="text-xs font-semibold p-2.5 rounded-xl hidden"></div>
+
+        <div class="flex items-center justify-end gap-2 pt-3 border-t">
+          <button type="button" onclick="closeEditProfileModal()" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl text-xs font-bold transition-colors">
+            Hủy
+          </button>
+          <button type="submit" id="btnSaveProfile" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold shadow-sm transition-colors flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-sm">save</span> Lưu thay đổi
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Bottom Nav -->
+  <nav class="fixed bottom-0 w-full bg-white border-t border-gray-200 z-50">
+    <div class="flex justify-around items-center h-16 max-w-5xl mx-auto">
+      <a href="home_property_search.html" class="flex flex-col items-center text-gray-400 hover:text-indigo-600">
+        <span class="material-symbols-outlined">search</span>
+        <span class="text-xs mt-1">Tìm kiếm</span>
+      </a>
+      <a href="user_profile.html" class="flex flex-col items-center text-indigo-600">
+        <span class="material-symbols-outlined">person</span>
+        <span class="text-xs mt-1 font-medium">Hồ sơ</span>
+      </a>
+    </div>
+  </nav>
+
+  <script>
+    const token = localStorage.getItem('accessToken') || localStorage.getItem('token');
+    if (!token) window.location.href = 'signin.html';
+
+    let currentUserRole = '';
+
+    const roleMap = { 
+      Admin: 'Quản trị viên Hệ thống', 
+      Seller: 'Người bán (Chủ nhà)', 
+      Landlord: 'Người cho thuê', 
+      Agent: 'Môi giới Bất động sản', 
+      Broker: 'Môi giới Bất động sản', 
+      Buyer: 'Người mua BĐS', 
+      Tenant: 'Người thuê nhà' 
+    };
+
+    // Hàm giải mã JWT an toàn ngay tại client để hiển thị tức thì
+    function parseJwt(tokenStr) {
+      try {
+        const base64Url = tokenStr.split('.')[1];
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+          return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+        }).join(''));
+        return JSON.parse(jsonPayload);
+      } catch {
+        return null;
+      }
+    }
+
+    // Cô lập danh sách tin yêu thích theo từng tài khoản (Tránh tài khoản mới bị lẫn tin cũ)
+    function getFavStorageKey() {
+      if (token) {
+        try {
+          const p = parseJwt(token);
+          const uid = p?.sub || p?.nameid || p?.email;
+          if (uid) return 'fav_listings_' + uid;
+        } catch {}
+      }
+      return 'fav_listings_guest';
+    }
+
+    // Định dạng nhãn hiển thị khi người dùng chọn nhiều vai trò (ví dụ: Người mua & Người bán)
+    function formatRoleDisplay(roleStr) {
+      if (!roleStr) return 'Người dùng';
+      const roleMapVi = {
+        Buyer: 'Người mua BĐS',
+        Tenant: 'Người thuê nhà',
+        Seller: 'Người bán (Chủ nhà)',
+        Landlord: 'Người cho thuê',
+        Agent: 'Môi giới BĐS',
+        Broker: 'Môi giới BĐS',
+        Admin: 'Quản trị viên'
+      };
+      const parts = roleStr.split(',').map(s => s.trim()).filter(Boolean);
+      if (parts.length === 1) {
+        return roleMapVi[parts[0]] || parts[0];
+      }
+      const shortNames = {
+        Buyer: 'Người mua',
+        Seller: 'Người bán',
+        Tenant: 'Người thuê',
+        Landlord: 'Cho thuê',
+        Agent: 'Môi giới',
+        Broker: 'Môi giới',
+        Admin: 'Quản trị viên'
+      };
+      const viParts = parts.map(p => shortNames[p] || p);
+      return viParts.length > 0 ? viParts.join(' & ') : roleStr;
+    }
+
+    // Áp dụng vai trò trên giao diện: Phân tách rõ ràng giữa Người mua và Người bán
+    function applyProfileRole(uRole) {
+      currentUserRole = uRole || '';
+      const canPost = (currentUserRole.includes('Seller') || currentUserRole.includes('Landlord') || currentUserRole.includes('Agent') || currentUserRole.includes('Admin'));
+
+      const myListingLink = document.getElementById('myListingsMenu');
+      const pkgPushBox = document.getElementById('packagePushBox');
+      const upgradeBtn = document.getElementById('upgradePackageBtn');
+      const menuPkg = document.getElementById('menuPackagesLink');
+      const upgradeBanner = document.getElementById('buyerUpgradeBanner');
+      const sellerActionsBox = document.getElementById('sellerActionsBox');
+      const crmBox = document.getElementById('crmSection');
+
+      if (!canPost) {
+        // Chỉ có vai trò Người mua/thuê: Ẩn đăng tin, hiển thị Banner đổi vai trò
+        if (myListingLink) myListingLink.classList.add('hidden');
+        if (pkgPushBox) pkgPushBox.classList.add('hidden');
+        if (upgradeBtn) upgradeBtn.classList.add('hidden');
+        if (menuPkg) menuPkg.classList.add('hidden');
+        if (upgradeBanner) upgradeBanner.classList.remove('hidden');
+        if (sellerActionsBox) sellerActionsBox.classList.add('hidden');
+        if (crmBox) crmBox.classList.add('hidden');
+      } else {
+        // Có vai trò Bán / Cho thuê / Môi giới / Admin: Hiển thị đầy đủ công cụ
+        if (myListingLink) myListingLink.classList.remove('hidden');
+        if (pkgPushBox) pkgPushBox.classList.remove('hidden');
+        if (upgradeBtn) upgradeBtn.classList.remove('hidden');
+        if (menuPkg) menuPkg.classList.remove('hidden');
+        if (upgradeBanner) upgradeBanner.classList.add('hidden');
+        if (sellerActionsBox) {
+          sellerActionsBox.classList.remove('hidden');
+          const titleEl = document.getElementById('sellerDashboardTitle');
+          const descEl = document.getElementById('sellerDashboardDesc');
+          if (currentUserRole.includes('Agent')) {
+            if (titleEl) titleEl.textContent = 'Bảng điều khiển Môi giới chuyên nghiệp (Agent)';
+            if (descEl) descEl.textContent = 'Bạn có quyền đăng cả tin bán & cho thuê, quản lý nhiều BĐS và phân hệ CRM.';
+          } else if (currentUserRole.includes('Landlord') && !currentUserRole.includes('Seller')) {
+            if (titleEl) titleEl.textContent = 'Bảng điều khiển Người cho thuê (Landlord)';
+            if (descEl) descEl.textContent = 'Bạn có quyền đăng tin cho thuê căn hộ, phòng trọ, mặt bằng và quản lý khách thuê.';
+          } else {
+            if (titleEl) titleEl.textContent = 'Bảng điều khiển Người bán / Đăng tin BĐS';
+            if (descEl) descEl.textContent = 'Bạn có quyền đăng tin BĐS và tiếp nhận khách hàng quan tâm (CRM).';
+          }
+        }
+        if (crmBox) {
+          crmBox.classList.remove('hidden');
+          loadMyLeads();
+        }
+        loadSubscriptionStatus();
+      }
+    }
+
+    // 1. Hiển thị thông tin người dùng ngay lập tức từ Token (0ms)
+    const payload = parseJwt(token);
+    if (payload) {
+      const uName = payload.name || payload.FullName || 'Người dùng';
+      const uEmail = payload.email || payload.Email || '';
+      const uRole = payload.role || payload.Role || 'Buyer';
+
+      document.getElementById('fullName').textContent = uName;
+      document.getElementById('email').textContent = uEmail;
+      document.getElementById('role').textContent = formatRoleDisplay(uRole);
+      document.getElementById('avatar').textContent = uName ? uName[0].toUpperCase() : 'U';
+
+      if (uRole.includes('Admin')) {
+        const adminBtn = document.getElementById('adminPortalBtn');
+        if (adminBtn) adminBtn.classList.remove('hidden');
+      }
+
+      applyProfileRole(uRole);
+    }
+
+    // 2. Tải thêm trạng thái gói hội viên & lượt đẩy tin
+    function loadSubscriptionStatus() {
+      fetch('/api/subscriptions/my-status', { headers: { 'Authorization': 'Bearer ' + token } })
+        .then(r => r.json())
+        .then(s => {
+          if (s) {
+            document.getElementById('userPackageName').textContent = s.currentPackage || 'Thành viên thường';
+            document.getElementById('userPushesCount').textContent = (s.remainingPushes !== undefined ? s.remainingPushes : 0) + ' lượt';
+          }
+        })
+        .catch(() => {});
+    }
+
+    // 3. Đồng bộ lại dữ liệu mới nhất từ server
+    fetch('/api/auth/me', { headers: { 'Authorization': 'Bearer ' + token } })
+      .then(r => r.ok ? r.json() : null)
+      .then(u => {
+        if (u) {
+          document.getElementById('fullName').textContent = u.fullName || 'Người dùng';
+          document.getElementById('email').textContent = u.email || '';
+          document.getElementById('role').textContent = formatRoleDisplay(u.role);
+          document.getElementById('avatar').textContent = u.fullName ? u.fullName[0].toUpperCase() : 'U';
+          if (u.role && u.role.includes('Admin')) {
+            const adminBtn = document.getElementById('adminPortalBtn');
+            if (adminBtn) adminBtn.classList.remove('hidden');
+          }
+          applyProfileRole(u.role);
+        }
+      })
+      .catch(() => {});
+
+    // Mở / Đóng modal chọn nhiều vai trò hệ thống
+    function openSwitchRoleModal() {
+      const userRoles = (currentUserRole || '').split(',').map(s => s.trim()).filter(Boolean);
+      document.querySelectorAll('input[name="switchRoleCheckbox"]').forEach(cb => {
+        cb.checked = userRoles.includes(cb.value);
+      });
+      const errEl = document.getElementById('switchRoleErrorMsg');
+      if (errEl) errEl.classList.add('hidden');
+      document.getElementById('switchRoleModal')?.classList.remove('hidden');
+    }
+
+    function closeSwitchRoleModal() {
+      document.getElementById('switchRoleModal')?.classList.add('hidden');
+    }
+
+    // Xử lý gửi danh sách nhiều vai trò được chọn
+    async function handleMultiRoleSubmit(e) {
+      e.preventDefault();
+      const checkedBoxes = Array.from(document.querySelectorAll('input[name="switchRoleCheckbox"]:checked'));
+      const selectedRoles = checkedBoxes.map(cb => cb.value);
+      const errEl = document.getElementById('switchRoleErrorMsg');
+      const btn = document.getElementById('btnConfirmSwitchRole');
+
+      if (selectedRoles.length === 0) {
+        if (errEl) {
+          errEl.textContent = 'Vui lòng chọn ít nhất 1 vai trò.';
+          errEl.classList.remove('hidden');
+        }
+        return;
+      }
+
+      btn.disabled = true;
+      btn.innerHTML = '<span class="material-symbols-outlined text-sm animate-spin">sync</span> Đang lưu...';
+
+      try {
+        const res = await fetch('/api/auth/upgrade-role', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
+          },
+          body: JSON.stringify({
+            targetRole: selectedRoles[0],
+            targetRoles: selectedRoles
+          })
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          if (errEl) {
+            errEl.textContent = data.message || 'Cập nhật thất bại.';
+            errEl.classList.remove('hidden');
+          }
+          btn.disabled = false;
+          btn.innerHTML = '<span class="material-symbols-outlined text-sm">check_circle</span><span>Cập nhật vai trò</span>';
+          return;
+        }
+
+        const newToken = data.accessToken || data.token;
+        if (newToken) {
+          localStorage.setItem('accessToken', newToken);
+          localStorage.setItem('token', newToken);
+        }
+        if (data.roles) {
+          localStorage.setItem('user_roles', JSON.stringify(data.roles));
+        }
+        if (data.roleLabel) {
+          localStorage.setItem('user_role_label', data.roleLabel);
+        }
+
+        alert('🎉 ' + data.message);
+        window.location.reload();
+      } catch (err) {
+        if (errEl) {
+          errEl.textContent = 'Lỗi kết nối máy chủ: ' + err.message;
+          errEl.classList.remove('hidden');
+        }
         btn.disabled = false;
-        label.textContent = 'Update Profile';
-        icon.textContent = 'check_circle';
-        btn.classList.remove('bg-secondary-container', 'text-on-secondary-container');
-        btn.classList.add('bg-primary', 'text-on-primary');
-      }, 2000);
-    }, 800);
-  }
-</script></main><nav class="fixed bottom-0 w-full z-50 pb-safe bg-surface-container-lowest/80 backdrop-blur-xl shadow-[0_-2px_12px_rgba(0,0,0,0.04)]" data-active-classes="text-on-surface font-semibold"><div class="flex justify-around items-center h-16 px-space-xs"><a class="flex flex-col items-center justify-center min-w-[56px] min-h-[44px] gap-1 text-on-surface-variant hover:text-on-surface transition-colors" data-path="explore" href="#"><span class="material-symbols-outlined text-[24px]">real_estate_agent</span><span class="font-label-sm text-label-sm">Explore</span></a><a class="flex flex-col items-center justify-center min-w-[56px] min-h-[44px] text-on-surface-variant -mt-5 transition-transform active:scale-95" data-path="create" href="#"><div class="w-12 h-12 rounded-full bg-secondary text-on-secondary flex items-center justify-center shadow-[0_4px_16px_-2px_rgba(144,77,0,0.35)]"><span class="material-symbols-outlined text-[26px]">add</span></div><span class="font-label-sm text-label-sm mt-1">Create</span></a><a class="flex flex-col items-center justify-center min-w-[56px] min-h-[44px] gap-1 text-on-surface-variant hover:text-on-surface transition-colors" data-path="saved" href="#"><span class="material-symbols-outlined text-[24px]">favorite</span><span class="font-label-sm text-label-sm">Saved</span></a><a aria-current="page" class="flex flex-col items-center justify-center min-w-[56px] min-h-[44px] gap-1 transition-colors text-on-surface font-semibold" data-path="profile" href="#"><span class="material-symbols-outlined text-[24px]">person</span><span class="font-label-sm text-label-sm">Profile</span></a></div></nav></body></html>
+        btn.innerHTML = '<span class="material-symbols-outlined text-sm">check_circle</span><span>Cập nhật vai trò</span>';
+      }
+    }
+
+    function upgradeToSeller() {
+      openSwitchRoleModal();
+    }
+
+    // ====================================================================
+    // 4. CHỨC NĂNG CHỈNH SỬA THÔNG TIN CÁ NHÂN
+    // ====================================================================
+    function openEditProfileModal() {
+      document.getElementById('edit_fullName').value = document.getElementById('fullName').textContent || '';
+      document.getElementById('edit_email').value = document.getElementById('email').textContent || '';
+      document.getElementById('edit_newPassword').value = '';
+      const msgEl = document.getElementById('editProfileMsg');
+      msgEl.classList.add('hidden');
+      msgEl.textContent = '';
+      document.getElementById('editProfileModal').classList.remove('hidden');
+    }
+
+    function closeEditProfileModal() {
+      document.getElementById('editProfileModal').classList.add('hidden');
+    }
+
+    async function handleUpdateProfile(e) {
+      e.preventDefault();
+      const newName = document.getElementById('edit_fullName').value.trim();
+      const newPass = document.getElementById('edit_newPassword').value.trim();
+      const msgEl = document.getElementById('editProfileMsg');
+      const btn = document.getElementById('btnSaveProfile');
+
+      if (!newName) {
+        msgEl.className = 'text-xs font-semibold p-2.5 rounded-xl bg-red-50 text-red-600 border border-red-200 block';
+        msgEl.textContent = 'Họ và tên không được để trống!';
+        return;
+      }
+
+      btn.disabled = true;
+      btn.innerHTML = '<span class="material-symbols-outlined text-sm animate-spin">sync</span> Đang lưu...';
+
+      try {
+        const bodyData = { fullName: newName };
+        if (newPass) bodyData.newPassword = newPass;
+
+        const res = await fetch('/api/auth/profile', {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
+          },
+          body: JSON.stringify(bodyData)
+        });
+
+        const data = await res.json();
+        if (res.ok) {
+          document.getElementById('fullName').textContent = newName;
+          document.getElementById('avatar').textContent = newName[0].toUpperCase();
+          msgEl.className = 'text-xs font-semibold p-2.5 rounded-xl bg-emerald-50 text-emerald-700 border border-emerald-200 block';
+          msgEl.textContent = '✅ ' + (data.message || 'Cập nhật thành công!');
+          setTimeout(() => closeEditProfileModal(), 1200);
+        } else {
+          msgEl.className = 'text-xs font-semibold p-2.5 rounded-xl bg-red-50 text-red-600 border border-red-200 block';
+          msgEl.textContent = '❌ ' + (data.message || 'Cập nhật thất bại!');
+        }
+      } catch (err) {
+        msgEl.className = 'text-xs font-semibold p-2.5 rounded-xl bg-red-50 text-red-600 border border-red-200 block';
+        msgEl.textContent = '❌ Lỗi kết nối: ' + err.message;
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<span class="material-symbols-outlined text-sm">save</span> Lưu thay đổi';
+      }
+    }
+
+    // ====================================================================
+    // 5. CHỨC NĂNG HIỂN THỊ DANH SÁCH BĐS ĐÃ LƯU YÊU THÍCH TRONG HỒ SƠ
+    // ====================================================================
+    function formatPrice(price) {
+      if (!price || price <= 0) return 'Thương lượng';
+      if (price >= 1000000000) {
+        const ty = price / 1000000000;
+        return (Number.isInteger(ty) ? ty : ty.toFixed(2).replace(/\.?0+$/, '')) + ' tỷ';
+      }
+      if (price >= 1000000) {
+        const tr = price / 1000000;
+        return (Number.isInteger(tr) ? tr : tr.toFixed(1).replace(/\.?0+$/, '')) + ' triệu';
+      }
+      return price.toLocaleString('vi-VN') + ' đ';
+    }
+
+    async function loadSavedListingsInProfile() {
+      const container = document.getElementById('savedListingsContainer');
+      const badge = document.getElementById('savedCountBadge');
+      const sectionBadge = document.getElementById('savedSectionCount');
+      const storageKey = getFavStorageKey();
+      const favs = JSON.parse(localStorage.getItem(storageKey) || '[]').map(Number);
+      if (badge) badge.textContent = favs.length;
+      if (sectionBadge) sectionBadge.textContent = favs.length;
+
+      if (!container) return;
+
+      if (favs.length === 0) {
+        container.innerHTML = `
+          <div class="text-center py-6 text-gray-400 text-xs">
+            <span class="text-3xl block mb-1">❤️</span>
+            <p class="font-bold text-gray-700">Chưa có bất động sản nào được lưu</p>
+            <p class="text-gray-400 mt-0.5">Bấm biểu tượng trái tim trên các tin đăng ở trang tìm kiếm để lưu vào đây.</p>
+            <a href="home_property_search.html" class="inline-block mt-3 px-4 py-1.5 bg-indigo-600 text-white rounded-xl font-bold text-xs shadow-sm">
+              Khám phá ngay
+            </a>
+          </div>
+        `;
+        return;
+      }
+
+      try {
+        const res = await fetch('/api/listings');
+        const allListings = await res.json();
+        const savedList = allListings.filter(l => favs.includes(Number(l.id)));
+
+        if (savedList.length === 0) {
+          container.innerHTML = '<p class="text-xs text-gray-400 text-center py-4">Các tin bạn đã lưu có thể đã bị gỡ hoặc không tồn tại.</p>';
+          return;
+        }
+
+        container.innerHTML = savedList.map(l => {
+          const imgs = (l.imageUrls && l.imageUrls.trim().length > 0) ? l.imageUrls.split(',').filter(x => x.trim().length > 0) : [];
+          const thumb = imgs.length > 0 ? imgs[0].trim() : 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=400&q=80';
+
+          return `
+            <div class="flex items-center gap-3 p-3 bg-gray-50 rounded-xl border border-gray-200 hover:border-red-200 transition-all">
+              <img src="${thumb}" class="w-20 h-16 rounded-lg object-cover shrink-0 bg-gray-200" onerror="this.src='https://placehold.co/120x80?text=BDS'"/>
+              <div class="flex-1 min-w-0">
+                <a href="property_detail.html?id=${l.id}" class="text-xs font-bold text-gray-900 hover:text-indigo-600 truncate block">
+                  ${l.title}
+                </a>
+                <div class="text-xs font-extrabold text-red-600 mt-0.5">
+                  ${formatPrice(l.price)}
+                </div>
+                <p class="text-[11px] text-gray-400 truncate">
+                  📍 ${l.district ? l.district + ', ' : ''}${l.city || ''} ${l.area ? '• ' + l.area + ' m²' : ''}
+                </p>
+              </div>
+              <div class="flex items-center gap-1.5 shrink-0">
+                <a href="property_detail.html?id=${l.id}" class="px-2.5 py-1.5 bg-white border border-gray-200 hover:border-indigo-500 text-indigo-600 rounded-lg text-xs font-bold shadow-sm">
+                  Xem
+                </a>
+                <button onclick="removeFavoriteInProfile(${l.id})" class="p-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors" title="Bỏ lưu">
+                  <span class="material-symbols-outlined text-base">delete</span>
+                </button>
+              </div>
+            </div>
+          `;
+        }).join('');
+      } catch (err) {
+        container.innerHTML = '<p class="text-xs text-red-500 text-center py-4">Lỗi tải danh sách tin đã lưu</p>';
+      }
+    }
+
+    function removeFavoriteInProfile(id) {
+      const numId = Number(id);
+      const storageKey = getFavStorageKey();
+      let favs = JSON.parse(localStorage.getItem(storageKey) || '[]').map(Number);
+      favs = favs.filter(x => x !== numId);
+      localStorage.setItem(storageKey, JSON.stringify(favs));
+      loadSavedListingsInProfile();
+    }
+
+    function toggleSavedListingsSection() {
+      const section = document.getElementById('savedListingsSection');
+      const arrow = document.getElementById('savedArrowIcon');
+      const text = document.getElementById('savedToggleText');
+      if (section.classList.contains('hidden')) {
+        section.classList.remove('hidden');
+        if (arrow) arrow.textContent = 'expand_less';
+        if (text) text.textContent = 'Thu gọn';
+        loadSavedListingsInProfile();
+        setTimeout(() => {
+          section.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }, 100);
+      } else {
+        section.classList.add('hidden');
+        if (arrow) arrow.textContent = 'expand_more';
+        if (text) text.textContent = 'Xem danh sách';
+      }
+    }
+
+    // Cập nhật số lượng tin đã lưu lên badge khi mở trang hồ sơ
+    (function updateSavedBadgeInit() {
+      const storageKey = getFavStorageKey();
+      const favs = JSON.parse(localStorage.getItem(storageKey) || '[]').map(Number);
+      const badge = document.getElementById('savedCountBadge');
+      if (badge) badge.textContent = favs.length;
+    })();
+
+    // CRM: Tải danh sách khách hàng liên hệ
+    async function loadMyLeads() {
+      const container = document.getElementById('leadsList');
+      try {
+        const res = await fetch('/api/leads/my-leads', {
+          headers: { 'Authorization': 'Bearer ' + token }
+        });
+        const data = await res.json();
+
+        if (!data || data.length === 0) {
+          container.innerHTML = `
+            <div class="text-center py-8 text-gray-400">
+              <span class="text-3xl block mb-1">📭</span>
+              <p class="font-bold text-gray-700">Chưa có khách hàng liên hệ</p>
+              <p class="text-xs text-gray-400 mt-0.5">Khi người xem gửi yêu cầu tư vấn trên tin đăng của bạn, thông tin sẽ xuất hiện ở đây.</p>
+            </div>
+          `;
+          return;
+        }
+
+        container.innerHTML = data.map(ld => {
+          return `
+            <div class="p-4 rounded-xl border border-gray-200 bg-gray-50/50 hover:bg-white hover:border-indigo-300 transition-all">
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                <div>
+                  <div class="flex items-center gap-2">
+                    <strong class="text-sm font-bold text-gray-900">${ld.customerName}</strong>
+                    <a href="tel:${ld.customerPhone}" class="inline-flex items-center gap-1 text-xs font-black text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded hover:bg-indigo-100">
+                      📞 ${ld.customerPhone}
+                    </a>
+                  </div>
+                  <p class="text-xs text-gray-500 mt-1">
+                    Quan tâm tin: <strong class="text-gray-800">${ld.listingTitle}</strong>
+                  </p>
+                  ${ld.customerEmail ? `<p class="text-[11px] text-gray-400">Email: ${ld.customerEmail}</p>` : ''}
+                  ${ld.notes ? `<p class="text-xs text-gray-700 mt-1.5 bg-white p-2 rounded border">💬 Lời nhắn: "${ld.notes}"</p>` : ''}
+                </div>
+
+                <!-- Phân loại trạng thái khách hàng (Sơ đồ CRM: NEW, CONSULTING, VIEWING, NEGOTIATING, DEALT, CANCELED) -->
+                <div class="flex items-center gap-1.5 shrink-0">
+                  <span class="text-[11px] text-gray-400">Trạng thái:</span>
+                  <select onchange="updateLeadStatus(${ld.id}, this.value)" 
+                    class="px-2.5 py-1.5 bg-white border border-gray-300 rounded-lg text-xs font-bold outline-none cursor-pointer">
+                    <option value="NEW" ${ld.status === 'NEW' ? 'selected' : ''}>🟡 Mới tiếp nhận</option>
+                    <option value="CONSULTING" ${ld.status === 'CONSULTING' ? 'selected' : ''}>🔵 Đang tư vấn</option>
+                    <option value="VIEWING" ${ld.status === 'VIEWING' ? 'selected' : ''}>🟣 Hẹn xem nhà</option>
+                    <option value="NEGOTIATING" ${ld.status === 'NEGOTIATING' ? 'selected' : ''}>🟠 Đang đàm phán</option>
+                    <option value="DEALT" ${ld.status === 'DEALT' ? 'selected' : ''}>🟢 Đã chốt cọc</option>
+                    <option value="CANCELED" ${ld.status === 'CANCELED' ? 'selected' : ''}>⚪ Đã hủy</option>
+                  </select>
+                </div>
+              </div>
+              <div class="text-[11px] text-gray-400 mt-2 text-right">
+                Ngày gửi: ${new Date(ld.createdAt).toLocaleString('vi-VN')}
+              </div>
+            </div>
+          `;
+        }).join('');
+      } catch (err) {
+        container.innerHTML = '<p class="text-red-500 text-xs text-center py-4">Lỗi tải danh sách khách hàng</p>';
+      }
+    }
+
+    async function updateLeadStatus(id, newStatus) {
+      try {
+        const res = await fetch('/api/leads/' + id + '/status', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+          body: JSON.stringify({ status: newStatus })
+        });
+        const data = await res.json();
+        alert(data.message || 'Đã cập nhật trạng thái khách hàng!');
+      } catch {
+        alert('Lỗi cập nhật trạng thái');
+      }
+    }
+
+    function logout() {
+      localStorage.removeItem('accessToken');
+      localStorage.removeItem('token');
+      window.location.href = 'signin.html';
+    }
+  </script>
+</body>
+</html>

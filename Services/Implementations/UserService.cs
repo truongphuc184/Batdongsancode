@@ -25,9 +25,26 @@ public class UserService : IUserService
         if (existingUser != null)
             return (false, "Email đã được sử dụng.");
 
-        // Parse role
-        if (!Enum.TryParse<Role>(request.Role, true, out var role))
-            return (false, "Vai trò không hợp lệ.");
+        // Xác định vai trò: Hỗ trợ chọn cùng lúc nhiều vai trò (ví dụ vừa Mua vừa Bán)
+        Role role = Role.None;
+        if (request.Roles != null && request.Roles.Count > 0)
+        {
+            foreach (var r in request.Roles)
+            {
+                if (Enum.TryParse<Role>(r.Trim(), true, out var parsedRole))
+                {
+                    role |= parsedRole;
+                }
+            }
+        }
+        
+        if (role == Role.None)
+        {
+            if (!Enum.TryParse<Role>(request.Role, true, out role))
+                return (false, "Vai trò không hợp lệ.");
+        }
+
+        bool canPost = role.HasFlag(Role.Seller) || role.HasFlag(Role.Landlord) || role.HasFlag(Role.Agent) || role.HasFlag(Role.Admin);
 
         var user = new User
         {
@@ -36,6 +53,8 @@ public class UserService : IUserService
             FullName = request.FullName,
             Role = role,
             IsActive = true,
+            RemainingPushes = canPost ? 5 : 0,
+            CurrentPackage = "Thành viên thường",
             CreatedAt = DateTime.UtcNow
         };
 

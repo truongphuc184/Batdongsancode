@@ -1,332 +1,147 @@
 <!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Đăng ký - Hệ Thống Bất Động Sản</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@400,0" rel="stylesheet"/>
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-image: url('images/login-bg.jpg');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4 relative">
+  <!-- Lớp phủ làm mờ nhẹ -->
+  <div class="absolute inset-0 bg-gradient-to-tr from-black/60 via-black/40 to-indigo-950/40 backdrop-blur-[2px]"></div>
 
-<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/><meta content="mobile_stack" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Manrope:wght@600;700&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{width:100vw;margin:0;padding:0;}body{overscroll-behavior:none;}.pb-safe{padding-bottom:env(safe-area-inset-bottom,0px);}.pt-safe{padding-top:env(safe-area-inset-top,0px);}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { colors: { "primary-fixed": "#dae2fd", "on-primary-container": "#7c839b", "surface-container-highest": "#e0e3e5", "surface-tint": "#565e74", "secondary-fixed-dim": "#ffb77d", "inverse-on-surface": "#eff1f3", "surface-container": "#eceef0", "on-secondary-fixed": "#2f1500", "tertiary-fixed-dim": "#b9c7e0", "tertiary": "#000000", "primary-container": "#131b2e", "on-error-container": "#93000a", "on-surface-variant": "#45464d", "secondary-fixed": "#ffdcc3", "secondary-container": "#fe932c", "outline-variant": "#c6c6cd", "surface-container-low": "#f2f4f6", "on-tertiary": "#ffffff", "error": "#ba1a1a", "on-primary": "#ffffff", "surface-bright": "#f7f9fb", "outline": "#76777d", "tertiary-fixed": "#d5e3fd", "on-tertiary-fixed-variant": "#3a485c", "on-surface": "#191c1e", "on-tertiary-container": "#76859b", "surface": "#f7f9fb", "on-secondary-container": "#663500", "on-error": "#ffffff", "error-container": "#ffdad6", "secondary": "#904d00", "inverse-surface": "#2d3133", "on-background": "#191c1e", "surface-container-high": "#e6e8ea", "on-secondary-fixed-variant": "#6e3900", "primary-fixed-dim": "#bec6e0", "surface-variant": "#e0e3e5", "tertiary-container": "#0d1c2f", "primary": "#000000", "on-primary-fixed-variant": "#3f465c", "surface-dim": "#d8dadc", "on-tertiary-fixed": "#0d1c2f", "inverse-primary": "#bec6e0", "on-primary-fixed": "#131b2e", "on-secondary": "#ffffff", "background": "#f7f9fb", "surface-container-lowest": "#ffffff" }, borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, spacing: { "space-xs": "0.25rem", "space-md": "1rem", "gutter": "1rem", "space-sm": "0.5rem", "space-xl": "2rem", "space-lg": "1.5rem", "margin": "1.25rem", "gutter-sm": "0.75rem", "margin-lg": "1.75rem" }, fontFamily: { "label-sm": ["Inter"], "body-lg": ["Inter"], "label-md": ["Inter"], "headline-md": ["Manrope"], "headline-lg": ["Manrope"], "display-lg": ["Manrope"], "headline-lg-mobile": ["Manrope"], "body-sm": ["Inter"], "body-md": ["Inter"], "headline-sm": ["Manrope"] }, fontSize: { "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.04em", "fontWeight": "600" }], "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }], "label-md": ["13px", { "lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "500" }], "headline-md": ["22px", { "lineHeight": "30px", "letterSpacing": "-0.015em", "fontWeight": "600" }], "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.025em", "fontWeight": "600" }], "display-lg": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.03em", "fontWeight": "700" }], "headline-lg-mobile": ["26px", { "lineHeight": "34px", "letterSpacing": "-0.02em", "fontWeight": "600" }], "body-sm": ["12px", { "lineHeight": "18px", "fontWeight": "400" }], "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }], "headline-sm": ["18px", { "lineHeight": "26px", "letterSpacing": "-0.01em", "fontWeight": "600" }] } } } };</script><style>
-    body {
-      min-height: max(884px, 100dvh);
-    }
-  </style>
-<style>
-    body {
-      min-height: max(884px, 100dvh);
-    }
-  </style>
-  </head><body class="bg-surface font-body-md text-body-md text-on-surface antialiased"><header class="fixed top-0 w-full z-50 pt-safe bg-surface-container-lowest/80 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="h-16 px-margin flex items-center justify-between gap-space-sm"><div class="flex items-center gap-space-sm min-w-0"><button aria-label="Go back" class="w-11 h-11 -ml-space-sm flex items-center justify-center text-on-surface hover:bg-surface-container rounded-full transition-colors" onclick="history.back()" type="button"><span class="material-symbols-outlined text-[24px]">arrow_back_ios_new</span></button><img alt="Havenly Logo" class="h-7 w-auto object-contain shrink-0" src="https://lh3.googleusercontent.com/aida/AEtjO1XoiYaOUYQIJOlGgy5QrLJDTjXSighpy2CqKXz0MKKbcCIg25e3ZNwWqdtf3yzSaot_6le7i0nQIZh-5WWsTQQpYE4PJaa7LCgbIps_EsW-E2_mpsHp_0uvwVEcBDFGXSL3B12BvPr9bYawKo3v5yxETRTNa8NRtjhHAkrR--xs0xFq8434oYUqWs5wCJWkoXmH37qxxZESIwwxOdBv1yy7mgGUN24AZA1_7anTcR_lSw"/><h1 class="font-headline-sm text-headline-sm text-on-surface truncate">Register</h1></div><div class="flex items-center gap-space-xs shrink-0"><button aria-label="Notifications" class="w-11 h-11 rounded-full flex items-center justify-center text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors" type="button"><span class="material-symbols-outlined text-[22px]">notifications</span></button><button aria-label="View user profile" class="w-11 h-11 flex items-center justify-center" type="button"><img alt="Profile" class="w-8 h-8 rounded-full object-cover shadow-[0_2px_8px_-2px_rgba(15,23,42,0.1)]" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB-WUVGzrVbS9a42Kup1PPEHSz22lZDqcdUyGy3hVLTWGdmnpm7Kq97kzsHYxaS77FSV6ClNYPDRlpfdi-FaUiWDE7Gt2TtIANzGpW1_-hH41r1x9sDsnNx9KIAMb3TpO3oQi6P7IuMNDLuE_K3nF9KC0RFG4jZfPJTtYkWLrOhwDv4F6VDp-vggIN87nYPFyDltS4KSdnUQR0hM9ylyHm7g5p4FRV-qp5-P5qSBgbw"/></button></div></div></header><main class="flex flex-col relative w-full pt-16 pb-safe bg-surface min-h-screen"><div class="flex flex-col w-full">
-<div class="px-margin pt-space-md pb-space-lg flex flex-col gap-space-md">
-<!-- Editorial Architectural Badge & Intro -->
-<div class="flex flex-col gap-space-xs">
-<div class="inline-flex items-center gap-1.5 self-start px-space-sm py-1 bg-secondary-fixed text-on-secondary-fixed rounded-full shadow-sm">
-<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">stars</span>
-<span class="font-label-sm text-label-sm uppercase tracking-wider">Private Syndicate Membership</span>
-</div>
-<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface tracking-tight mt-1">
-        Create Your Havenly Account
-      </h2>
-<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
-        Discover architectural masterpieces, syndicate investments, and bespoke private listings curated across elite enclaves.
+  <div class="relative z-10 w-full max-w-md my-4 sm:my-8">
+    <div class="bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl p-6 sm:p-10 border border-white/50">
+      <div class="text-center mb-6">
+        <div class="w-16 h-16 bg-gradient-to-tr from-indigo-600 to-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-lg shadow-indigo-500/30">
+          <span class="material-symbols-outlined text-white text-3xl">person_add</span>
+        </div>
+        <h1 class="text-2xl font-black text-gray-900 tracking-tight">Tạo tài khoản mới</h1>
+        <p class="text-xs text-gray-500 mt-1 font-medium">Tham gia sàn giao dịch bất động sản</p>
+      </div>
+
+      <form id="registerForm" class="space-y-3.5">
+        <div>
+          <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Họ và tên</label>
+          <input type="text" id="fullName" required placeholder="Nguyễn Văn A"
+            class="w-full px-4 py-2.5 bg-gray-50/80 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-indigo-500 focus:bg-white focus:border-transparent outline-none text-sm font-medium"/>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Email</label>
+          <input type="email" id="email" required placeholder="nhapemail@batdongsan.vn"
+            class="w-full px-4 py-2.5 bg-gray-50/80 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-indigo-500 focus:bg-white focus:border-transparent outline-none text-sm font-medium"/>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Mật khẩu</label>
+          <input type="password" id="password" required placeholder="Tối thiểu 6 ký tự"
+            class="w-full px-4 py-2.5 bg-gray-50/80 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-indigo-500 focus:bg-white focus:border-transparent outline-none text-sm font-medium"/>
+        </div>
+        <div>
+          <div class="flex items-center justify-between mb-1">
+            <label class="block text-xs font-bold text-gray-700 uppercase">Nhu cầu & Vai trò</label>
+            <span class="text-[11px] text-indigo-600 font-semibold">(Có thể chọn nhiều mục)</span>
+          </div>
+          <p class="text-[11px] text-gray-500 mb-2">Bạn có thể vừa mua vừa bán hoặc vừa thuê vừa cho thuê:</p>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+            <label class="flex items-center gap-2 p-2.5 rounded-xl border border-gray-200 hover:border-indigo-300 bg-gray-50/70 cursor-pointer transition-all has-[:checked]:bg-indigo-50/80 has-[:checked]:border-indigo-500 has-[:checked]:text-indigo-950">
+              <input type="checkbox" name="roleCheckbox" value="Buyer" class="rounded text-indigo-600 focus:ring-indigo-500 w-4 h-4 cursor-pointer" checked>
+              <span class="font-semibold">🛒 Mua Bất động sản</span>
+            </label>
+            <label class="flex items-center gap-2 p-2.5 rounded-xl border border-gray-200 hover:border-indigo-300 bg-gray-50/70 cursor-pointer transition-all has-[:checked]:bg-indigo-50/80 has-[:checked]:border-indigo-500 has-[:checked]:text-indigo-950">
+              <input type="checkbox" name="roleCheckbox" value="Seller" class="rounded text-indigo-600 focus:ring-indigo-500 w-4 h-4 cursor-pointer">
+              <span class="font-semibold">🏠 Bán BĐS (Đăng tin)</span>
+            </label>
+            <label class="flex items-center gap-2 p-2.5 rounded-xl border border-gray-200 hover:border-indigo-300 bg-gray-50/70 cursor-pointer transition-all has-[:checked]:bg-indigo-50/80 has-[:checked]:border-indigo-500 has-[:checked]:text-indigo-950">
+              <input type="checkbox" name="roleCheckbox" value="Tenant" class="rounded text-indigo-600 focus:ring-indigo-500 w-4 h-4 cursor-pointer">
+              <span class="font-semibold">🔑 Thuê nhà / Căn hộ</span>
+            </label>
+            <label class="flex items-center gap-2 p-2.5 rounded-xl border border-gray-200 hover:border-indigo-300 bg-gray-50/70 cursor-pointer transition-all has-[:checked]:bg-indigo-50/80 has-[:checked]:border-indigo-500 has-[:checked]:text-indigo-950">
+              <input type="checkbox" name="roleCheckbox" value="Landlord" class="rounded text-indigo-600 focus:ring-indigo-500 w-4 h-4 cursor-pointer">
+              <span class="font-semibold">🏢 Cho thuê BĐS</span>
+            </label>
+            <label class="flex items-center gap-2 p-2.5 rounded-xl border border-gray-200 hover:border-indigo-300 bg-gray-50/70 cursor-pointer transition-all has-[:checked]:bg-indigo-50/80 has-[:checked]:border-indigo-500 has-[:checked]:text-indigo-950 sm:col-span-2">
+              <input type="checkbox" name="roleCheckbox" value="Agent" class="rounded text-indigo-600 focus:ring-indigo-500 w-4 h-4 cursor-pointer">
+              <span class="font-semibold">👔 Môi giới chuyên nghiệp (Agent / Broker)</span>
+            </label>
+          </div>
+        </div>
+
+        <div id="error-msg" class="text-red-500 text-xs font-semibold bg-red-50 p-2.5 rounded-xl border border-red-200 hidden"></div>
+        <div id="success-msg" class="text-emerald-700 text-xs font-bold bg-emerald-50 p-2.5 rounded-xl border border-emerald-200 hidden"></div>
+
+        <button type="submit" id="reg-btn"
+          class="w-full py-3.5 bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 text-white font-bold rounded-2xl shadow-lg shadow-indigo-500/25 transition-all text-sm flex items-center justify-center gap-1.5 mt-2">
+          <span>Đăng ký tài khoản</span>
+          <span class="material-symbols-outlined text-sm">arrow_forward</span>
+        </button>
+      </form>
+
+      <p class="text-center mt-5 text-gray-500 text-xs font-medium">
+        Đã có tài khoản? <a href="signin.html" class="text-indigo-600 font-bold hover:underline">Đăng nhập ngay</a>
       </p>
-</div>
-<!-- Decorative Architectural Accent Visual -->
-<div class="relative w-full h-32 rounded-xl overflow-hidden shadow-sm bg-surface-container-high">
-<div class="w-full h-full bg-cover bg-center" data-alt="Minimalist warm modernist luxury architectural villa with limestone facades, floor-to-ceiling glass pavilions, and reflective swimming pool in soft evening golden hour glow, muted slate and sand palette." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDfbgwY8nEvpz3Kx_TBsoLKutJd7dyAN2yRRpvt8ZeyZwFDhNH1sL9mCv6Ktoy9lUHjQUf5e3_n_qvi_20WFEKK77dOsM6A64z8Xic3fVgoRUhVbA5UfVa08aht0WrPFohLgOZbS35erikRMhORX9Sb_1F7qCWZpj64YtEjtLQbiFgV_EpPr0AUshzKkbB6tTXRFDLy6NXBsDkCeT6_d9_5ZuKeCg_N98TTz2_wPHjP')"></div>
-<div class="absolute inset-0 bg-gradient-to-t from-primary/75 via-primary/20 to-transparent flex items-end p-space-md">
-<div class="flex items-center gap-space-sm">
-<div class="w-7 h-7 rounded-full bg-surface-container-lowest/20 backdrop-blur-md flex items-center justify-center text-on-primary">
-<span class="material-symbols-outlined text-[16px]">verified</span>
-</div>
-<p class="font-label-sm text-label-sm text-on-primary uppercase tracking-wider">Vetted Institutional &amp; Private Portfolios</p>
-</div>
-</div>
-</div>
-<!-- Role Selection Carousel / Segmented Cards -->
-<div class="flex flex-col gap-space-xs">
-<div class="flex items-center justify-between">
-<label class="font-label-md text-label-md text-on-surface font-medium">Select Your Membership Role</label>
-<span class="font-label-sm text-label-sm text-secondary-container">Confidential Access</span>
-</div>
-<div class="grid grid-cols-3 gap-space-xs" id="role-selector">
-<!-- Role 1 (Selected) -->
-<button class="role-card flex flex-col p-space-sm rounded-lg text-left transition-all duration-200 bg-primary text-on-primary shadow-sm" data-role="buyer" onclick="selectRole(this, 'buyer')" type="button">
-<div class="w-8 h-8 rounded-md bg-surface-container-lowest/15 flex items-center justify-center mb-space-xs text-on-primary">
-<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">account_balance</span>
-</div>
-<span class="font-label-md text-label-md font-semibold leading-tight">Private Buyer</span>
-<span class="font-label-sm text-label-sm text-on-primary/75 mt-0.5">Collector</span>
-</button>
-<!-- Role 2 -->
-<button class="role-card flex flex-col p-space-sm rounded-lg text-left transition-all duration-200 bg-surface-container-lowest text-on-surface shadow-sm" data-role="seller" onclick="selectRole(this, 'seller')" type="button">
-<div class="w-8 h-8 rounded-md bg-surface-container-low flex items-center justify-center mb-space-xs text-on-surface-variant">
-<span class="material-symbols-outlined text-[18px]">home_work</span>
-</div>
-<span class="font-label-md text-label-md font-semibold leading-tight">Seller / Owner</span>
-<span class="font-label-sm text-label-sm text-on-surface-variant mt-0.5">Off-Market</span>
-</button>
-<!-- Role 3 -->
-<button class="role-card flex flex-col p-space-sm rounded-lg text-left transition-all duration-200 bg-surface-container-lowest text-on-surface shadow-sm" data-role="broker" onclick="selectRole(this, 'broker')" type="button">
-<div class="w-8 h-8 rounded-md bg-surface-container-low flex items-center justify-center mb-space-xs text-on-surface-variant">
-<span class="material-symbols-outlined text-[18px]">badge</span>
-</div>
-<span class="font-label-md text-label-md font-semibold leading-tight">Licensed Agent</span>
-<span class="font-label-sm text-label-sm text-on-surface-variant mt-0.5">Brokerage</span>
-</button>
-</div>
-</div>
-<!-- Registration Form -->
-<form class="flex flex-col gap-space-md" onsubmit="event.preventDefault();">
-<!-- Full Legal Name -->
-<div class="flex flex-col gap-1.5">
-<label class="font-label-md text-label-md text-on-surface font-medium flex items-center gap-1" for="legal-name">
-          Full Legal Name
-          <span class="text-secondary">*</span>
-</label>
-<div class="relative flex items-center bg-surface-container-lowest rounded-lg shadow-sm">
-<span class="material-symbols-outlined absolute left-3 text-on-surface-variant text-[20px]">person</span>
-<input class="w-full bg-transparent pl-10 pr-4 py-3.5 text-on-surface font-body-md text-body-md placeholder:text-outline focus:outline-none focus:bg-surface-container-low rounded-lg transition-colors" id="legal-name" placeholder="e.g. Julian Montgomery Vance" type="text"/>
-</div>
-</div>
-<!-- Email Address -->
-<div class="flex flex-col gap-1.5">
-<div class="flex items-center justify-between">
-<label class="font-label-md text-label-md text-on-surface font-medium flex items-center gap-1" for="work-email">
-            Email Address
-            <span class="text-secondary">*</span>
-</label>
-<span class="font-label-sm text-label-sm text-outline">Institutional Preferred</span>
-</div>
-<div class="relative flex items-center bg-surface-container-lowest rounded-lg shadow-sm">
-<span class="material-symbols-outlined absolute left-3 text-on-surface-variant text-[20px]">mail</span>
-<input class="w-full bg-transparent pl-10 pr-4 py-3.5 text-on-surface font-body-md text-body-md placeholder:text-outline focus:outline-none focus:bg-surface-container-low rounded-lg transition-colors" id="work-email" placeholder="julian@vancepartners.com" type="email"/>
-</div>
-<p class="font-body-sm text-body-sm text-on-surface-variant px-1 flex items-center gap-1">
-<span class="material-symbols-outlined text-[14px] text-secondary">info</span>
-          Official family office, fund, or syndicate email expedites verification.
-        </p>
-</div>
-<!-- Mobile Number with Flag / Country Selector -->
-<div class="flex flex-col gap-1.5">
-<label class="font-label-md text-label-md text-on-surface font-medium flex items-center gap-1" for="phone-number">
-          Direct Mobile Number
-          <span class="text-secondary">*</span>
-</label>
-<div class="flex items-center gap-2">
-<div class="flex items-center gap-1 px-3 py-3.5 bg-surface-container-lowest rounded-lg shadow-sm shrink-0">
-<span class="text-body-md">🇺🇸</span>
-<span class="font-label-md text-label-md text-on-surface font-medium">+1</span>
-<span class="material-symbols-outlined text-[16px] text-on-surface-variant">expand_more</span>
-</div>
-<div class="relative flex-1 flex items-center bg-surface-container-lowest rounded-lg shadow-sm">
-<span class="material-symbols-outlined absolute left-3 text-on-surface-variant text-[20px]">phone_iphone</span>
-<input class="w-full bg-transparent pl-10 pr-4 py-3.5 text-on-surface font-body-md text-body-md placeholder:text-outline focus:outline-none focus:bg-surface-container-low rounded-lg transition-colors" id="phone-number" placeholder="(555) 234-8901" type="tel"/>
-</div>
-</div>
-<p class="font-body-sm text-body-sm text-outline px-1">
-          Secured for cryptographic 2FA authorization and urgent transaction alerts.
-        </p>
-</div>
-<!-- Password Creation & Dynamic Strength Indicator -->
-<div class="flex flex-col gap-1.5">
-<label class="font-label-md text-label-md text-on-surface font-medium flex items-center gap-1" for="master-password">
-          Master Security Passphrase
-          <span class="text-secondary">*</span>
-</label>
-<div class="relative flex items-center bg-surface-container-lowest rounded-lg shadow-sm">
-<span class="material-symbols-outlined absolute left-3 text-on-surface-variant text-[20px]">lock</span>
-<input class="w-full bg-transparent pl-10 pr-11 py-3.5 text-on-surface font-body-md text-body-md placeholder:text-outline focus:outline-none focus:bg-surface-container-low rounded-lg transition-colors" id="master-password" oninput="updatePasswordStrength(this.value)" placeholder="Create strong passphrase" type="password"/>
-<button aria-label="Toggle password visibility" class="absolute right-3 text-on-surface-variant hover:text-on-surface" onclick="togglePasswordVisibility()" type="button">
-<span class="material-symbols-outlined text-[20px]" id="pw-visibility-icon">visibility</span>
-</button>
-</div>
-<!-- Password Strength Meter Visual -->
-<div class="bg-surface-container-lowest p-space-sm rounded-lg shadow-sm flex flex-col gap-2 mt-1">
-<div class="flex items-center justify-between">
-<span class="font-label-sm text-label-sm text-on-surface-variant">Strength Assessment</span>
-<span class="font-label-sm text-label-sm font-semibold text-secondary" id="strength-label">Good (3/4)</span>
-</div>
-<!-- Bar indicators -->
-<div class="grid grid-cols-4 gap-1.5 h-1.5 w-full">
-<div class="rounded-full bg-secondary transition-all" id="bar-1"></div>
-<div class="rounded-full bg-secondary transition-all" id="bar-2"></div>
-<div class="rounded-full bg-secondary transition-all" id="bar-3"></div>
-<div class="rounded-full bg-surface-container-highest transition-all" id="bar-4"></div>
-</div>
-<!-- Requirement Badges -->
-<div class="grid grid-cols-3 gap-1 pt-1 text-center">
-<div class="flex items-center justify-center gap-1 py-1 rounded bg-surface-container text-on-surface" id="req-len">
-<span class="material-symbols-outlined text-[12px] text-secondary">check</span>
-<span class="font-label-sm text-label-sm">8+ chars</span>
-</div>
-<div class="flex items-center justify-center gap-1 py-1 rounded bg-surface-container text-on-surface" id="req-case">
-<span class="material-symbols-outlined text-[12px] text-secondary">check</span>
-<span class="font-label-sm text-label-sm">Uppercase</span>
-</div>
-<div class="flex items-center justify-center gap-1 py-1 rounded bg-surface-container text-on-surface" id="req-num">
-<span class="material-symbols-outlined text-[12px] text-secondary">check</span>
-<span class="font-label-sm text-label-sm">Number/Sym</span>
-</div>
-</div>
-</div>
-</div>
-<!-- Legal & Privacy Agreements -->
-<div class="flex flex-col gap-space-sm pt-space-xs">
-<!-- Checkbox 1 -->
-<label class="flex items-start gap-3 p-space-sm rounded-lg bg-surface-container-lowest shadow-sm cursor-pointer select-none">
-<input checked="" class="mt-0.5 w-5 h-5 rounded accent-primary cursor-pointer shrink-0" id="terms-agree" type="checkbox"/>
-<span class="font-body-sm text-body-sm text-on-surface-variant leading-tight">
-            I agree to the <span class="font-medium text-on-surface underline">Havenly Syndicate Terms of Service</span>, Accredited Buyer Disclosure, &amp; <span class="font-medium text-on-surface underline">Privacy Policy</span>.
-          </span>
-</label>
-<!-- Checkbox 2 (Delight Feature) -->
-<label class="flex items-start gap-3 p-space-sm rounded-lg bg-surface-container-lowest shadow-sm cursor-pointer select-none">
-<input checked="" class="mt-0.5 w-5 h-5 rounded accent-primary cursor-pointer shrink-0" id="memos-agree" type="checkbox"/>
-<div class="flex flex-col gap-0.5">
-<span class="font-body-sm text-body-sm text-on-surface font-medium leading-tight">
-              Curated Architectural Previews
-            </span>
-<span class="font-body-sm text-body-sm text-on-surface-variant leading-tight">
-              Receive confidential off-market architectural dossiers and invitations to private syndication rounds.
-            </span>
-</div>
-</label>
-</div>
-<!-- Primary Action CTA -->
-<button class="w-full h-12 bg-primary text-on-primary rounded-lg font-headline-sm text-headline-sm flex items-center justify-center gap-2 shadow-md active:scale-[0.99] transition-transform" type="submit">
-<span>Create Account &amp; Continue</span>
-<span class="material-symbols-outlined text-[20px]">arrow_forward</span>
-</button>
-<!-- Trust Indicator Strip -->
-<div class="flex items-center justify-center gap-4 py-1">
-<div class="flex items-center gap-1 text-on-surface-variant">
-<span class="material-symbols-outlined text-[16px]">lock</span>
-<span class="font-label-sm text-label-sm">256-bit Vault Security</span>
-</div>
-<div class="h-3 w-px bg-surface-container-highest"></div>
-<div class="flex items-center gap-1 text-on-surface-variant">
-<span class="material-symbols-outlined text-[16px]">verified_user</span>
-<span class="font-label-sm text-label-sm">FINRA Compliant</span>
-</div>
-</div>
-<!-- Divider -->
-<div class="relative flex items-center justify-center py-2">
-<div class="w-full h-px bg-surface-container-highest"></div>
-<span class="absolute bg-surface px-3 font-label-sm text-label-sm text-outline uppercase tracking-wider">or verify with</span>
-</div>
-<!-- Single Sign-On Actions -->
-<div class="grid grid-cols-2 gap-space-sm">
-<button class="h-12 bg-surface-container-lowest rounded-lg shadow-sm flex items-center justify-center gap-2 text-on-surface hover:bg-surface-container-low transition-colors" type="button">
-<svg class="w-4 h-4 fill-current" viewbox="0 0 170 170">
-<path d="M150.37 130.25c-2.45 5.66-5.35 10.87-8.71 15.66-4.58 6.53-8.33 11.05-11.22 13.56-4.48 4.12-9.28 6.23-14.42 6.35-3.69 0-8.14-1.05-13.32-3.18-5.19-2.12-9.97-3.17-14.34-3.17-4.58 0-9.49 1.05-14.75 3.17-5.26 2.13-9.5 3.24-12.74 3.35-4.35.13-9.16-1.9-14.42-6.08-3.69-3.04-7.69-7.85-12-14.42-6-9.12-10.64-19.46-13.92-31.02-3.28-11.56-4.92-22.75-4.92-33.56 0-14.15 3.49-25.75 10.47-34.8 6.98-9.05 15.66-13.68 26.04-13.88 4.79 0 10.3 1.25 16.54 3.75 6.24 2.5 10.05 3.75 11.43 3.75 1.59 0 5.62-1.35 12.09-4.06 6.47-2.71 12.09-3.9 16.86-3.56 12.61.95 22.58 5.75 29.9 14.42-10.98 6.64-16.36 15.7-16.14 27.18.22 9.05 3.69 16.63 10.4 22.73 6.72 6.1 14.62 9.68 23.71 10.74-2.22 6.76-4.95 13.43-8.19 20.02zM119.22 31.05c0-7.24 2.65-14.07 7.95-20.48 5.3-6.42 11.83-10.42 19.59-12.02.21 1.27.32 2.43.32 3.49 0 7.24-2.8 14.17-8.41 20.79-5.61 6.61-12.06 10.53-19.34 11.75-.08-1.16-.11-2.34-.11-3.53z"></path>
-</svg>
-<span class="font-label-md text-label-md font-medium">Apple</span>
-</button>
-<button class="h-12 bg-surface-container-lowest rounded-lg shadow-sm flex items-center justify-center gap-2 text-on-surface hover:bg-surface-container-low transition-colors" type="button">
-<svg class="w-4 h-4" viewbox="0 0 24 24">
-<path d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z" fill="#4285F4"></path>
-<path d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.34 24 12 24z" fill="#34A853"></path>
-<path d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.25C.45 8.17 0 9.97 0 12s.45 3.83 1.25 5.42l4.03-3.15z" fill="#FBBC05"></path>
-<path d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.34 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98z" fill="#EA4335"></path>
-</svg>
-<span class="font-label-md text-label-md font-medium">Google</span>
-</button>
-</div>
-<!-- Account Switcher Sign-In Link -->
-<div class="flex items-center justify-center pt-space-xs pb-space-sm text-center">
-<p class="font-body-md text-body-md text-on-surface-variant">
-          Already have a Havenly account?
-          <button class="font-headline-sm text-headline-sm text-on-surface underline font-semibold ml-1 inline" type="button">
-            Sign In
-          </button>
-</p>
-</div>
-</form>
-</div>
-</div>
-<script>
-  function selectRole(button, role) {
-    const cards = document.querySelectorAll('.role-card');
-    cards.forEach(card => {
-      card.classList.remove('bg-primary', 'text-on-primary');
-      card.classList.add('bg-surface-container-lowest', 'text-on-surface');
-      
-      const iconWrap = card.querySelector('div');
-      if (iconWrap) {
-        iconWrap.classList.remove('bg-surface-container-lowest/15', 'text-on-primary');
-        iconWrap.classList.add('bg-surface-container-low', 'text-on-surface-variant');
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('registerForm').addEventListener('submit', async e => {
+      e.preventDefault();
+      const btn = document.getElementById('reg-btn');
+      const errDiv = document.getElementById('error-msg');
+      const succDiv = document.getElementById('success-msg');
+
+      const checkedRoles = Array.from(document.querySelectorAll('input[name="roleCheckbox"]:checked')).map(cb => cb.value);
+      if (checkedRoles.length === 0) {
+        errDiv.textContent = 'Vui lòng chọn ít nhất 1 nhu cầu / vai trò của bạn.';
+        errDiv.classList.remove('hidden');
+        return;
       }
-      
-      const subtext = card.querySelectorAll('span')[1];
-      if (subtext) {
-        subtext.classList.remove('text-on-primary/75');
-        subtext.classList.add('text-on-surface-variant');
+
+      btn.innerHTML = '<span class="material-symbols-outlined text-sm animate-spin">sync</span> Đang tạo tài khoản...';
+      btn.disabled = true;
+      errDiv.classList.add('hidden');
+      succDiv.classList.add('hidden');
+
+      try {
+        const res = await fetch('/api/auth/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            fullName: document.getElementById('fullName').value.trim(),
+            email: document.getElementById('email').value.trim(),
+            password: document.getElementById('password').value,
+            role: checkedRoles[0],
+            roles: checkedRoles
+          })
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          errDiv.textContent = data.message || 'Đăng ký thất bại';
+          errDiv.classList.remove('hidden');
+          return;
+        }
+        succDiv.textContent = '🎉 Đăng ký thành công! Đang chuyển hướng sang đăng nhập...';
+        succDiv.classList.remove('hidden');
+        setTimeout(() => window.location.href = 'signin.html', 1200);
+      } catch (err) {
+        errDiv.textContent = 'Lỗi kết nối server';
+        errDiv.classList.remove('hidden');
+      } finally {
+        btn.innerHTML = '<span>Đăng ký tài khoản</span><span class="material-symbols-outlined text-sm">arrow_forward</span>';
+        btn.disabled = false;
       }
     });
-
-    button.classList.remove('bg-surface-container-lowest', 'text-on-surface');
-    button.classList.add('bg-primary', 'text-on-primary');
-
-    const activeIconWrap = button.querySelector('div');
-    if (activeIconWrap) {
-      activeIconWrap.classList.remove('bg-surface-container-low', 'text-on-surface-variant');
-      activeIconWrap.classList.add('bg-surface-container-lowest/15', 'text-on-primary');
-    }
-
-    const activeSubtext = button.querySelectorAll('span')[1];
-    if (activeSubtext) {
-      activeSubtext.classList.remove('text-on-surface-variant');
-      activeSubtext.classList.add('text-on-primary/75');
-    }
-  }
-
-  function togglePasswordVisibility() {
-    const input = document.getElementById('master-password');
-    const icon = document.getElementById('pw-visibility-icon');
-    if (input.type === 'password') {
-      input.type = 'text';
-      icon.textContent = 'visibility_off';
-    } else {
-      input.type = 'password';
-      icon.textContent = 'visibility';
-    }
-  }
-
-  function updatePasswordStrength(val) {
-    let score = 0;
-    const lenPass = val.length >= 8;
-    const upperPass = /[A-Z]/.test(val);
-    const numPass = /[0-9!@#$%^&*]/.test(val);
-
-    if (val.length > 0) score++;
-    if (lenPass) score++;
-    if (upperPass) score++;
-    if (numPass) score++;
-
-    const label = document.getElementById('strength-label');
-    const b1 = document.getElementById('bar-1');
-    const b2 = document.getElementById('bar-2');
-    const b3 = document.getElementById('bar-3');
-    const b4 = document.getElementById('bar-4');
-
-    const bars = [b1, b2, b3, b4];
-    bars.forEach((b, idx) => {
-      if (idx < score) {
-        b.className = 'rounded-full transition-all ' + (score <= 2 ? 'bg-secondary-container' : 'bg-secondary');
-      } else {
-        b.className = 'rounded-full bg-surface-container-highest transition-all';
-      }
-    });
-
-    if (score === 0) {
-      label.textContent = 'Enter Passphrase';
-      label.className = 'font-label-sm text-label-sm font-semibold text-outline';
-    } else if (score <= 2) {
-      label.textContent = 'Basic Security';
-      label.className = 'font-label-sm text-label-sm font-semibold text-secondary-container';
-    } else if (score === 3) {
-      label.textContent = 'Good (3/4)';
-      label.className = 'font-label-sm text-label-sm font-semibold text-secondary';
-    } else {
-      label.textContent = 'Syndicate Grade';
-      label.className = 'font-label-sm text-label-sm font-semibold text-primary';
-    }
-  }
-</script></main></body></html>
+  </script>
+</body>
+</html>
