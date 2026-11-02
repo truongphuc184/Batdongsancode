@@ -53,7 +53,12 @@ public class ListingsController : ControllerBase
         [FromQuery] double? minArea,
         [FromQuery] double? maxArea,
         [FromQuery] int? bedrooms,
+        [FromQuery] int? bathrooms,
         [FromQuery] string? direction,
+        [FromQuery] string? category,
+        [FromQuery] string? legal,
+        [FromQuery] string? furniture,
+        [FromQuery] string? project,
         [FromQuery] string? sortBy)
     {
         var query = _context.Listings
@@ -90,8 +95,35 @@ public class ListingsController : ControllerBase
         if (bedrooms.HasValue && bedrooms.Value > 0)
             query = query.Where(l => (l.Bedrooms ?? 0) >= bedrooms.Value);
 
+        if (bathrooms.HasValue && bathrooms.Value > 0)
+            query = query.Where(l => (l.Bathrooms ?? 0) >= bathrooms.Value);
+
         if (!string.IsNullOrWhiteSpace(direction))
             query = query.Where(l => l.Direction == direction);
+
+        if (!string.IsNullOrWhiteSpace(category))
+        {
+            var cat = category.Trim().ToLower();
+            query = query.Where(l => l.Title.ToLower().Contains(cat) || l.Description.ToLower().Contains(cat));
+        }
+
+        if (!string.IsNullOrWhiteSpace(legal))
+        {
+            var leg = legal.Trim().ToLower();
+            query = query.Where(l => l.Title.ToLower().Contains(leg) || l.Description.ToLower().Contains(leg));
+        }
+
+        if (!string.IsNullOrWhiteSpace(furniture))
+        {
+            var furn = furniture.Trim().ToLower();
+            query = query.Where(l => l.Title.ToLower().Contains(furn) || l.Description.ToLower().Contains(furn));
+        }
+
+        if (!string.IsNullOrWhiteSpace(project))
+        {
+            var proj = project.Trim().ToLower();
+            query = query.Where(l => l.Title.ToLower().Contains(proj) || l.Description.ToLower().Contains(proj) || l.Address.ToLower().Contains(proj));
+        }
 
         // Sắp xếp kết quả tìm kiếm (Use Case: Sắp xếp kết quả tìm kiếm)
         query = (sortBy?.ToLower()) switch
@@ -330,10 +362,22 @@ public class ListingsController : ControllerBase
         // Nếu là Admin thì duyệt luôn (Approved)
         var initialStatus = (role == "Admin") ? ListingStatus.Approved : ListingStatus.Pending;
 
+        var desc = request.Description?.Trim() ?? "";
+        var extraDetails = new List<string>();
+        if (!string.IsNullOrWhiteSpace(request.Category)) extraDetails.Add($"Loại BĐS: {request.Category.Trim()}");
+        if (!string.IsNullOrWhiteSpace(request.Legal)) extraDetails.Add($"Pháp lý: {request.Legal.Trim()}");
+        if (!string.IsNullOrWhiteSpace(request.Furniture)) extraDetails.Add($"Nội thất: {request.Furniture.Trim()}");
+        if (!string.IsNullOrWhiteSpace(request.Project)) extraDetails.Add($"Dự án: {request.Project.Trim()}");
+
+        if (extraDetails.Count > 0 && !desc.Contains("Loại BĐS:"))
+        {
+            desc = desc + (string.IsNullOrWhiteSpace(desc) ? "" : "\n\n") + "[Thông tin chi tiết]: " + string.Join(" • ", extraDetails);
+        }
+
         var listing = new Listing
         {
             Title = request.Title.Trim(),
-            Description = request.Description?.Trim() ?? "",
+            Description = desc,
             Type = pType,
             Price = request.Price > 0 ? request.Price : 0,
             Address = request.Address?.Trim() ?? "",
@@ -496,6 +540,10 @@ public class CreateListingRequest
     public int Bedrooms { get; set; }
     public int Bathrooms { get; set; }
     public string? ImageUrls { get; set; }
+    public string? Category { get; set; }
+    public string? Legal { get; set; }
+    public string? Furniture { get; set; }
+    public string? Project { get; set; }
 }
 
 public class RejectRequest
