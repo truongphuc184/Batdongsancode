@@ -1,0 +1,55 @@
+====================================================================
+HƯỚNG DẪN CÀI ĐẶT DATABASE BẤT ĐỘNG SẢN (GỬI BẠN BÈ / ĐỒNG ĐỘI)
+====================================================================
+
+1. FILE CƠ SỞ DỮ LIỆU ĐI KÈM:
+   - Tên file: database.sql
+   - Định dạng: UTF-8 with BOM (Mở trên SSMS hiển thị 100% tiếng Việt chuẩn có dấu, không bao giờ bị lỗi font).
+
+2. CÁCH CHẠY DATABASE TRÊN MÁY BẠN:
+   - Bước 1: Mở SQL Server Management Studio (SSMS) hoặc Azure Data Studio.
+   - Bước 2: Kéo thả file 'database.sql' vào SSMS (hoặc nhấn File -> Open -> File...).
+   - Bước 3: Nhấn nút 'Execute' (hoặc phím tắt F5).
+   - Script sẽ tự động:
+     + Tạo mới database 'batdongsan' (nếu máy chưa có).
+     + Tạo đầy đủ 4 bảng: Users, Listings, Leads, Reports cùng các khóa ngoại.
+     + Nạp sẵn dữ liệu BĐS mẫu phong phú (Căn hộ, Biệt thự, Đất nền, Mặt bằng, Kho xưởng).
+     + Nạp sẵn dữ liệu khách hàng tiềm năng CRM và báo cáo vi phạm.
+
+3. CẤU HÌNH KẾT NỐI TRONG BACKEND (appsettings.json):
+   Mở file appsettings.json trong source code backend và kiểm tra dòng ConnectionStrings:
+
+   "ConnectionStrings": {
+     "DefaultConnection": "Server=localhost;Database=batdongsan;Trusted_Connection=True;TrustServerCertificate=True;"
+   }
+
+   (Nếu máy bạn dùng bản SQL Server Express có tên instance, đổi Server=localhost\\SQLEXPRESS)
+
+4. DANH SÁCH TÀI KHOẢN MẪU ĐỂ TEST HỆ THỐNG:
+   Tất cả tài khoản đều có chung mật khẩu: 123456
+
+   + QUẢN TRỊ VIÊN (Admin):
+     - Email: admin@batdongsan.vn | Pass: 123456
+     - Quyền: Quản trị toàn sàn, Duyệt/Từ chối tin đăng, Báo cáo vi phạm, Doanh thu & Biểu đồ xu hướng thị trường.
+
+   + NGƯỜI BÁN / CHỦ NHÀ (Seller):
+     - Email: seller@batdongsan.vn | Pass: 123456
+     - Quyền: Đăng tin bán BĐS, Đẩy tin lên top đầu, Tiếp nhận & Phản hồi khách xem nhà (CRM Mini).
+
+   + NGƯỜI CHO THUÊ (Landlord):
+     - Email: landlord@batdongsan.vn | Pass: 123456
+     - Quyền: Đăng tin cho thuê căn hộ/phòng trọ/mặt bằng, Quản lý khách thuê & Phản hồi lịch hẹn.
+
+   + MÔI GIỚI BĐS (Agent):
+     - Email: agent@batdongsan.vn | Pass: 123456
+     - Quyền: Đăng cả tin bán và cho thuê, Đẩy tin ưu tiên, Phân hệ CRM chuyên nghiệp.
+
+   + NGƯỜI MUA (Buyer):
+     - Email: buyer@batdongsan.vn | Pass: 123456
+     - Quyền: Tìm kiếm nâng cao, Lưu tin yêu thích, Gửi form hẹn xem nhà & Nhận tin nhắn phản hồi từ người bán.
+
+   + KHÁCH THUÊ (Tenant):
+     - Email: tenant@batdongsan.vn | Pass: 123456
+     - Quyền: Tìm BĐS cho thuê, Gửi yêu cầu đặt lịch hẹn & Nhận tin nhắn phản hồi trực tiếp từ người cho thuê.
+====================================================================
+

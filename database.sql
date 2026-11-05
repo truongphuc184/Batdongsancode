@@ -1,4 +1,4 @@
--- ====================================================================
+﻿-- ====================================================================
 -- SCRIPT CẬP NHẬT DATABASE BẤT ĐỘNG SẢN (DÙNG ĐỂ UPDATE DATABASE ĐANG CÓ)
 -- Chạy an toàn: Tự thêm các cột còn thiếu, tự tạo bảng mới nếu chưa có,
 -- và nạp đầy đủ dữ liệu mẫu phong phú để Tìm kiếm & Lọc hoạt động hoàn hảo.
