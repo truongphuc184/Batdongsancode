@@ -494,9 +494,11 @@
       btn.textContent = 'Đang gửi...';
 
       try {
+        const reqHeaders = { 'Content-Type': 'application/json' };
+        if (token) reqHeaders['Authorization'] = 'Bearer ' + token;
         const res = await fetch('/api/leads', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: reqHeaders,
           body: JSON.stringify({
             listingId: listingId,
             customerName: name,

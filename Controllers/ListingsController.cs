@@ -42,6 +42,100 @@ public class ListingsController : ControllerBase
         return Ok(listings.Select(l => MapToListingDto(l)));
     }
 
+    // 1.1 Thống kê xu hướng thị trường & Phân loại loại hình BĐS (Market Analytics & Trend Dashboard)
+    [HttpGet("market-trends")]
+    public async Task<IActionResult> GetMarketTrends()
+    {
+        var allListings = await _context.Listings
+            .AsNoTracking()
+            .ToListAsync();
+
+        string ClassifyListing(string title, string desc)
+        {
+            var text = ((title ?? "") + " " + (desc ?? "")).ToLower();
+            if (text.Contains("căn hộ") || text.Contains("chung cư") || text.Contains("duplex") || text.Contains("penthouse") || text.Contains("studio") || text.Contains("officetel"))
+                return "Căn hộ / Chung cư";
+            if (text.Contains("biệt thự") || text.Contains("villa") || text.Contains("dinh thự"))
+                return "Biệt thự";
+            if (text.Contains("nhà phố") || text.Contains("liền kề") || text.Contains("nhà riêng") || text.Contains("nguyên căn") || text.Contains("nhà ngõ"))
+                return "Nhà phố / Nhà riêng";
+            if (text.Contains("đất nền") || text.Contains("lô đất") || text.Contains("thổ cư") || text.Contains("đất dự án"))
+                return "Đất nền";
+            if (text.Contains("mặt bằng") || text.Contains("shophouse") || text.Contains("cửa hàng") || text.Contains("kiot"))
+                return "Mặt bằng / Shophouse";
+            if (text.Contains("nhà xưởng") || text.Contains("kho bãi") || text.Contains("kho") || text.Contains("xưởng"))
+                return "Kho xưởng / Bãi";
+            return "Bất động sản khác";
+        }
+
+        var total = allListings.Count;
+        var approvedTotal = allListings.Count(l => l.Status == ListingStatus.Approved);
+        var pendingTotal = allListings.Count(l => l.Status == ListingStatus.Pending);
+        var rejectedTotal = allListings.Count(l => l.Status == ListingStatus.Rejected);
+        var totalSale = allListings.Count(l => l.Type == PropertyType.Sale);
+        var totalRent = allListings.Count(l => l.Type == PropertyType.Rent);
+
+        var groups = allListings
+            .GroupBy(l => ClassifyListing(l.Title, l.Description))
+            .Select(g =>
+            {
+                var count = g.Count();
+                var pct = total > 0 ? Math.Round((double)count / total * 100, 1) : 0;
+                var saleCount = g.Count(l => l.Type == PropertyType.Sale);
+                var rentCount = g.Count(l => l.Type == PropertyType.Rent);
+                var approvedCount = g.Count(l => l.Status == ListingStatus.Approved);
+                var pendingCount = g.Count(l => l.Status == ListingStatus.Pending);
+                var avgPriceSale = g.Where(l => l.Type == PropertyType.Sale && l.Price > 0).Select(l => l.Price).DefaultIfEmpty(0).Average();
+                var avgPriceRent = g.Where(l => l.Type == PropertyType.Rent && l.Price > 0).Select(l => l.Price).DefaultIfEmpty(0).Average();
+                var avgArea = g.Where(l => (l.Area ?? 0) > 0).Select(l => l.Area!.Value).DefaultIfEmpty(0).Average();
+
+                string icon = g.Key switch
+                {
+                    "Căn hộ / Chung cư" => "🏢",
+                    "Biệt thự" => "🏰",
+                    "Nhà phố / Nhà riêng" => "🏡",
+                    "Đất nền" => "🏞️",
+                    "Mặt bằng / Shophouse" => "🏬",
+                    "Kho xưởng / Bãi" => "🏭",
+                    _ => "🏠"
+                };
+
+                return new
+                {
+                    Category = g.Key,
+                    Icon = icon,
+                    Count = count,
+                    Percentage = pct,
+                    SaleCount = saleCount,
+                    RentCount = rentCount,
+                    ApprovedCount = approvedCount,
+                    PendingCount = pendingCount,
+                    AvgPriceSale = Math.Round(avgPriceSale, 0),
+                    AvgPriceRent = Math.Round(avgPriceRent, 0),
+                    AvgArea = Math.Round(avgArea, 1)
+                };
+            })
+            .OrderByDescending(x => x.Count)
+            .ToList();
+
+        var top = groups.FirstOrDefault();
+
+        return Ok(new
+        {
+            TotalListings = total,
+            ApprovedListings = approvedTotal,
+            PendingListings = pendingTotal,
+            RejectedListings = rejectedTotal,
+            TotalSale = totalSale,
+            TotalRent = totalRent,
+            TopCategory = top?.Category ?? "Chưa có",
+            TopCategoryIcon = top?.Icon ?? "🏢",
+            TopCategoryCount = top?.Count ?? 0,
+            TopCategoryPercentage = top?.Percentage ?? 0,
+            Categories = groups
+        });
+    }
+
     // 2. Tìm kiếm BĐS nâng cao & Sắp xếp
     [HttpGet("search")]
     public async Task<IActionResult> Search(
@@ -432,7 +526,7 @@ public class ListingsController : ControllerBase
 
         var msg = (initialStatus == ListingStatus.Approved) 
             ? "Đăng tin thành công và đã hiển thị công khai!" 
-            : "Đăng tin thành công! Tin của bạn đang được chuyển đến Ban quản trị kiểm duyệt trước khi hiển thị.";
+            : "Tin đăng đã gửi và đang chờ duyệt! Ban quản trị sẽ kiểm duyệt tin trước khi hiển thị.";
 
         return Ok(new { id = listing.Id, status = initialStatus.ToString(), message = msg });
     }

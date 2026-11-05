@@ -31,6 +31,11 @@ public class Lead
 
     public LeadStatus Status { get; set; } = LeadStatus.NEW;
 
+    [MaxLength(500)]
+    public string? ResponseMessage { get; set; } // Phản hồi từ người bán / môi giới gửi người mua/thuê
+
+    public DateTime? RespondedAt { get; set; }
+
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
     // Navigation

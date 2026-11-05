@@ -34,8 +34,17 @@
   </header>
 
   <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mt-4 sm:mt-6">
-    <!-- Thống kê nhanh 4 cột: 2 cột trên điện thoại, 4 cột trên iPad/Máy tính -->
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mb-6">
+    <!-- Thống kê nhanh 5 cột: Doanh thu, Tin chờ duyệt, Tin đã duyệt, Báo cáo vi phạm, Admin -->
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4 mb-6">
+      <div class="bg-gradient-to-br from-indigo-600 to-blue-700 p-5 rounded-2xl shadow-sm text-white col-span-2 sm:col-span-1">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-black uppercase text-indigo-100">Tổng thu gói tin</span>
+          <span class="material-symbols-outlined text-white">payments</span>
+        </div>
+        <div class="text-2xl font-black mt-2 truncate" id="stat-revenue">0 đ</div>
+        <p class="text-[11px] text-indigo-100 mt-1" id="stat-transactions-count">0 giao dịch thành công</p>
+      </div>
+
       <div class="bg-white p-5 rounded-2xl shadow-sm border border-amber-200">
         <div class="flex items-center justify-between">
           <span class="text-xs font-bold text-amber-600 uppercase">Tin chờ duyệt</span>
@@ -94,6 +103,10 @@
       <button onclick="switchAdminTab('articles')" id="tabBtnArticles" 
         class="px-5 py-2.5 rounded-xl font-semibold text-xs bg-white text-gray-600 hover:bg-gray-50 border border-gray-200 flex items-center gap-1.5 transition-all">
         <span class="material-symbols-outlined text-base text-purple-600">article</span> Bài viết & Thanh toán
+      </button>
+      <button onclick="switchAdminTab('trends')" id="tabBtnTrends" 
+        class="px-5 py-2.5 rounded-xl font-semibold text-xs bg-white text-gray-600 hover:bg-gray-50 border border-gray-200 flex items-center gap-1.5 transition-all">
+        <span class="material-symbols-outlined text-base text-amber-600">trending_up</span> Biểu đồ Xu hướng BĐS
       </button>
     </div>
 
@@ -268,30 +281,90 @@
         </div>
       </div>
 
-      <!-- Gói dịch vụ & Doanh thu hội viên -->
+      <!-- Thống kê Doanh thu & Dòng tiền thanh toán gói dịch vụ -->
       <div class="mb-6">
-        <h3 class="text-xs font-bold text-gray-800 uppercase mb-3 flex items-center gap-1.5">
-          <span class="material-symbols-outlined text-indigo-600 text-sm">payments</span> Cấu hình Gói dịch vụ đăng tin & hội viên
-        </h3>
+        <div class="flex items-center justify-between mb-3">
+          <h3 class="text-xs font-bold text-gray-800 uppercase flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-indigo-600 text-sm">payments</span> Thống kê Doanh thu & Dòng tiền Gói dịch vụ
+          </h3>
+          <button onclick="loadAdminRevenue()" class="px-3 py-1 bg-gray-100 hover:bg-gray-200 rounded-lg text-xs font-semibold text-gray-700 flex items-center gap-1">
+            <span class="material-symbols-outlined text-xs">refresh</span> Cập nhật doanh thu
+          </button>
+        </div>
+
+        <!-- Khung tổng thu -->
+        <div class="grid grid-cols-1 sm:grid-cols-4 gap-3 mb-4">
+          <div class="p-4 bg-gradient-to-br from-emerald-600 to-teal-700 rounded-2xl text-white shadow-sm sm:col-span-2">
+            <span class="text-xs font-black uppercase text-emerald-100">💰 Tổng tiền thu về từ gói dịch vụ</span>
+            <div class="text-3xl font-black mt-1" id="secRevTotal">0 đ</div>
+            <p class="text-xs text-emerald-100 mt-1" id="secRevCount">Dữ liệu doanh thu thực tế từ các thành viên</p>
+          </div>
+          <div class="p-4 bg-white rounded-2xl border border-gray-200 shadow-sm">
+            <span class="text-xs font-bold text-gray-500 uppercase">Gói bán nhiều nhất</span>
+            <div class="text-base font-black text-gray-900 mt-1 truncate" id="topPackageName">Đang tải...</div>
+            <p class="text-[11px] text-gray-400 mt-1" id="topPackageDesc">Tính từ giao dịch thực tế</p>
+          </div>
+          <div class="p-4 bg-white rounded-2xl border border-gray-200 shadow-sm">
+            <span class="text-xs font-bold text-gray-500 uppercase">Tỷ lệ thanh toán</span>
+            <div class="text-base font-black text-emerald-600 mt-1">100% Thành công</div>
+            <p class="text-[11px] text-gray-400 mt-1">Qua VNPAY, MoMo, VietQR</p>
+          </div>
+        </div>
+
+        <!-- 3 Thẻ Gói hội viên -->
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
           <div class="p-4 bg-indigo-50/50 rounded-xl border border-indigo-100">
-            <span class="text-xs font-bold text-indigo-700 uppercase">Hội viên Cơ bản</span>
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold text-indigo-700 uppercase">Hội viên Cơ bản</span>
+              <span id="countPkgBasic" class="px-2 py-0.5 bg-indigo-100 text-indigo-800 text-[10px] font-black rounded-full">0 lượt</span>
+            </div>
             <div class="text-2xl font-black text-indigo-900 mt-1">467.000 đ</div>
+            <div class="text-xs text-indigo-600 font-bold mt-1">Đã thu: <span id="revPkgBasic">0 đ</span></div>
             <p class="text-[11px] text-gray-500 mt-1">15 lượt đẩy tin + 15 voucher đăng</p>
-            <span class="mt-2 inline-block px-2 py-0.5 bg-emerald-100 text-emerald-800 text-[10px] font-bold rounded">Đang áp dụng</span>
           </div>
           <div class="p-4 bg-amber-50/50 rounded-xl border border-amber-200">
-            <span class="text-xs font-bold text-amber-700 uppercase">Hội viên Tiêu chuẩn</span>
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold text-amber-700 uppercase">Hội viên Tiêu chuẩn</span>
+              <span id="countPkgStandard" class="px-2 py-0.5 bg-amber-100 text-amber-800 text-[10px] font-black rounded-full">0 lượt</span>
+            </div>
             <div class="text-2xl font-black text-amber-900 mt-1">770.000 đ</div>
+            <div class="text-xs text-amber-600 font-bold mt-1">Đã thu: <span id="revPkgStandard">0 đ</span></div>
             <p class="text-[11px] text-gray-500 mt-1">30 lượt đẩy tin + 1 tin VIP</p>
-            <span class="mt-2 inline-block px-2 py-0.5 bg-emerald-100 text-emerald-800 text-[10px] font-bold rounded">Phổ biến nhất</span>
           </div>
           <div class="p-4 bg-purple-50/50 rounded-xl border border-purple-100">
-            <span class="text-xs font-bold text-purple-700 uppercase">Hội viên Cao cấp</span>
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold text-purple-700 uppercase">Hội viên Cao cấp</span>
+              <span id="countPkgPremium" class="px-2 py-0.5 bg-purple-100 text-purple-800 text-[10px] font-black rounded-full">0 lượt</span>
+            </div>
             <div class="text-2xl font-black text-purple-900 mt-1">1.170.000 đ</div>
+            <div class="text-xs text-purple-600 font-bold mt-1">Đã thu: <span id="revPkgPremium">0 đ</span></div>
             <p class="text-[11px] text-gray-500 mt-1">50 lượt đẩy tin + 3 tin VIP</p>
-            <span class="mt-2 inline-block px-2 py-0.5 bg-emerald-100 text-emerald-800 text-[10px] font-bold rounded">Ưu tiên cao</span>
           </div>
+        </div>
+      </div>
+
+      <!-- Bảng Lịch sử Giao dịch Thanh toán Gói dịch vụ -->
+      <div class="mb-6 pt-4 border-t border-gray-100">
+        <h3 class="text-xs font-bold text-gray-800 uppercase mb-3 flex items-center gap-1.5">
+          <span class="material-symbols-outlined text-indigo-600 text-sm">receipt_long</span> Lịch sử Giao dịch Thanh toán Gói dịch vụ
+        </h3>
+        <div class="overflow-x-auto rounded-xl border border-gray-100">
+          <table class="w-full text-left text-xs">
+            <thead class="bg-gray-50 text-gray-600 font-bold uppercase text-[11px] border-b">
+              <tr>
+                <th class="py-3 px-4">Mã giao dịch</th>
+                <th class="py-3 px-4">Người thanh toán</th>
+                <th class="py-3 px-4">Gói dịch vụ</th>
+                <th class="py-3 px-4">Số tiền</th>
+                <th class="py-3 px-4">Cổng thanh toán</th>
+                <th class="py-3 px-4">Thời gian</th>
+                <th class="py-3 px-4">Trạng thái</th>
+              </tr>
+            </thead>
+            <tbody id="transactionsTableBody" class="divide-y divide-gray-100">
+              <tr><td colspan="7" class="text-center py-6 text-gray-400">Đang tải lịch sử giao dịch...</td></tr>
+            </tbody>
+          </table>
         </div>
       </div>
 
@@ -322,6 +395,93 @@
             </div>
             <span class="px-2.5 py-1 bg-emerald-50 text-emerald-700 text-[10px] font-bold rounded-lg border border-emerald-200">Đã xuất bản</span>
           </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Phân hệ 6: Biểu đồ xu hướng thị trường & Phân loại BĐS (Xem 100% chi tiết cho Admin) -->
+    <div id="sectionTrends" class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 hidden">
+      <div class="flex items-center justify-between pb-4 border-b border-gray-100 mb-6">
+        <div>
+          <h2 class="text-base font-bold text-gray-900 flex items-center gap-2">
+            <span class="material-symbols-outlined text-amber-600">trending_up</span>
+            Biểu đồ Xu hướng & Cơ cấu Loại hình Bất động sản (Backend Analytics Dashboard)
+          </h2>
+          <p class="text-xs text-gray-500">Xem 100% đầy đủ chi tiết: Loại BĐS đăng nhiều nhất, tỷ lệ thị phần, số tin bán/thuê, tình trạng duyệt và giá trung bình</p>
+        </div>
+        <button onclick="loadAdminMarketTrends()" class="px-3.5 py-1.5 bg-gray-100 hover:bg-gray-200 rounded-xl text-xs font-semibold text-gray-700 flex items-center gap-1">
+          <span class="material-symbols-outlined text-sm">refresh</span> Cập nhật biểu đồ
+        </button>
+      </div>
+
+      <!-- Thẻ tóm tắt chỉ số thị trường -->
+      <div class="grid grid-cols-1 sm:grid-cols-4 gap-4 mb-6">
+        <div class="p-4 bg-gradient-to-br from-indigo-600 to-indigo-800 rounded-2xl text-white shadow-sm">
+          <span class="text-xs font-bold uppercase text-indigo-100">🏆 Loại hình đăng nhiều nhất</span>
+          <div class="text-xl font-black mt-1 flex items-center gap-2">
+            <span id="trendTopIcon" class="text-2xl">🏢</span>
+            <span id="trendTopName" class="truncate">Đang tải...</span>
+          </div>
+          <p class="text-xs text-indigo-100 mt-1" id="trendTopCount">0 tin đăng (0% thị phần)</p>
+        </div>
+
+        <div class="p-4 bg-white rounded-2xl border border-gray-200 shadow-sm">
+          <span class="text-xs font-bold text-gray-500 uppercase">Tổng số tin trên sàn</span>
+          <div class="text-2xl font-black text-gray-900 mt-1" id="trendTotalListings">0</div>
+          <p class="text-[11px] text-gray-400 mt-1" id="trendApprovedPendingRatio">0 đã duyệt • 0 chờ duyệt</p>
+        </div>
+
+        <div class="p-4 bg-white rounded-2xl border border-gray-200 shadow-sm">
+          <span class="text-xs font-bold text-gray-500 uppercase">Cơ cấu Mua bán vs Thuê</span>
+          <div class="text-2xl font-black text-emerald-600 mt-1" id="trendSaleVsRentRatio">0% Bán / 0% Thuê</div>
+          <p class="text-[11px] text-gray-400 mt-1" id="trendSaleRentCount">0 tin bán • 0 tin thuê</p>
+        </div>
+
+        <div class="p-4 bg-white rounded-2xl border border-gray-200 shadow-sm">
+          <span class="text-xs font-bold text-gray-500 uppercase">Tỷ lệ duyệt tin sạch</span>
+          <div class="text-2xl font-black text-blue-600 mt-1" id="trendApprovalRate">0%</div>
+          <p class="text-[11px] text-gray-400 mt-1">Đảm bảo chất lượng tin toàn sàn</p>
+        </div>
+      </div>
+
+      <!-- Khối Biểu đồ Trực quan Thanh % Thị Phần -->
+      <div class="mb-6 p-5 bg-gray-50/70 rounded-2xl border border-gray-200">
+        <h3 class="text-xs font-bold text-gray-700 uppercase mb-4 flex items-center gap-1.5">
+          <span class="material-symbols-outlined text-sm text-indigo-600">bar_chart</span>
+          Biểu đồ tỷ lệ phân bố các loại Bất động sản trên sàn (% Thị phần)
+        </h3>
+        <div id="trendChartBars" class="space-y-4">
+          <div class="text-center py-6 text-gray-400 text-xs">Đang nạp số liệu biểu đồ...</div>
+        </div>
+      </div>
+
+      <!-- Bảng Phân Tích Chi Tiết 100% Cho Admin -->
+      <div>
+        <h3 class="text-xs font-bold text-gray-700 uppercase mb-3 flex items-center gap-1.5">
+          <span class="material-symbols-outlined text-sm text-indigo-600">table_chart</span>
+          Bảng số liệu chi tiết toàn diện (Backend Dashboard Data)
+        </h3>
+        <div class="overflow-x-auto rounded-xl border border-gray-200">
+          <table class="w-full text-xs text-left text-gray-600">
+            <thead class="bg-gray-100 text-gray-800 uppercase font-black text-[11px] border-b">
+              <tr>
+                <th class="py-3 px-4">Loại hình BĐS</th>
+                <th class="py-3 px-3 text-center">Số lượng</th>
+                <th class="py-3 px-3 text-center">Thị phần (%)</th>
+                <th class="py-3 px-3 text-center">Mua bán</th>
+                <th class="py-3 px-3 text-center">Cho thuê</th>
+                <th class="py-3 px-3 text-center">Đã duyệt</th>
+                <th class="py-3 px-3 text-center">Chờ duyệt</th>
+                <th class="py-3 px-4 text-right">Giá TB Bán</th>
+                <th class="py-3 px-4 text-right">Giá TB Thuê</th>
+                <th class="py-3 px-3 text-center">DT Trung bình</th>
+                <th class="py-3 px-4 text-center">Đánh giá xu hướng</th>
+              </tr>
+            </thead>
+            <tbody id="trendDetailTableBody" class="divide-y divide-gray-100 bg-white">
+              <!-- Render dynamically by JS -->
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
@@ -489,12 +649,14 @@
       const btnR = document.getElementById('tabBtnReports');
       const btnU = document.getElementById('tabBtnUsers');
       const btnArt = document.getElementById('tabBtnArticles');
+      const btnT = document.getElementById('tabBtnTrends');
 
       const secP = document.getElementById('sectionPending');
       const secA = document.getElementById('sectionApproved');
       const secR = document.getElementById('sectionReports');
       const secU = document.getElementById('sectionUsers');
       const secArt = document.getElementById('sectionArticles');
+      const secT = document.getElementById('sectionTrends');
 
       const activeClass = 'px-5 py-2.5 rounded-xl font-bold text-xs bg-indigo-600 text-white shadow-sm flex items-center gap-1.5 transition-all';
       const inactiveClass = 'px-5 py-2.5 rounded-xl font-semibold text-xs bg-white text-gray-600 hover:bg-gray-50 border border-gray-200 flex items-center gap-1.5 transition-all';
@@ -504,12 +666,14 @@
       if (btnR) btnR.className = inactiveClass;
       if (btnU) btnU.className = inactiveClass;
       if (btnArt) btnArt.className = inactiveClass;
+      if (btnT) btnT.className = inactiveClass;
 
       if (secP) secP.classList.add('hidden');
       if (secA) secA.classList.add('hidden');
       if (secR) secR.classList.add('hidden');
       if (secU) secU.classList.add('hidden');
       if (secArt) secArt.classList.add('hidden');
+      if (secT) secT.classList.add('hidden');
 
       if (tab === 'pending') {
         if (btnP) btnP.className = activeClass;
@@ -530,6 +694,211 @@
       } else if (tab === 'articles') {
         if (btnArt) btnArt.className = activeClass;
         if (secArt) secArt.classList.remove('hidden');
+        loadAdminRevenue();
+      } else if (tab === 'trends') {
+        if (btnT) btnT.className = activeClass;
+        if (secT) secT.classList.remove('hidden');
+        loadAdminMarketTrends();
+      }
+    }
+
+    // Tải và hiển thị Biểu đồ Xu hướng BĐS chi tiết 100% dành cho Admin
+    async function loadAdminMarketTrends() {
+      try {
+        const res = await fetch('/api/listings/market-trends', {
+          headers: { 'Authorization': 'Bearer ' + token }
+        });
+        if (!res.ok) return;
+        const data = await res.json();
+
+        // 1. Cập nhật các thẻ KPI tóm tắt
+        document.getElementById('trendTopName').textContent = data.topCategory || 'Chưa có dữ liệu';
+        document.getElementById('trendTopIcon').textContent = data.topCategoryIcon || '🏢';
+        document.getElementById('trendTopCount').textContent = `${data.topCategoryCount} tin đăng (${data.topCategoryPercentage}% thị phần)`;
+
+        document.getElementById('trendTotalListings').textContent = data.totalListings;
+        document.getElementById('trendApprovedPendingRatio').textContent = `${data.approvedListings} đã duyệt • ${data.pendingListings} chờ duyệt`;
+
+        const salePct = data.totalListings > 0 ? Math.round((data.totalSale / data.totalListings) * 100) : 0;
+        const rentPct = data.totalListings > 0 ? (100 - salePct) : 0;
+        document.getElementById('trendSaleVsRentRatio').textContent = `${salePct}% Bán / ${rentPct}% Thuê`;
+        document.getElementById('trendSaleRentCount').textContent = `${data.totalSale} tin bán • ${data.totalRent} tin thuê`;
+
+        const approveRate = data.totalListings > 0 ? Math.round((data.approvedListings / data.totalListings) * 100) : 0;
+        document.getElementById('trendApprovalRate').textContent = `${approveRate}%`;
+
+        // 2. Vẽ Biểu đồ thanh % (Chart bars)
+        const chartContainer = document.getElementById('trendChartBars');
+        const colors = [
+          'from-indigo-500 to-indigo-600',
+          'from-emerald-500 to-emerald-600',
+          'from-amber-500 to-amber-600',
+          'from-purple-500 to-purple-600',
+          'from-blue-500 to-blue-600',
+          'from-rose-500 to-rose-600'
+        ];
+
+        if (!data.categories || data.categories.length === 0) {
+          chartContainer.innerHTML = '<p class="text-center py-4 text-gray-400 text-xs">Chưa có dữ liệu bài đăng</p>';
+        } else {
+          chartContainer.innerHTML = data.categories.map((cat, idx) => {
+            const barColor = colors[idx % colors.length];
+            return `
+              <div>
+                <div class="flex items-center justify-between text-xs font-bold text-gray-800 mb-1">
+                  <span class="flex items-center gap-1.5">
+                    <span class="text-base">${cat.icon}</span>
+                    <span>${cat.category}</span>
+                  </span>
+                  <div class="flex items-center gap-3">
+                    <span class="text-[11px] font-normal text-gray-500">
+                      Bán: <b class="text-emerald-700">${cat.saleCount}</b> • Thuê: <b class="text-blue-700">${cat.rentCount}</b> • Đã duyệt: <b class="text-gray-900">${cat.approvedCount}</b>
+                    </span>
+                    <span class="font-black text-indigo-700 px-2 py-0.5 bg-indigo-50 border border-indigo-100 rounded-full text-[11px]">
+                      ${cat.count} tin (${cat.percentage}%)
+                    </span>
+                  </div>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-3.5 overflow-hidden shadow-inner">
+                  <div class="bg-gradient-to-r ${barColor} h-3.5 rounded-full transition-all duration-700 shadow" style="width: ${cat.percentage}%;"></div>
+                </div>
+              </div>
+            `;
+          }).join('');
+        }
+
+        // 3. Đổ bảng số liệu chi tiết 100% (Backend Table)
+        const tableBody = document.getElementById('trendDetailTableBody');
+        if (tableBody && data.categories) {
+          tableBody.innerHTML = data.categories.map(cat => {
+            let evalBadge = '<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-50 text-amber-800 border border-amber-200">💎 Phân khúc tiềm năng</span>';
+            if (cat.percentage >= 30) {
+              evalBadge = '<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-50 text-rose-800 border border-rose-200">🔥 Đăng nhiều nhất (Dẫn đầu)</span>';
+            } else if (cat.percentage >= 15) {
+              evalBadge = '<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-800 border border-emerald-200">⚡ Nguồn cung dồi dào</span>';
+            }
+
+            const salePriceStr = cat.avgPriceSale > 0 
+              ? (cat.avgPriceSale >= 1000000000 ? (cat.avgPriceSale / 1000000000).toLocaleString('vi-VN', { maximumFractionDigits: 1 }) + ' tỷ' : (cat.avgPriceSale / 1000000).toLocaleString('vi-VN') + ' tr')
+              : '—';
+
+            const rentPriceStr = cat.avgPriceRent > 0 
+              ? (cat.avgPriceRent >= 1000000 ? (cat.avgPriceRent / 1000000).toLocaleString('vi-VN', { maximumFractionDigits: 0 }) + ' tr/tháng' : cat.avgPriceRent.toLocaleString('vi-VN') + ' đ')
+              : '—';
+
+            return `
+              <tr class="hover:bg-gray-50/70 transition-colors">
+                <td class="py-3 px-4 font-bold text-gray-900 flex items-center gap-2">
+                  <span class="text-base">${cat.icon}</span>
+                  <span>${cat.category}</span>
+                </td>
+                <td class="py-3 px-3 text-center font-black text-indigo-700">${cat.count}</td>
+                <td class="py-3 px-3 text-center font-black text-gray-800">${cat.percentage}%</td>
+                <td class="py-3 px-3 text-center text-emerald-700 font-bold">${cat.saleCount}</td>
+                <td class="py-3 px-3 text-center text-blue-700 font-bold">${cat.rentCount}</td>
+                <td class="py-3 px-3 text-center text-gray-800">${cat.approvedCount}</td>
+                <td class="py-3 px-3 text-center text-amber-700 font-bold">${cat.pendingCount}</td>
+                <td class="py-3 px-4 text-right font-extrabold text-red-600">${salePriceStr}</td>
+                <td class="py-3 px-4 text-right font-extrabold text-blue-600">${rentPriceStr}</td>
+                <td class="py-3 px-3 text-center text-gray-700">${cat.avgArea > 0 ? cat.avgArea + ' m²' : '—'}</td>
+                <td class="py-3 px-4 text-center">${evalBadge}</td>
+              </tr>
+            `;
+          }).join('');
+        }
+      } catch (err) {
+        console.error('Lỗi nạp số liệu xu hướng thị trường:', err);
+      }
+    }
+
+    async function loadAdminRevenue() {
+      try {
+        const res = await fetch('/api/subscriptions/admin-revenue', {
+          headers: { 'Authorization': 'Bearer ' + token }
+        });
+        if (!res.ok) return;
+        const data = await res.json();
+
+        // 1. Cập nhật thẻ thống kê trên đầu trang
+        const statRevEl = document.getElementById('stat-revenue');
+        if (statRevEl) statRevEl.textContent = (data.totalRevenue || 0).toLocaleString('vi-VN') + ' đ';
+        const statTxEl = document.getElementById('stat-transactions-count');
+        if (statTxEl) statTxEl.textContent = (data.totalTransactions || 0) + ' giao dịch hoàn tất';
+
+        // 2. Cập nhật khối Quản lý Bài viết & Thanh toán
+        const secRevEl = document.getElementById('secRevTotal');
+        if (secRevEl) secRevEl.textContent = (data.totalRevenue || 0).toLocaleString('vi-VN') + ' đ';
+        const secCountEl = document.getElementById('secRevCount');
+        if (secCountEl) secCountEl.textContent = `Đã thu từ ${data.totalTransactions || 0} thành viên đã kích hoạt gói`;
+
+        // 3. Cập nhật chi tiết 3 gói và tự động tính Gói bán nhiều nhất
+        if (data.packages) {
+          const bCount = data.packages.basic?.count || 0;
+          const sCount = data.packages.standard?.count || 0;
+          const pCount = data.packages.premium?.count || 0;
+
+          if (document.getElementById('countPkgBasic')) document.getElementById('countPkgBasic').textContent = bCount + ' lượt';
+          if (document.getElementById('revPkgBasic')) document.getElementById('revPkgBasic').textContent = (data.packages.basic?.revenue || 0).toLocaleString('vi-VN') + ' đ';
+
+          if (document.getElementById('countPkgStandard')) document.getElementById('countPkgStandard').textContent = sCount + ' lượt';
+          if (document.getElementById('revPkgStandard')) document.getElementById('revPkgStandard').textContent = (data.packages.standard?.revenue || 0).toLocaleString('vi-VN') + ' đ';
+
+          if (document.getElementById('countPkgPremium')) document.getElementById('countPkgPremium').textContent = pCount + ' lượt';
+          if (document.getElementById('revPkgPremium')) document.getElementById('revPkgPremium').textContent = (data.packages.premium?.revenue || 0).toLocaleString('vi-VN') + ' đ';
+
+          // Tự động tìm gói có số lượt mua nhiều nhất từ dữ liệu thực
+          const topPkgEl = document.getElementById('topPackageName');
+          const topDescEl = document.getElementById('topPackageDesc');
+          const maxCount = Math.max(bCount, sCount, pCount);
+
+          if (maxCount > 0) {
+            if (pCount === maxCount) {
+              if (topPkgEl) topPkgEl.textContent = 'Hội viên Cao cấp';
+              if (topDescEl) topDescEl.textContent = `${pCount} lượt mua (${(data.packages.premium?.revenue || 0).toLocaleString('vi-VN')} đ)`;
+            } else if (sCount === maxCount) {
+              if (topPkgEl) topPkgEl.textContent = 'Hội viên Tiêu chuẩn';
+              if (topDescEl) topDescEl.textContent = `${sCount} lượt mua (${(data.packages.standard?.revenue || 0).toLocaleString('vi-VN')} đ)`;
+            } else if (bCount === maxCount) {
+              if (topPkgEl) topPkgEl.textContent = 'Hội viên Cơ bản';
+              if (topDescEl) topDescEl.textContent = `${bCount} lượt mua (${(data.packages.basic?.revenue || 0).toLocaleString('vi-VN')} đ)`;
+            }
+          } else {
+            if (topPkgEl) topPkgEl.textContent = 'Chưa có dữ liệu';
+            if (topDescEl) topDescEl.textContent = 'Chưa có gói nào được mua';
+          }
+        }
+
+        // 4. Cập nhật bảng lịch sử giao dịch
+        const tbody = document.getElementById('transactionsTableBody');
+        if (tbody) {
+          if (!data.transactions || data.transactions.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="7" class="text-center py-6 text-gray-400">Chưa có giao dịch thanh toán nào</td></tr>';
+          } else {
+            tbody.innerHTML = data.transactions.map(t => {
+              let badgeColor = 'bg-gray-100 text-gray-700';
+              if (t.packageName.includes('Cao cấp')) badgeColor = 'bg-purple-100 text-purple-700';
+              else if (t.packageName.includes('Tiêu chuẩn')) badgeColor = 'bg-amber-100 text-amber-700';
+              else if (t.packageName.includes('Cơ bản')) badgeColor = 'bg-indigo-100 text-indigo-700';
+
+              return `
+                <tr class="hover:bg-gray-50/60 transition-colors">
+                  <td class="py-3 px-4 font-mono font-bold text-indigo-600">${t.transactionCode}</td>
+                  <td class="py-3 px-4">
+                    <strong class="text-gray-900">${t.userName || 'Thành viên'}</strong>
+                    <div class="text-[11px] text-gray-400">${t.userEmail}</div>
+                  </td>
+                  <td class="py-3 px-4"><span class="px-2 py-0.5 rounded-full font-bold text-[10px] ${badgeColor}">${t.packageName}</span></td>
+                  <td class="py-3 px-4 font-extrabold text-red-600">${(t.amount || 0).toLocaleString('vi-VN')} đ</td>
+                  <td class="py-3 px-4 text-gray-600 font-semibold">${t.paymentMethod}</td>
+                  <td class="py-3 px-4 text-gray-400 text-[11px]">${new Date(t.createdAt).toLocaleString('vi-VN')}</td>
+                  <td class="py-3 px-4"><span class="px-2 py-0.5 rounded bg-emerald-50 text-emerald-700 font-bold text-[10px]">🟢 ${t.status}</span></td>
+                </tr>
+              `;
+            }).join('');
+          }
+        }
+      } catch (err) {
+        console.error('Error loading revenue:', err);
       }
     }
 
@@ -776,6 +1145,7 @@
     loadPendingListings();
     loadApprovedListings();
     loadReports();
+    loadAdminRevenue();
   </script>
   <!-- MODAL TỪ CHỐI TIN ĐĂNG DÀNH CHO ADMIN -->
   <div id="adminRejectModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">

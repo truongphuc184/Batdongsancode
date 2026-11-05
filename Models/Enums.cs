@@ -8,8 +8,8 @@ namespace Batdongsancode.Models
         Tenant = 2,     // Người thuê
         Seller = 4,     // Người bán
         Landlord = 8,   // Người cho thuê
-        Agent = 16,     // Môi giới
-        Broker = 16,    // Tương thích ngược
+        Broker = 16,    // Tương thích ngược dữ liệu cũ
+        Agent = 16,     // Môi giới (Ưu tiên ToString() và serialization)
         Agency = 32,
         Admin = 64      // Quản trị viên
     }

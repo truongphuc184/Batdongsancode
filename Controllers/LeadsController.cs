@@ -32,7 +32,8 @@ public class LeadsController : ControllerBase
 
     public class UpdateLeadStatusDto
     {
-        public LeadStatus Status { get; set; }
+        public string? Status { get; set; }
+        public string? ResponseMessage { get; set; }
     }
 
     // 1. Khách hàng gửi yêu cầu tư vấn / Đặt lịch xem BĐS
@@ -78,15 +79,16 @@ public class LeadsController : ControllerBase
         if (user == null)
             return Unauthorized(new { message = "Không tìm thấy thông tin tài khoản người dùng" });
 
-        bool isAgentOrAdmin = user.Role.HasFlag(Role.Agent) || user.Role.HasFlag(Role.Admin);
+        bool isAdmin = user.Role.HasFlag(Role.Admin);
 
         var query = _context.Leads
             .Include(ld => ld.Listing)
             .AsQueryable();
 
-        // Môi giới (Agent) & Admin: Có quyền tiếp nhận và tư vấn toàn bộ khách hàng quan tâm trên sàn
-        // Người bán (Seller) & Cho thuê (Landlord): Tiếp nhận khách hàng gửi yêu cầu cho chính tin đăng của mình
-        if (!isAgentOrAdmin)
+        // Nghiệp vụ phân quyền tiếp nhận yêu cầu xem nhà:
+        // - Admin (Quản trị viên hệ thống): Có quyền quản lý toàn bộ dữ liệu, xem và kiểm tra tất cả các yêu cầu tư vấn / đặt lịch xem nhà gửi lên.
+        // - Chủ BĐS / Cho thuê / Người bán / Môi giới: Nhận thông tin đăng ký xem nhà của khách hàng đối với bài đăng BĐS do chính mình niêm yết/phụ trách (OwnerId == userId).
+        if (!isAdmin)
         {
             query = query.Where(ld => ld.OwnerId == userId);
         }
@@ -104,6 +106,8 @@ public class LeadsController : ControllerBase
                 ld.CustomerEmail,
                 ld.Notes,
                 Status = ld.Status.ToString(),
+                ld.ResponseMessage,
+                ld.RespondedAt,
                 ld.CreatedAt
             })
             .ToListAsync();
@@ -111,7 +115,57 @@ public class LeadsController : ControllerBase
         return Ok(leads);
     }
 
-    // 3. Cập nhật trạng thái khách hàng (Phân loại: NEW, CONSULTING, VIEWING, NEGOTIATING, DEALT, CANCELED)
+    // 3. Khách hàng (Người mua / Người thuê) xem lịch sử yêu cầu tư vấn & phản hồi từ người bán
+    [Authorize]
+    [HttpGet("my-sent-requests")]
+    public async Task<IActionResult> GetMySentRequests()
+    {
+        var userIdStr = User.FindFirst("sub")?.Value 
+                     ?? User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (string.IsNullOrEmpty(userIdStr) || !int.TryParse(userIdStr, out var userId))
+            return Unauthorized(new { message = "Không xác định được danh tính người dùng" });
+
+        var user = await _context.Users.FindAsync(userId);
+        if (user == null)
+            return Unauthorized(new { message = "Không tìm thấy thông tin tài khoản người dùng" });
+
+        var userEmail = (user.Email ?? string.Empty).Trim().ToLower();
+
+        var requests = await _context.Leads
+            .Include(ld => ld.Listing)
+            .Include(ld => ld.Owner)
+            .Where(ld => ld.CustomerEmail != null && ld.CustomerEmail.ToLower() == userEmail)
+            .OrderByDescending(ld => ld.CreatedAt)
+            .Select(ld => new
+            {
+                ld.Id,
+                ld.ListingId,
+                ListingTitle = ld.Listing != null ? ld.Listing.Title : "Bất động sản #" + ld.ListingId,
+                ListingPrice = ld.Listing != null ? ld.Listing.Price : 0,
+                ListingAddress = ld.Listing != null ? ld.Listing.Address : "",
+                ListingCity = ld.Listing != null ? ld.Listing.City : "",
+                ListingDistrict = ld.Listing != null ? ld.Listing.District : "",
+                ListingType = ld.Listing != null ? ld.Listing.Type.ToString() : "Sale",
+                ListingImage = ld.Listing != null && !string.IsNullOrEmpty(ld.Listing.ImageUrls)
+                    ? ld.Listing.ImageUrls.Split(',', StringSplitOptions.RemoveEmptyEntries).FirstOrDefault() 
+                    : null,
+                OwnerName = ld.Owner != null ? ld.Owner.FullName : "Người đăng tin",
+                OwnerEmail = ld.Owner != null ? ld.Owner.Email : "",
+                ld.CustomerName,
+                ld.CustomerPhone,
+                ld.CustomerEmail,
+                ld.Notes,
+                Status = ld.Status.ToString(),
+                ld.ResponseMessage,
+                ld.RespondedAt,
+                ld.CreatedAt
+            })
+            .ToListAsync();
+
+        return Ok(requests);
+    }
+
+    // 4. Cập nhật trạng thái khách hàng & Gửi phản hồi lại cho khách
     [Authorize]
     [HttpPut("{id}/status")]
     public async Task<IActionResult> UpdateStatus(int id, [FromBody] UpdateLeadStatusDto dto)
@@ -127,14 +181,28 @@ public class LeadsController : ControllerBase
         var lead = await _context.Leads.FindAsync(id);
         if (lead == null) return NotFound(new { message = "Không tìm thấy khách hàng" });
 
-        bool isAgentOrAdmin = user.Role.HasFlag(Role.Agent) || user.Role.HasFlag(Role.Admin);
-        if (lead.OwnerId != userId && !isAgentOrAdmin)
+        bool isAdmin = user.Role.HasFlag(Role.Admin);
+        if (lead.OwnerId != userId && !isAdmin)
             return Forbid();
 
-        lead.Status = dto.Status;
+        if (!string.IsNullOrEmpty(dto.Status) && Enum.TryParse<LeadStatus>(dto.Status, true, out var parsedStatus))
+        {
+            lead.Status = parsedStatus;
+        }
+
+        if (dto.ResponseMessage != null)
+        {
+            lead.ResponseMessage = dto.ResponseMessage.Trim();
+            lead.RespondedAt = DateTime.UtcNow;
+        }
+
         await _context.SaveChangesAsync();
 
-        return Ok(new { message = "Đã cập nhật trạng thái khách hàng thành công!", newStatus = lead.Status.ToString() });
+        return Ok(new { 
+            message = "Đã cập nhật trạng thái và phản hồi khách hàng thành công!", 
+            newStatus = lead.Status.ToString(),
+            responseMessage = lead.ResponseMessage
+        });
     }
 }
 

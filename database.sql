@@ -118,10 +118,20 @@ BEGIN
         CustomerEmail NVARCHAR(100) NULL,
         Notes NVARCHAR(500) NULL,
         Status NVARCHAR(50) NOT NULL DEFAULT 'NEW',
+        ResponseMessage NVARCHAR(500) NULL,
+        RespondedAt DATETIME2 NULL,
         CreatedAt DATETIME2 NOT NULL DEFAULT GETDATE(),
         CONSTRAINT FK_Leads_Listings FOREIGN KEY (ListingId) REFERENCES Listings(Id) ON DELETE NO ACTION,
         CONSTRAINT FK_Leads_Users FOREIGN KEY (OwnerId) REFERENCES Users(Id) ON DELETE NO ACTION
     );
+END
+ELSE
+BEGIN
+    IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('Leads') AND name = 'ResponseMessage')
+        ALTER TABLE Leads ADD ResponseMessage NVARCHAR(500) NULL;
+
+    IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('Leads') AND name = 'RespondedAt')
+        ALTER TABLE Leads ADD RespondedAt DATETIME2 NULL;
 END
 GO
 
@@ -214,27 +224,123 @@ BEGIN
     (N'Cho thuê Shophouse chân đế KĐT Ecopark Văn Giang', 
      N'Vị trí đắc địa ngay mặt đường trục chính Ecopark, dân cư đông đúc, vỉa hè rộng 8m thuận tiện mở cafe, nhà hàng, spa.',
      35000000, 120, 2, 2, N'Khu phố Thủy Nguyên, KĐT Ecopark', N'Hà Nội', N'Gia Lâm', N'Đông Bắc', 'Rent', 'Approved', @AgentId, GETDATE(), GETDATE(),
-     'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=1200&q=80', 67, 0, 1, NULL);
+     'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=1200&q=80', 67, 0, 1, NULL),
+
+    (N'Biệt thự Đảo Ecopark Grand The Island ven hồ sinh thái',
+     N'Tuyệt tác biệt thự ven hồ sinh thái Ecopark Grand. Diện tích 300m2, thiết kế 3 tầng phong cách Châu Âu hiện đại, sân vườn riêng biệt, bể bơi vô cực ngắm hồ. Sổ đỏ lâu dài.',
+     32000000000, 300, 5, 6, N'Khu đô thị Ecopark, Phụng Công', N'Hưng Yên', N'Văn Giang', N'Đông Nam', 'Sale', 'Approved', @SellerId, GETDATE(), GETDATE(),
+     'https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=1200&q=80,https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1200&q=80,https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?auto=format&fit=crop&w=1200&q=80',
+     185, 1, 1, DATEADD(DAY, 5, GETDATE())),
+
+    (N'Căn hộ The Metropole Thủ Thiêm 2PN view trực diện sông Sài Gòn',
+     N'Cần bán căn hộ cao cấp The Metropole Thủ Thiêm phân khu The Opera Residence. Tầng cao view Panorama trực diện sông Sài Gòn và Bitexco, nội thất bàn giao ngoại nhập cao cấp.',
+     11500000000, 85, 2, 2, N'Khu đô thị mới Thủ Thiêm, An Khánh', N'Hồ Chí Minh', N'Thành phố Thủ Đức', N'Tây Nam', 'Sale', 'Approved', @AgentId, GETDATE(), GETDATE(),
+     'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=1200&q=80,https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?auto=format&fit=crop&w=1200&q=80',
+     142, 1, 1, DATEADD(DAY, 4, GETDATE())),
+
+    (N'Nhà phố liền kề Gamuda Gardens Hoàng Mai đầy đủ nội thất gỗ lim',
+     N'Nhà xây 4 tầng chắc chắn, diện tích đất 118m2, mặt tiền 5.5m. Đường trước nhà 13m ô tô tránh thoải mái, tiện ích club house, bể bơi Olympic, trường quốc tế SIS.',
+     18500000000, 118, 4, 5, N'KĐT Gamuda Gardens, Yên Sở', N'Hà Nội', N'Hoàng Mai', N'Nam', 'Sale', 'Approved', @SellerId, GETDATE(), GETDATE(),
+     'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=1200&q=80,https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=1200&q=80',
+     98, 0, 1, NULL),
+
+    (N'Căn hộ Masteri Centre Point Vinhomes Grand Park công viên 36ha',
+     N'Căn 2 phòng ngủ 72m2 tại Masteri Centre Point phân khu compound cao cấp nhất đại đô thị. View trọn đại công viên 36ha và biển hồ cát trắng. Sắp bàn giao nhận nhà ngay.',
+     3850000000, 72, 2, 2, N'Khu đô thị Vinhomes Grand Park, Long Thạnh Mỹ', N'Hồ Chí Minh', N'Thành phố Thủ Đức', N'Đông', 'Sale', 'Approved', @AgentId, GETDATE(), GETDATE(),
+     'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=1200&q=80,https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=1200&q=80',
+     115, 0, 1, NULL),
+
+    (N'Cho thuê Căn hộ Duplex DCapitale Trần Duy Hưng full nội thất Ý',
+     N'Cho thuê căn Duplex thông tầng toà C6 DCapitale Trần Duy Hưng. Thiết kế sang trọng 3 phòng ngủ, kính Low-E full từ sàn tới trần, view hồ công viên Thanh Xuân. Phù hợp chuyên gia nước ngoài.',
+     28000000, 120, 3, 3, N'119 Trần Duy Hưng, Trung Hòa', N'Hà Nội', N'Cầu Giấy', N'Đông Nam', 'Rent', 'Approved', @LandlordId, GETDATE(), GETDATE(),
+     'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=1200&q=80,https://images.unsplash.com/photo-1502005229762-ee1b2da97e06?auto=format&fit=crop&w=1200&q=80',
+     89, 1, 1, DATEADD(DAY, 3, GETDATE())),
+
+    (N'Cho thuê Nhà xưởng / Kho bãi KCN VSIP 1 Thuận An PCCC chuẩn quốc tế',
+     N'Cho thuê nhà xưởng tiêu chuẩn công nghiệp 1.500m2 tại KCN VSIP 1 Bình Dương. Trạm biến áp riêng 400kVA, trần cao 9m, sàn epoxy tải trọng 5 tấn/m2, hệ thống PCCC tự động nghiệm thu đầy đủ.',
+     65000000, 1500, 0, 4, N'Đại lộ Hữu Nghị, KCN VSIP 1, An Phú', N'Bình Dương', N'Thuận An', N'Bắc', 'Rent', 'Approved', @LandlordId, GETDATE(), GETDATE(),
+     'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=1200&q=80,https://images.unsplash.com/photo-1587293852726-70cdb56c2866?auto=format&fit=crop&w=1200&q=80',
+     74, 0, 1, NULL);
+
+    -- 6 TIN CHỜ KIỂM DUYỆT (PENDING) DÀNH CHO ADMIN
+    INSERT INTO Listings (Title, Description, Price, Area, Bedrooms, Bathrooms, Address, City, District, Direction, Type, Status, OwnerId, CreatedAt, UpdatedAt, ImageUrls, ViewCount, IsVip, IsVerified, PriorityTime)
+    VALUES 
+    (N'Bán nhà riêng ngõ 3 tầng phố Thái Hà Đống Đa ngõ thông thoáng',
+     N'Nhà xây khung cột bê tông 3 tầng kiên cố, ngõ 2.5m thông ra Hoàng Cầu, gần các trường đại học lớn. Sổ đỏ vuông vắn cất két sẵn sàng giao dịch.',
+     6200000000, 45, 3, 3, N'Ngõ 117 Thái Hà, Trung Liệt', N'Hà Nội', N'Đống Đa', N'Đông', 'Sale', 'Pending', @SellerId, GETDATE(), GETDATE(),
+     'https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?auto=format&fit=crop&w=1200&q=80,https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1200&q=80',
+     0, 0, 1, NULL),
+
+    (N'Căn hộ góc 3PN Sky Oasis Ecopark tầng trung ngắm trọn vịnh đảo',
+     N'Cần bán căn hộ 3 phòng ngủ 2 WC toà S2 Sky Oasis Ecopark. Ban công Đông Nam mát mẻ quanh năm, view trực diện biệt thự đảo Marina và hồ Thiên Nga.',
+     4100000000, 88, 3, 2, N'KĐT Ecopark, Phụng Công', N'Hưng Yên', N'Văn Giang', N'Đông Nam', 'Sale', 'Pending', @AgentId, GETDATE(), GETDATE(),
+     'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=1200&q=80',
+     0, 0, 1, NULL),
+
+    (N'Bán đất nền dự án KĐT Sinh Thái Hòa Xuân Cẩm Lệ đường 7.5m',
+     N'Lô đất đẹp đường 7.5m vỉa hè mỗi bên 4m, khu dân cư đông đúc trí thức cao. Gần cầu Hòa Xuân, cách siêu thị Metro chỉ 5 phút đi xe.',
+     3450000000, 100, 0, 0, N'Đường Mẹ Thứ, KĐT Nam Hòa Xuân', N'Đà Nẵng', N'Cẩm Lệ', N'Nam', 'Sale', 'Pending', @SellerId, GETDATE(), GETDATE(),
+     'https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1200&q=80',
+     0, 0, 1, NULL),
+
+    (N'Cho thuê Mặt bằng kinh doanh Phố Huế Hai Bà Trưng vị trí đắc địa',
+     N'Mặt tiền 6m vỉa hè rộng 5m để được nhiều xe máy. Phù hợp làm showroom thời trang, nha khoa, văn phòng đại diện hoặc ngân hàng. Hợp đồng dài hạn.',
+     45000000, 90, 1, 2, N'182 Phố Huế, Ngô Thì Nhậm', N'Hà Nội', N'Hai Bà Trưng', N'Tây', 'Rent', 'Pending', @LandlordId, GETDATE(), GETDATE(),
+     'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=1200&q=80',
+     0, 0, 1, NULL),
+
+    (N'Bán căn hộ 1PN+1 Vinhomes Ocean Park Gia Lâm bao phí sang tên',
+     N'Căn hộ 1 phòng ngủ cộng toà S2.05 Vinhomes Ocean Park. Đã có nội thất cơ bản liền tường, ban công Đông Bắc thoáng mát, gần trường học Vinschool.',
+     2150000000, 48, 1, 1, N'KĐT Vinhomes Ocean Park, Đa Tốn', N'Hà Nội', N'Gia Lâm', N'Đông Bắc', 'Sale', 'Pending', @AgentId, GETDATE(), GETDATE(),
+     'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=1200&q=80',
+     0, 0, 1, NULL),
+
+    (N'Cho thuê Căn hộ Officetel Wilton Tower Bình Thạnh đầy đủ tiện ích',
+     N'Cho thuê căn officetel vừa ở vừa làm văn phòng công ty. Diện tích 42m2 có sẵn máy lạnh, rèm cửa, bàn làm việc, bảo vệ 24/7 an ninh tuyệt đối.',
+     13500000, 42, 1, 1, N'71/3 Nguyễn Văn Thương, Phường 25', N'Hồ Chí Minh', N'Bình Thạnh', N'Nam', 'Rent', 'Pending', @LandlordId, GETDATE(), GETDATE(),
+     'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80',
+     0, 0, 1, NULL);
 END
 
--- 7. DỮ LIỆU MẪU CHO LEADS (CRM KHÁCH HÀNG)
-DECLARE @FirstListingId INT = (SELECT TOP 1 Id FROM Listings WHERE Status = 'Approved');
+-- 7. DỮ LIỆU MẪU CHO LEADS (CRM KHÁCH HÀNG & LỊCH XEM NHÀ & PHẢN HỒI)
+DECLARE @FirstListingId INT = (SELECT TOP 1 Id FROM Listings WHERE Status = 'Approved' ORDER BY Id ASC);
+DECLARE @SecondListingId INT = (SELECT TOP 1 Id FROM Listings WHERE Status = 'Approved' ORDER BY Id DESC);
 IF @FirstListingId IS NOT NULL AND NOT EXISTS (SELECT 1 FROM Leads)
 BEGIN
-    INSERT INTO Leads (ListingId, OwnerId, CustomerName, CustomerPhone, CustomerEmail, Notes, Status, CreatedAt)
+    INSERT INTO Leads (ListingId, OwnerId, CustomerName, CustomerPhone, CustomerEmail, Notes, Status, ResponseMessage, RespondedAt, CreatedAt)
     VALUES 
-    (@FirstListingId, @SellerId, N'Trần Minh Quân', '0988123456', 'quan.tran@gmail.com', N'Muốn hẹn xem nhà vào 9h sáng thứ 7 tuần này', 'VIEWING', GETDATE()),
-    (@FirstListingId, @SellerId, N'Hoàng Thu Thảo', '0912888999', 'thao.hoang@yahoo.com', N'Cần hỗ trợ tư vấn thủ tục vay ngân hàng 70%', 'CONSULTING', DATEADD(HOUR, -5, GETDATE())),
-    (@FirstListingId, @AgentId, N'Nguyễn Đức Anh', '0903555777', 'ducanh88@gmail.com', N'Đang đàm phán bớt lộc và hẹn chốt cọc', 'NEGOTIATING', DATEADD(DAY, -1, GETDATE()));
+    -- Dành cho Người bán (OwnerId = @SellerId)
+    (@FirstListingId, @SellerId, N'Nguyễn Văn Hùng', '0912888999', 'hung.nv@gmail.com', N'Tôi muốn hẹn xem thực tế biệt thự đảo Ecopark vào sáng thứ 7 tuần này lúc 9h30, gia đình có xe riêng qua xem.', 'New', NULL, NULL, GETDATE()),
+    (@FirstListingId, @SellerId, N'Trần Đình Trọng', '0977222333', 'trong.tran@vietcombank.com.vn', N'Tư vấn giúp tôi thủ tục vay ngân hàng 50% giá trị căn biệt thự này, gửi sổ đỏ qua Zalo trước giúp tôi.', 'Contacted', NULL, NULL, DATEADD(HOUR, -3, GETDATE())),
+
+    -- Dành cho Chủ nhà cho thuê (OwnerId = @LandlordId)
+    (@SecondListingId, @LandlordId, N'Michael Brown', '0903111222', 'michael.brown@expats-vn.com', N'Hi, I am looking to rent this duplex penthouse for my family for 2 years starting next month. Can we view tomorrow?', 'New', NULL, NULL, DATEADD(HOUR, -6, GETDATE())),
+    (@SecondListingId, @LandlordId, N'Đỗ Kim Ngân', '0988555666', 'kimngan.media@gmail.com', N'Tôi thuê nhà làm văn phòng công ty truyền thông (khoảng 8 người), chủ nhà có xuất hóa đơn VAT được không?', 'Contacted', NULL, NULL, DATEADD(DAY, -1, GETDATE())),
+
+    -- Dành cho Môi giới (OwnerId = @AgentId)
+    (@FirstListingId, @AgentId, N'Phan Thanh Sơn', '0938444555', 'son.pt@novagroup.vn', N'Anh Sơn quan tâm căn Landmark 81 2PN, cần chốt sớm trước tết để làm nội thất đón năm mới.', 'New', NULL, NULL, DATEADD(DAY, -1, GETDATE())),
+    (@SecondListingId, @AgentId, N'Lê Hồng Nhung', '0969888777', 'nhung.lehong@gmail.com', N'Khách muốn đàm phán giá bớt lộc và thương lượng lại phí môi giới sang tên. Hẹn gặp tại sảnh toà nhà.', 'Completed', NULL, NULL, DATEADD(DAY, -2, GETDATE())),
+
+    -- Dành cho Người mua (buyer@batdongsan.vn) đã nhận phản hồi
+    (@FirstListingId, @SellerId, N'Nguyễn Văn Mua', '0988111222', 'buyer@batdongsan.vn', N'Tôi muốn hẹn xem thực tế biệt thự đảo Ecopark vào sáng thứ 7 tuần này lúc 9h30, gia đình có xe riêng qua xem.', 'VIEWING', N'Chào anh/chị, tôi là chủ nhà đã nhận được lịch hẹn. Sáng thứ 7 lúc 9h30 tôi sẽ đón gia đình anh/chị tại sảnh Clubhouse đảo Ecopark nhé!', DATEADD(HOUR, -2, GETDATE()), DATEADD(HOUR, -6, GETDATE())),
+    (@SecondListingId, @AgentId, N'Nguyễn Văn Mua', '0988111222', 'buyer@batdongsan.vn', N'Tư vấn giúp tôi thủ tục vay ngân hàng 50% giá trị căn hộ này và tiến độ thanh toán.', 'CONSULTING', N'Chào anh/chị, chuyên viên môi giới đã gửi bảng tính chi tiết lãi suất ngân hàng và hồ sơ pháp lý qua Zalo/Email cho anh/chị rồi nhé.', DATEADD(HOUR, -3, GETDATE()), DATEADD(HOUR, -8, GETDATE())),
+
+    -- Dành cho Người thuê (tenant@batdongsan.vn) đã nhận phản hồi
+    (@SecondListingId, @LandlordId, N'Vũ Khách Thuê', '0903222333', 'tenant@batdongsan.vn', N'Gia đình tôi muốn thuê dài hạn 2 năm, chiều mai 14h có thể xem nhà được không?', 'VIEWING', N'Chủ nhà đồng ý lịch hẹn lúc 14h chiều mai. Lễ tân tòa nhà sẽ mở thang máy hỗ trợ bạn lên xem trực tiếp nhé.', DATEADD(HOUR, -1, GETDATE()), DATEADD(HOUR, -5, GETDATE())),
+    (@FirstListingId, @LandlordId, N'Vũ Khách Thuê', '0903222333', 'tenant@batdongsan.vn', N'Bên mình thuê làm kho chứa linh kiện điện tử, chủ nhà có xuất hóa đơn VAT không?', 'CONSULTING', N'Xưởng tiêu chuẩn công nghiệp đầy đủ pháp lý, bên mình xuất hóa đơn VAT điện tử hàng tháng và ký hợp đồng công chứng.', DATEADD(HOUR, -2, GETDATE()), DATEADD(HOUR, -7, GETDATE()));
 END
 
--- 8. DỮ LIỆU MẪU CHO REPORTS (BÁO CÁO VI PHẠM)
+-- 8. DỮ LIỆU MẪU CHO REPORTS (BÁO CÁO VI PHẠM DÀNH CHO ADMIN)
 IF @FirstListingId IS NOT NULL AND NOT EXISTS (SELECT 1 FROM Reports)
 BEGIN
     INSERT INTO Reports (ListingId, Reason, Details, ReporterName, ReporterPhone, Status, CreatedAt)
     VALUES 
-    (@FirstListingId, N'Sai giá niêm yết', N'Chủ nhà thông báo mức giá khác khi tôi liên hệ qua điện thoại', N'Phạm Văn Hùng', '0977666555', 'Pending', GETDATE()),
-    (@FirstListingId, N'Tin ảo / Đã bán / Không có thật', N'Căn này môi giới báo đã chốt cọc từ tuần trước', N'Lê Minh Trang', '0933222111', 'Pending', DATEADD(HOUR, -8, GETDATE()));
+    (@FirstListingId, N'Sai lệch giá bán thực tế', N'Tôi có liên hệ người đăng nhưng báo giá thực tế chênh hơn 2 tỷ so với giá niêm yết trên web.', N'Hoàng Tuấn Anh', '0912345678', 'Pending', GETDATE()),
+    (@SecondListingId, N'Hình ảnh không đúng thực tế', N'Hình ảnh đăng là căn góc toà The Landmark nhưng địa chỉ thực tế khi tới xem lại ở toà Park 2.', N'Trịnh Mai Phương', '0987654321', 'Pending', DATEADD(HOUR, -2, GETDATE())),
+    (@FirstListingId, N'Bất động sản đã cho thuê nhưng không gỡ tin', N'Căn hộ đã có khách ký hợp đồng thuê tuần trước nhưng chủ vẫn để tin đăng gây nhầm lẫn.', N'Vũ Quang Huy', '0934567890', 'Pending', DATEADD(HOUR, -5, GETDATE())),
+    (@SecondListingId, N'Địa chỉ bất động sản không chính xác', N'Số nhà trên đường bị ghi sai, thực tế căn nhà nằm sâu trong ngõ hẹp chứ không phải mặt tiền như miêu tả.', N'Lê Thị Bích', '0971239876', 'Pending', DATEADD(DAY, -1, GETDATE())),
+    (@FirstListingId, N'Tin đăng trùng lặp nhiều lần', N'Tin bất động sản này bị người đăng gửi liên tục 3 lần trong ngày hôm qua làm loãng trang tìm kiếm.', N'Phạm Đình Trọng', '0908765432', 'Pending', DATEADD(DAY, -1, GETDATE())),
+    (@SecondListingId, N'Thông tin pháp lý chưa rõ ràng', N'Người bán báo căn hộ đang tranh chấp hợp đồng mua bán với chủ đầu tư chưa giải quyết xong.', N'Đặng Thu Thảo', '0945671234', 'Pending', DATEADD(DAY, -2, GETDATE()));
 END
 GO
 

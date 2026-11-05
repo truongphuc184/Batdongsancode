@@ -177,7 +177,28 @@
       </div>
     </div>
 
-    <!-- KHÁCH HÀNG QUAN TÂM / CRM -->
+    <!-- YÊU CẦU XEM BĐS & PHẢN HỒI (DÀNH CHO NGƯỜI MUA / THUÊ) -->
+    <div id="sentRequestsSection" class="bg-white rounded-2xl shadow-sm mt-4 p-6 hidden border border-emerald-100">
+      <div class="flex items-center justify-between pb-3 border-b mb-4">
+        <div>
+          <h3 class="text-base font-bold text-gray-900 flex items-center gap-2">
+            <span class="material-symbols-outlined text-emerald-600">mark_chat_unread</span>
+            <span id="sentRequestsTitle">Lịch hẹn xem BĐS & Phản hồi</span>
+            <span id="sentRequestsCountBadge" class="ml-1 px-2 py-0.5 bg-emerald-100 text-emerald-800 text-xs font-black rounded-full">0</span>
+          </h3>
+          <p id="sentRequestsSubtitle" class="text-xs text-gray-500 mt-0.5">Theo dõi lịch hẹn xem thực tế và tin nhắn phản hồi trực tiếp từ người bán / người cho thuê</p>
+        </div>
+        <button onclick="loadMySentRequests()" class="px-3 py-1.5 bg-gray-100 hover:bg-gray-200 rounded-xl text-xs font-semibold text-gray-700 flex items-center gap-1">
+          <span class="material-symbols-outlined text-sm">refresh</span> Làm mới
+        </button>
+      </div>
+
+      <div id="sentRequestsList" class="space-y-3">
+        <div class="text-center py-6 text-gray-400 text-xs">Đang tải lịch sử yêu cầu...</div>
+      </div>
+    </div>
+
+    <!-- KHÁCH HÀNG QUAN TÂM / CRM (DÀNH CHO NGƯỜI BÁN / MÔI GIỚI) -->
     <div id="crmSection" class="bg-white rounded-2xl shadow-sm mt-4 p-6 hidden border border-indigo-100">
       <div class="flex items-center justify-between pb-3 border-b mb-4">
         <div>
@@ -195,6 +216,66 @@
 
       <div id="leadsList" class="space-y-3">
         <div class="text-center py-6 text-gray-400 text-xs">Đang tải danh sách khách hàng...</div>
+      </div>
+    </div>
+
+    <!-- THỐNG KÊ THỊ TRƯỜNG & XU HƯỚNG BĐS (DÀNH CHO NGƯỜI BÁN / MÔI GIỚI / CHO THUÊ) -->
+    <div id="marketAnalyticsSection" class="bg-white rounded-2xl shadow-sm mt-4 p-6 hidden border border-emerald-100">
+      <div class="flex items-center justify-between pb-3 border-b mb-4">
+        <div>
+          <h3 class="text-base font-bold text-gray-900 flex items-center gap-2">
+            <span class="material-symbols-outlined text-emerald-600">query_stats</span>
+            Thống kê thị trường & Xu hướng BĐS (Market Analytics)
+          </h3>
+          <p class="text-xs text-gray-500 mt-0.5">Phân tích loại hình BĐS đang sôi động nhất, thị phần & giá tham khảo để tối ưu hóa đăng tin & đẩy tin</p>
+        </div>
+        <button onclick="loadSellerMarketAnalytics()" class="px-3 py-1.5 bg-gray-100 hover:bg-gray-200 rounded-xl text-xs font-semibold text-gray-700 flex items-center gap-1 transition-colors">
+          <span class="material-symbols-outlined text-sm">refresh</span> Làm mới
+        </button>
+      </div>
+
+      <!-- Thẻ tóm tắt xu hướng nhanh cho Người bán / Môi giới -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
+        <div class="p-3.5 bg-gradient-to-br from-emerald-500 to-teal-700 rounded-xl text-white shadow-sm">
+          <span class="text-[11px] font-bold uppercase text-emerald-100 tracking-wider">🔥 Đang được đăng nhiều nhất</span>
+          <div class="text-lg font-black mt-1 flex items-center gap-1.5">
+            <span id="sellerTopIcon" class="text-xl">🏢</span>
+            <span id="sellerTopCategory">Đang tải...</span>
+          </div>
+          <p class="text-[11px] text-emerald-100 mt-1">
+            Chiếm <span id="sellerTopPct" class="font-extrabold text-white">--%</span> (<span id="sellerTopCount" class="font-bold">--</span> tin đang có)
+          </p>
+        </div>
+
+        <div class="p-3.5 bg-gray-50 border border-gray-100 rounded-xl">
+          <span class="text-[11px] font-bold uppercase text-gray-400 tracking-wider">⚖️ Tỷ trọng Bán vs Cho thuê</span>
+          <div class="text-sm font-extrabold text-gray-800 mt-1 flex items-center gap-2">
+            <span class="text-emerald-600" id="sellerRatioSale">Bán: --</span>
+            <span class="text-gray-300">|</span>
+            <span class="text-blue-600" id="sellerRatioRent">Thuê: --</span>
+          </div>
+          <div class="w-full bg-gray-200 h-2 rounded-full overflow-hidden mt-2 flex">
+            <div id="sellerRatioSaleBar" class="bg-emerald-500 h-full" style="width: 50%"></div>
+            <div id="sellerRatioRentBar" class="bg-blue-500 h-full" style="width: 50%"></div>
+          </div>
+        </div>
+
+        <div class="p-3.5 bg-amber-50/70 border border-amber-200/80 rounded-xl">
+          <span class="text-[11px] font-bold uppercase text-amber-700 tracking-wider">💡 Gợi ý chiến lược đăng tin</span>
+          <p id="sellerStrategyTip" class="text-xs text-amber-900 mt-1 leading-relaxed font-medium">
+            Tận dụng gói Hội viên và lượt Đẩy tin vào khung giờ vàng cho loại hình đang dẫn đầu để tăng gấp 3 lần lượt xem.
+          </p>
+        </div>
+      </div>
+
+      <!-- Biểu đồ phân bổ tỷ lệ các loại hình BĐS -->
+      <div>
+        <h4 class="text-xs font-bold uppercase text-gray-500 tracking-wider mb-2.5">
+          Phân bố thị phần & Giá trung bình theo Loại hình BĐS
+        </h4>
+        <div id="sellerTrendBarsList" class="space-y-2.5">
+          <div class="text-center py-4 text-gray-400 text-xs">Đang tải dữ liệu phân tích...</div>
+        </div>
       </div>
     </div>
 
@@ -449,7 +530,7 @@
     function applyProfileRole(uRole) {
       currentUserRole = uRole || '';
       const isAdmin = currentUserRole.includes('Admin');
-      const canPost = !isAdmin && (currentUserRole.includes('Seller') || currentUserRole.includes('Landlord') || currentUserRole.includes('Agent'));
+      const canPost = !isAdmin && (currentUserRole.includes('Seller') || currentUserRole.includes('Landlord') || currentUserRole.includes('Agent') || currentUserRole.includes('Broker'));
 
       const myListingLink = document.getElementById('myListingsMenu');
       const pkgPushBox = document.getElementById('packagePushBox');
@@ -458,6 +539,8 @@
       const upgradeBanner = document.getElementById('buyerUpgradeBanner');
       const sellerActionsBox = document.getElementById('sellerActionsBox');
       const crmBox = document.getElementById('crmSection');
+      const marketAnalyticsBox = document.getElementById('marketAnalyticsSection');
+      const sentReqSec = document.getElementById('sentRequestsSection');
       const adminBtn = document.getElementById('adminPortalBtn');
       const adminCard = document.getElementById('adminCardBox');
       const openRoleModalBtn = document.getElementById('openSwitchRoleBtn');
@@ -473,6 +556,8 @@
         if (upgradeBanner) upgradeBanner.classList.add('hidden');
         if (sellerActionsBox) sellerActionsBox.classList.add('hidden');
         if (crmBox) crmBox.classList.add('hidden');
+        if (marketAnalyticsBox) marketAnalyticsBox.classList.add('hidden');
+        if (sentReqSec) sentReqSec.classList.add('hidden');
         if (adminBtn) adminBtn.classList.remove('hidden');
         if (adminCard) adminCard.classList.remove('hidden');
         if (openRoleModalBtn) openRoleModalBtn.classList.add('hidden');
@@ -484,7 +569,21 @@
       if (openRoleModalBtn) openRoleModalBtn.classList.remove('hidden');
 
       if (!canPost) {
-        // Chỉ có vai trò Người mua/thuê: Ẩn đăng tin, hiển thị Banner đổi vai trò
+        // Chỉ có vai trò Người mua / Người thuê: 
+        // Linh hoạt tiêu đề: Khách thuê -> "từ Người cho thuê"; Người mua -> "từ Người bán"
+        const sentTitleEl = document.getElementById('sentRequestsTitle');
+        const sentSubEl = document.getElementById('sentRequestsSubtitle');
+        if (currentUserRole.includes('Tenant') && !currentUserRole.includes('Buyer')) {
+          if (sentTitleEl) sentTitleEl.textContent = 'Yêu cầu xem & Phản hồi từ Người cho thuê';
+          if (sentSubEl) sentSubEl.textContent = 'Theo dõi lịch hẹn xem phòng/nhà và tin nhắn phản hồi trực tiếp từ người cho thuê / môi giới';
+        } else if (currentUserRole.includes('Buyer') && !currentUserRole.includes('Tenant')) {
+          if (sentTitleEl) sentTitleEl.textContent = 'Yêu cầu xem nhà & Phản hồi từ Người bán';
+          if (sentSubEl) sentSubEl.textContent = 'Theo dõi lịch hẹn xem thực tế và tin nhắn phản hồi trực tiếp từ người bán / môi giới';
+        } else {
+          if (sentTitleEl) sentTitleEl.textContent = 'Lịch hẹn xem BĐS & Phản hồi từ Chủ nhà / Môi giới';
+          if (sentSubEl) sentSubEl.textContent = 'Theo dõi lịch hẹn xem thực tế và phản hồi từ người bán hoặc bên cho thuê';
+        }
+
         if (myListingLink) myListingLink.classList.add('hidden');
         const mySec = document.getElementById('myListingsSection');
         if (mySec) mySec.classList.add('hidden');
@@ -494,8 +593,12 @@
         if (upgradeBanner) upgradeBanner.classList.remove('hidden');
         if (sellerActionsBox) sellerActionsBox.classList.add('hidden');
         if (crmBox) crmBox.classList.add('hidden');
+        if (marketAnalyticsBox) marketAnalyticsBox.classList.add('hidden');
+        if (sentReqSec) sentReqSec.classList.remove('hidden');
+        loadMySentRequests();
       } else {
-        // Có vai trò Bán / Cho thuê / Môi giới: Hiển thị đầy đủ công cụ
+        // Có vai trò Bán / Cho thuê / Môi giới: 
+        // Hiển thị CRM khách hàng & Thống kê thị trường; Ẩn hộp "Yêu cầu gửi đi"
         if (myListingLink) myListingLink.classList.remove('hidden');
         if (pkgPushBox) pkgPushBox.classList.remove('hidden');
         if (upgradeBtn) upgradeBtn.classList.remove('hidden');
@@ -505,7 +608,7 @@
           sellerActionsBox.classList.remove('hidden');
           const titleEl = document.getElementById('sellerDashboardTitle');
           const descEl = document.getElementById('sellerDashboardDesc');
-          if (currentUserRole.includes('Agent')) {
+          if (currentUserRole.includes('Agent') || currentUserRole.includes('Broker')) {
             if (titleEl) titleEl.textContent = 'Bảng điều khiển Môi giới chuyên nghiệp (Agent)';
             if (descEl) descEl.textContent = 'Bạn có quyền đăng cả tin bán & cho thuê, quản lý nhiều BĐS và phân hệ CRM.';
           } else if (currentUserRole.includes('Landlord') && !currentUserRole.includes('Seller')) {
@@ -520,6 +623,11 @@
           crmBox.classList.remove('hidden');
           loadMyLeads();
         }
+        if (marketAnalyticsBox) {
+          marketAnalyticsBox.classList.remove('hidden');
+          loadSellerMarketAnalytics();
+        }
+        if (sentReqSec) sentReqSec.classList.add('hidden');
         loadSubscriptionStatus();
         loadMyProfileListings();
       }
@@ -872,10 +980,7 @@
             <div class="text-center py-6 text-gray-400 text-xs">
               <span class="text-3xl block mb-1">🏠</span>
               <p class="font-bold text-gray-700">Bạn chưa đăng tin bất động sản nào</p>
-              <p class="text-gray-400 mt-0.5">Bắt đầu đăng tin bán hoặc cho thuê nhà đất để tiếp cận khách hàng tiềm năng.</p>
-              <a href="home_property_search.html?action=create" class="inline-block mt-3 px-4 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold text-xs shadow-sm transition-all">
-                + Đăng tin mới ngay
-              </a>
+              <p class="text-gray-400 mt-0.5">Sử dụng nút "Đăng tin mới ngay" ở khung bên trên để tạo tin đăng mới.</p>
             </div>
           `;
           return;
@@ -946,13 +1051,13 @@
           let pushButtonHtml = '';
           if (l.status === 'Rejected') {
             pushButtonHtml = `
-              <button disabled class="px-2.5 py-1.5 bg-gray-200 text-gray-400 rounded-lg text-xs font-bold cursor-not-allowed flex items-center gap-1 opacity-70" title="Tin bị từ chối kiểm duyệt, không thể đẩy tin">
-                <span class="material-symbols-outlined text-xs">block</span> Không thể đẩy
+              <button disabled class="px-2.5 py-1.5 bg-gray-200 text-gray-400 rounded-lg text-xs font-bold cursor-not-allowed flex items-center gap-1 opacity-50 pointer-events-none select-none" title="Tin bị từ chối kiểm duyệt, đã bị khóa chức năng đẩy tin">
+                <span class="material-symbols-outlined text-xs">block</span> 🚫 Đã chặn đẩy
               </button>
             `;
           } else if (l.status === 'Pending') {
             pushButtonHtml = `
-              <button disabled class="px-2.5 py-1.5 bg-amber-50 text-amber-500 rounded-lg text-xs font-bold cursor-not-allowed flex items-center gap-1 opacity-80" title="Tin đang chờ duyệt, chưa thể đẩy">
+              <button disabled class="px-2.5 py-1.5 bg-amber-50 text-amber-500 rounded-lg text-xs font-bold cursor-not-allowed flex items-center gap-1 opacity-75 pointer-events-none select-none" title="Tin đang chờ kiểm duyệt">
                 <span class="material-symbols-outlined text-xs">hourglass_empty</span> Chờ duyệt
               </button>
             `;
@@ -1087,7 +1192,7 @@
       }
     }
 
-    // CRM: Tải danh sách khách hàng liên hệ
+    // CRM: Tải danh sách khách hàng liên hệ (Dành cho Người bán / Môi giới)
     async function loadMyLeads() {
       const container = document.getElementById('leadsList');
       const badge = document.getElementById('leadsCountBadge');
@@ -1113,8 +1218,8 @@
         container.innerHTML = data.map(ld => {
           return `
             <div class="p-4 rounded-xl border border-gray-200 bg-gray-50/50 hover:bg-white hover:border-indigo-300 transition-all">
-              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                <div>
+              <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
+                <div class="flex-1">
                   <div class="flex items-center gap-2">
                     <strong class="text-sm font-bold text-gray-900">${ld.customerName}</strong>
                     <a href="tel:${ld.customerPhone}" class="inline-flex items-center gap-1 text-xs font-black text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded hover:bg-indigo-100">
@@ -1125,21 +1230,39 @@
                     Quan tâm tin: <strong class="text-gray-800">${ld.listingTitle}</strong>
                   </p>
                   ${ld.customerEmail ? `<p class="text-[11px] text-gray-400">Email: ${ld.customerEmail}</p>` : ''}
-                  ${ld.notes ? `<p class="text-xs text-gray-700 mt-1.5 bg-white p-2 rounded border">💬 Lời nhắn: "${ld.notes}"</p>` : ''}
+                  ${ld.notes ? `<p class="text-xs text-gray-700 mt-1.5 bg-white p-2.5 rounded-lg border">💬 Lời nhắn của khách: "${ld.notes}"</p>` : ''}
+
+                  <!-- Phản hồi đã gửi cho khách -->
+                  ${ld.responseMessage ? `
+                    <div class="mt-2.5 p-2.5 bg-indigo-50/90 border border-indigo-200 rounded-lg text-xs text-indigo-900">
+                      <div class="font-bold flex items-center gap-1 text-[11px] text-indigo-700">
+                        <span class="material-symbols-outlined text-sm">outgoing_mail</span> Phản hồi bạn đã gửi cho khách:
+                      </div>
+                      <p class="mt-0.5 bg-white p-2 rounded border border-indigo-100 font-medium">"${ld.responseMessage}"</p>
+                      ${ld.respondedAt ? `<span class="text-[10px] text-gray-400 block mt-1 text-right">Lúc: ${new Date(ld.respondedAt).toLocaleString('vi-VN')}</span>` : ''}
+                    </div>
+                  ` : ''}
                 </div>
 
-                <!-- Phân loại trạng thái khách hàng -->
-                <div class="flex items-center gap-1.5 shrink-0">
-                  <span class="text-[11px] text-gray-400">Trạng thái:</span>
-                  <select onchange="updateLeadStatus(${ld.id}, this.value)" 
-                    class="px-2.5 py-1.5 bg-white border border-gray-300 rounded-lg text-xs font-bold outline-none cursor-pointer">
-                    <option value="NEW" ${ld.status === 'NEW' ? 'selected' : ''}>🟡 Mới tiếp nhận</option>
-                    <option value="CONSULTING" ${ld.status === 'CONSULTING' ? 'selected' : ''}>🔵 Đang tư vấn</option>
-                    <option value="VIEWING" ${ld.status === 'VIEWING' ? 'selected' : ''}>🟣 Hẹn xem nhà</option>
-                    <option value="NEGOTIATING" ${ld.status === 'NEGOTIATING' ? 'selected' : ''}>🟠 Đang đàm phán</option>
-                    <option value="DEALT" ${ld.status === 'DEALT' ? 'selected' : ''}>🟢 Đã chốt cọc</option>
-                    <option value="CANCELED" ${ld.status === 'CANCELED' ? 'selected' : ''}>⚪ Đã hủy</option>
-                  </select>
+                <!-- Phân loại trạng thái & Nút phản hồi -->
+                <div class="flex flex-col items-end gap-2 shrink-0">
+                  <div class="flex items-center gap-1.5">
+                    <span class="text-[11px] text-gray-400">Trạng thái:</span>
+                    <select onchange="updateLeadStatus(${ld.id}, this.value)" 
+                      class="px-2.5 py-1.5 bg-white border border-gray-300 rounded-lg text-xs font-bold outline-none cursor-pointer">
+                      <option value="NEW" ${ld.status === 'NEW' ? 'selected' : ''}>🟡 Mới tiếp nhận</option>
+                      <option value="CONSULTING" ${ld.status === 'CONSULTING' ? 'selected' : ''}>🔵 Đang tư vấn</option>
+                      <option value="VIEWING" ${ld.status === 'VIEWING' ? 'selected' : ''}>🟣 Hẹn xem nhà</option>
+                      <option value="NEGOTIATING" ${ld.status === 'NEGOTIATING' ? 'selected' : ''}>🟠 Đang đàm phán</option>
+                      <option value="DEALT" ${ld.status === 'DEALT' ? 'selected' : ''}>🟢 Đã chốt cọc</option>
+                      <option value="CANCELED" ${ld.status === 'CANCELED' ? 'selected' : ''}>⚪ Đã hủy</option>
+                    </select>
+                  </div>
+                  <button onclick="replyLead(${ld.id}, '${ld.status}', '${encodeURIComponent(ld.responseMessage || '')}')" 
+                    class="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-bold shadow-sm transition flex items-center gap-1">
+                    <span class="material-symbols-outlined text-sm">reply</span>
+                    ${ld.responseMessage ? 'Sửa phản hồi' : 'Gửi phản hồi'}
+                  </button>
                 </div>
               </div>
               <div class="text-[11px] text-gray-400 mt-2 text-right">
@@ -1164,6 +1287,223 @@
         alert(data.message || 'Đã cập nhật trạng thái khách hàng!');
       } catch {
         alert('Lỗi cập nhật trạng thái');
+      }
+    }
+
+    async function replyLead(id, currentStatus, currentEncodedMsg) {
+      const oldMsg = decodeURIComponent(currentEncodedMsg || '');
+      const reply = prompt('Nhập tin nhắn phản hồi gửi tới người mua / người thuê:\n(Ví dụ: Đã xác nhận lịch hẹn xem nhà 9h30 sáng thứ 7 này...)', oldMsg);
+      if (reply === null) return; // Bấm Cancel
+
+      try {
+        const res = await fetch('/api/leads/' + id + '/status', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+          body: JSON.stringify({ status: currentStatus, responseMessage: reply })
+        });
+        const data = await res.json();
+        alert(data.message || 'Đã gửi phản hồi thành công!');
+        loadMyLeads();
+      } catch {
+        alert('Lỗi khi gửi phản hồi');
+      }
+    }
+
+    // THỐNG KÊ THỊ TRƯỜNG & PHÂN LOẠI BĐS (Dành cho Người bán / Cho thuê / Môi giới)
+    async function loadSellerMarketAnalytics() {
+      try {
+        const res = await fetch('/api/listings/market-trends', {
+          headers: { 'Authorization': 'Bearer ' + token }
+        });
+        if (!res.ok) return;
+        const data = await res.json();
+
+        // 1. Thẻ Top Category
+        const topCatEl = document.getElementById('sellerTopCategory');
+        const topIconEl = document.getElementById('sellerTopIcon');
+        const topPctEl = document.getElementById('sellerTopPct');
+        const topCountEl = document.getElementById('sellerTopCount');
+        if (topCatEl) topCatEl.textContent = data.topCategory || 'Chưa có';
+        if (topIconEl) topIconEl.textContent = data.topCategoryIcon || '🏢';
+        if (topPctEl) topPctEl.textContent = (data.topCategoryPercentage || 0) + '%';
+        if (topCountEl) topCountEl.textContent = data.topCategoryCount || 0;
+
+        // 2. Tỷ lệ Bán vs Thuê
+        const ratioSaleEl = document.getElementById('sellerRatioSale');
+        const ratioRentEl = document.getElementById('sellerRatioRent');
+        const ratioSaleBar = document.getElementById('sellerRatioSaleBar');
+        const ratioRentBar = document.getElementById('sellerRatioRentBar');
+        const totalSr = (data.totalSale || 0) + (data.totalRent || 0);
+        const salePct = totalSr > 0 ? Math.round((data.totalSale / totalSr) * 100) : 50;
+        const rentPct = 100 - salePct;
+        if (ratioSaleEl) ratioSaleEl.textContent = `Bán: ${data.totalSale} (${salePct}%)`;
+        if (ratioRentEl) ratioRentEl.textContent = `Thuê: ${data.totalRent} (${rentPct}%)`;
+        if (ratioSaleBar) ratioSaleBar.style.width = salePct + '%';
+        if (ratioRentBar) ratioRentBar.style.width = rentPct + '%';
+
+        // 3. Gợi ý chiến lược đăng tin cho người bán / môi giới
+        const tipEl = document.getElementById('sellerStrategyTip');
+        if (tipEl && data.topCategory) {
+          tipEl.innerHTML = `Phân khúc <strong>${data.topCategory}</strong> đang dẫn đầu thị trường (${data.topCategoryPercentage}%). Hãy dùng lượt Đẩy tin để đưa tin của bạn lên đầu tìm kiếm và thu hút khách nhanh nhất!`;
+        }
+
+        // 4. Danh sách các thanh tỷ lệ theo từng loại hình BĐS
+        const listEl = document.getElementById('sellerTrendBarsList');
+        if (!listEl) return;
+        if (!data.categories || data.categories.length === 0) {
+          listEl.innerHTML = '<div class="text-xs text-gray-400 py-3 text-center">Chưa có dữ liệu thống kê.</div>';
+          return;
+        }
+
+        const colorGradients = [
+          'from-indigo-500 to-indigo-600',
+          'from-emerald-500 to-emerald-600',
+          'from-amber-500 to-amber-600',
+          'from-purple-500 to-purple-600',
+          'from-cyan-500 to-cyan-600',
+          'from-rose-500 to-rose-600'
+        ];
+
+        listEl.innerHTML = data.categories.map((c, idx) => {
+          const grad = colorGradients[idx % colorGradients.length];
+          const formatSalePrice = c.avgPriceSale > 0
+            ? (c.avgPriceSale >= 1000000000 ? (c.avgPriceSale / 1000000000).toLocaleString('vi-VN', { maximumFractionDigits: 1 }) + ' tỷ' : (c.avgPriceSale / 1000000).toLocaleString('vi-VN', { maximumFractionDigits: 0 }) + ' tr')
+            : 'Chưa có';
+          const formatRentPrice = c.avgPriceRent > 0
+            ? (c.avgPriceRent / 1000000).toLocaleString('vi-VN', { maximumFractionDigits: 1 }) + ' tr/tháng'
+            : 'Chưa có';
+
+          return `
+            <div class="p-3 rounded-xl bg-gray-50/70 hover:bg-gray-50 border border-gray-100 transition-all">
+              <div class="flex items-center justify-between text-xs mb-1.5">
+                <span class="font-bold text-gray-900 flex items-center gap-1.5">
+                  <span>${c.icon}</span> ${c.category}
+                  <span class="text-[11px] font-semibold text-gray-400">(${c.count} tin • Bán: ${c.saleCount} | Thuê: ${c.rentCount})</span>
+                </span>
+                <span class="font-black text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded-full text-[11px]">
+                  ${c.percentage}% thị phần
+                </span>
+              </div>
+              <div class="w-full bg-gray-200 rounded-full h-2 overflow-hidden mb-1.5">
+                <div class="bg-gradient-to-r ${grad} h-full rounded-full transition-all duration-500" style="width: ${Math.max(c.percentage, 4)}%"></div>
+              </div>
+              <div class="flex items-center justify-between text-[11px] text-gray-500 pt-1 border-t border-gray-100">
+                <span>Giá TB bán: <strong class="text-red-600 font-semibold">${formatSalePrice}</strong> • Giá TB thuê: <strong class="text-blue-600 font-semibold">${formatRentPrice}</strong></span>
+                ${c.avgArea > 0 ? `<span>DT trung bình: <strong class="text-gray-700">${c.avgArea} m²</strong></span>` : ''}
+              </div>
+            </div>
+          `;
+        }).join('');
+      } catch (err) {
+        console.error('Error loading market analytics:', err);
+      }
+    }
+
+    // YÊU CẦU XEM NHÀ CỦA TÔI (Dành cho Người mua / Người thuê & mọi người dùng)
+    async function loadMySentRequests() {
+      const container = document.getElementById('sentRequestsList');
+      const badge = document.getElementById('sentRequestsCountBadge');
+      if (!container) return;
+
+      try {
+        const res = await fetch('/api/leads/my-sent-requests', {
+          headers: { 'Authorization': 'Bearer ' + token }
+        });
+        if (!res.ok) {
+          container.innerHTML = '<p class="text-gray-400 text-xs text-center py-4">Chưa có yêu cầu nào.</p>';
+          return;
+        }
+        const data = await res.json();
+        const count = Array.isArray(data) ? data.length : 0;
+        if (badge) badge.textContent = count;
+
+        if (!data || data.length === 0) {
+          container.innerHTML = `
+            <div class="text-center py-8 text-gray-400">
+              <span class="text-3xl block mb-1">📬</span>
+              <p class="font-bold text-gray-700">Bạn chưa gửi yêu cầu tư vấn / xem nhà nào</p>
+              <p class="text-xs text-gray-400 mt-0.5">Khi bạn vào xem chi tiết bất động sản và nhấn "Gửi thông tin tư vấn", lịch hẹn và phản hồi của người bán sẽ hiển thị ở đây.</p>
+              <a href="home_property_search.html" class="inline-block mt-3 px-4 py-2 bg-indigo-600 text-white rounded-xl text-xs font-bold shadow hover:bg-indigo-700 transition">
+                🔍 Khám phá bất động sản ngay
+              </a>
+            </div>
+          `;
+          return;
+        }
+
+        const statusMap = {
+          'NEW': { label: '🟡 Chờ người bán phản hồi', bg: 'bg-amber-50 text-amber-800 border-amber-200' },
+          'CONSULTING': { label: '🔵 Đang được tư vấn', bg: 'bg-blue-50 text-blue-800 border-blue-200' },
+          'VIEWING': { label: '🟣 Đã xếp lịch hẹn xem nhà', bg: 'bg-purple-50 text-purple-800 border-purple-200' },
+          'NEGOTIATING': { label: '🟠 Đang thương lượng', bg: 'bg-orange-50 text-orange-800 border-orange-200' },
+          'DEALT': { label: '🟢 Đã chốt giao dịch', bg: 'bg-emerald-50 text-emerald-800 border-emerald-200' },
+          'CANCELED': { label: '⚪ Đã hủy', bg: 'bg-gray-100 text-gray-600 border-gray-200' }
+        };
+
+        container.innerHTML = data.map(req => {
+          const st = statusMap[req.status] || { label: req.status, bg: 'bg-gray-100 text-gray-800 border-gray-200' };
+          const formattedPrice = req.listingPrice >= 1000000000 
+            ? (req.listingPrice / 1000000000).toLocaleString('vi-VN', { maximumFractionDigits: 2 }) + ' tỷ'
+            : (req.listingPrice / 1000000).toLocaleString('vi-VN', { maximumFractionDigits: 0 }) + ' triệu' + (req.listingType === 'Rent' ? '/tháng' : '');
+
+          const isRental = req.listingType === 'Rent';
+          const partnerRoleName = isRental ? 'Người cho thuê' : 'Người bán';
+
+          return `
+            <div class="p-4 rounded-2xl border border-gray-200 bg-white hover:border-emerald-300 hover:shadow-sm transition-all">
+              <div class="flex flex-col sm:flex-row gap-4 items-start">
+                ${req.listingImage ? `
+                <img src="${req.listingImage}" alt="${req.listingTitle}" class="w-full sm:w-28 h-24 object-cover rounded-xl border border-gray-100 shrink-0"/>
+                ` : `
+                <div class="w-full sm:w-28 h-24 bg-gray-100 rounded-xl flex items-center justify-center text-3xl shrink-0">🏠</div>
+                `}
+                <div class="flex-1 w-full">
+                  <div class="flex items-start justify-between gap-2">
+                    <div>
+                      <a href="property_detail.html?id=${req.listingId}" class="text-sm font-bold text-gray-900 hover:text-indigo-600 line-clamp-1">
+                        ${req.listingTitle}
+                      </a>
+                      <p class="text-xs text-red-600 font-black mt-0.5">${formattedPrice} ${req.listingAddress ? '• <span class="text-gray-500 font-normal">' + req.listingAddress + '</span>' : ''}</p>
+                    </div>
+                    <span class="px-2.5 py-1 rounded-full text-[11px] font-bold border shrink-0 ${st.bg}">
+                      ${st.label}
+                    </span>
+                  </div>
+
+                  <div class="mt-2.5 bg-gray-50 p-2.5 rounded-xl border border-gray-100 text-xs">
+                    <p class="text-gray-700"><span class="font-bold text-gray-900">👤 ${partnerRoleName}:</span> ${req.ownerName} ${req.ownerEmail ? '(' + req.ownerEmail + ')' : ''}</p>
+                    <p class="text-gray-600 mt-1"><span class="font-bold text-gray-900">💬 Lời nhắn của bạn:</span> "${req.notes || (isRental ? 'Đăng ký hẹn xem phòng/nhà' : 'Đăng ký tư vấn và xem nhà')}"</p>
+                  </div>
+
+                  <!-- Khung hiển thị Tin nhắn phản hồi từ Người bán / Người cho thuê -->
+                  <div class="mt-3">
+                    ${req.responseMessage ? `
+                      <div class="p-3 bg-emerald-50/90 border border-emerald-200 rounded-xl">
+                        <div class="flex items-center gap-1.5 text-emerald-900 font-black text-xs">
+                          <span class="material-symbols-outlined text-sm text-emerald-600">outgoing_mail</span>
+                          Phản hồi từ ${partnerRoleName} (${req.ownerName}):
+                        </div>
+                        <p class="text-xs text-emerald-950 font-medium mt-1 leading-relaxed bg-white p-2.5 rounded-lg border border-emerald-100">
+                          "${req.responseMessage}"
+                        </p>
+                        ${req.respondedAt ? `<p class="text-[10px] text-emerald-700/80 mt-1 text-right">Đã gửi lúc: ${new Date(req.respondedAt).toLocaleString('vi-VN')}</p>` : ''}
+                      </div>
+                    ` : `
+                      <div class="p-2.5 bg-amber-50/70 border border-amber-200/70 rounded-xl flex items-center gap-2 text-xs text-amber-800">
+                        <span class="material-symbols-outlined text-base text-amber-600">hourglass_top</span>
+                        <span>Đang chờ ${partnerRoleName.toLowerCase()} phản hồi lại qua hệ thống hoặc gọi điện thoại cho bạn.</span>
+                      </div>
+                    `}
+                  </div>
+
+                  <p class="text-[10px] text-gray-400 mt-2 text-right">Ngày gửi yêu cầu: ${new Date(req.createdAt).toLocaleString('vi-VN')}</p>
+                </div>
+              </div>
+            </div>
+          `;
+        }).join('');
+      } catch (err) {
+        container.innerHTML = '<p class="text-red-500 text-xs text-center py-4">Lỗi tải lịch sử yêu cầu</p>';
       }
     }
 

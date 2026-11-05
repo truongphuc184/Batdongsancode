@@ -308,7 +308,7 @@
       })
       .then(u => {
         const role = u.role || '';
-        const canPost = role.includes('Seller') || role.includes('Landlord') || role.includes('Agent');
+        const canPost = role.includes('Seller') || role.includes('Landlord') || role.includes('Agent') || role.includes('Broker');
         if (!canPost) {
           alert('⚠️ Gói dịch vụ hội viên chỉ dành cho các tài khoản có quyền đăng tin (Người bán, Cho thuê, Môi giới). Tài khoản Người mua, Người thuê hoặc Quản trị viên không có quyền truy cập trang này!');
           window.location.href = 'home_property_search.html';
