@@ -42,7 +42,7 @@ public class ListingsController : ControllerBase
         return Ok(listings.Select(l => MapToListingDto(l)));
     }
 
-    // 2. Tìm kiếm BĐS nâng cao & Sắp xếp (Theo Sơ đồ Use Case: Tìm kiếm & Tra cứu + Ad3)
+    // 2. Tìm kiếm BĐS nâng cao & Sắp xếp
     [HttpGet("search")]
     public async Task<IActionResult> Search(
         [FromQuery] string? keyword,
@@ -125,7 +125,7 @@ public class ListingsController : ControllerBase
             query = query.Where(l => l.Title.ToLower().Contains(proj) || l.Description.ToLower().Contains(proj) || l.Address.ToLower().Contains(proj));
         }
 
-        // Sắp xếp kết quả tìm kiếm (Use Case: Sắp xếp kết quả tìm kiếm)
+        // Sắp xếp kết quả tìm kiếm
         query = (sortBy?.ToLower()) switch
         {
             "price_asc" => query.OrderBy(l => l.Price),
@@ -141,7 +141,7 @@ public class ListingsController : ControllerBase
         return Ok(results.Select(l => MapToListingDto(l)));
     }
 
-    // 3. Xem chi tiết BĐS + Tăng lượt xem (Sequence Diagram 2: view_count = view_count + 1)
+    // 3. Xem chi tiết BĐS + Tăng lượt xem (view_count = view_count + 1)
     [HttpGet("{id}")]
     public async Task<IActionResult> GetById(int id)
     {
@@ -200,7 +200,7 @@ public class ListingsController : ControllerBase
         return Ok(listings.Select(l => MapToListingDto(l)));
     }
 
-    // 5. [ADMIN] Lấy danh sách tin chờ duyệt (Sequence Diagram 1)
+    // 5. [ADMIN] Lấy danh sách tin chờ duyệt
     [HttpGet("pending")]
     [Authorize]
     public async Task<IActionResult> GetPendingListings()
@@ -218,7 +218,7 @@ public class ListingsController : ControllerBase
         return Ok(listings.Select(l => MapToListingDto(l)));
     }
 
-    // 6. [ADMIN] Duyệt tin đăng (Sequence Diagram 1: status = 'Approved')
+    // 6. [ADMIN] Duyệt tin đăng (status = 'Approved')
     [HttpPut("{id}/approve")]
     [Authorize]
     public async Task<IActionResult> ApproveListing(int id)
@@ -237,10 +237,10 @@ public class ListingsController : ControllerBase
         return Ok(new { message = "Đã duyệt tin đăng thành công. Tin hiện đã được công khai!" });
     }
 
-    // 7. [ADMIN] Từ chối tin đăng kèm lý do (Sequence Diagram 1: status = 'Rejected')
+    // 7. [ADMIN] Từ chối tin đăng kèm lý do (status = 'Rejected')
     [HttpPut("{id}/reject")]
     [Authorize]
-    public async Task<IActionResult> RejectListing(int id, [FromBody] RejectRequest req)
+    public async Task<IActionResult> RejectListing(int id, [FromBody] RejectRequest? req)
     {
         var role = User.FindFirst("role")?.Value;
         if (role != "Admin")
@@ -249,15 +249,19 @@ public class ListingsController : ControllerBase
         var listing = await _context.Listings.FindAsync(id);
         if (listing == null) return NotFound();
 
+        var reason = !string.IsNullOrWhiteSpace(req?.Reason) 
+            ? req.Reason.Trim() 
+            : "Không đạt tiêu chuẩn kiểm duyệt nội dung của sàn";
+
         listing.Status = ListingStatus.Rejected;
-        listing.RejectReason = req.Reason ?? "Không đạt tiêu chuẩn kiểm duyệt";
+        listing.RejectReason = reason;
         listing.UpdatedAt = DateTime.UtcNow;
         await _context.SaveChangesAsync();
 
-        return Ok(new { message = "Đã từ chối tin đăng." });
+        return Ok(new { message = $"Đã từ chối tin đăng thành công. Lý do: '{reason}'" });
     }
 
-    // 8. Đẩy tin lên đầu danh sách (Sequence Diagram 3 & Ad6)
+    // 8. Đẩy tin lên đầu danh sách
     [HttpPut("{id}/push")]
     [Authorize]
     public async Task<IActionResult> PushListing(int id)
@@ -267,6 +271,25 @@ public class ListingsController : ControllerBase
 
         var listing = await _context.Listings.FindAsync(id);
         if (listing == null) return NotFound();
+
+        // CHẶN ĐẨY TIN ĐỐI VỚI TIN BỊ TỪ CHỐI HOẶC CHƯA ĐƯỢC DUYỆT
+        if (listing.Status == ListingStatus.Rejected)
+        {
+            return BadRequest(new 
+            { 
+                code = "LISTING_REJECTED", 
+                message = $"Không thể đẩy tin! Tin đăng này đã bị Ban quản trị từ chối kiểm duyệt (Lý do: {listing.RejectReason ?? "Nội dung chưa đạt tiêu chuẩn"}). Bạn không thể sử dụng gói đẩy tin cho tin đã bị từ chối." 
+            });
+        }
+
+        if (listing.Status == ListingStatus.Pending)
+        {
+            return BadRequest(new 
+            { 
+                code = "LISTING_PENDING", 
+                message = "Tin đăng đang trong trạng thái chờ Ban quản trị duyệt. Bạn chỉ có thể sử dụng tính năng đẩy tin sau khi tin đã được phê duyệt công khai!" 
+            });
+        }
 
         // Chỉ chủ tin hoặc Admin mới được đẩy tin
         var role = User.FindFirst("role")?.Value;
@@ -302,7 +325,7 @@ public class ListingsController : ControllerBase
         });
     }
 
-    // 9. Cập nhật trạng thái BĐS (Đã bán, Đã cho thuê, Ẩn tin theo Ad1 & Ad2)
+    // 9. Cập nhật trạng thái BĐS (Đã bán, Đã cho thuê, Ẩn tin)
     [HttpPut("{id}/status")]
     [Authorize]
     public async Task<IActionResult> UpdateStatus(int id, [FromBody] UpdateStatusRequest req)
@@ -328,7 +351,7 @@ public class ListingsController : ControllerBase
         return BadRequest(new { message = "Trạng thái không hợp lệ" });
     }
 
-    // 10. Tạo tin đăng BĐS mới (Sequence Diagram 1)
+    // 10. Tạo tin đăng BĐS mới
     [HttpPost]
     [Authorize]
     public async Task<IActionResult> Create([FromBody] CreateListingRequest request)
@@ -365,7 +388,7 @@ public class ListingsController : ControllerBase
 
         var role = user.Role.ToString();
 
-        // Theo Sequence Diagram 1: Tin đăng của Seller/Landlord/Agent tạo ra ở trạng thái Chờ duyệt (Pending)
+        // Tin đăng của Seller/Landlord/Agent tạo ra ở trạng thái Chờ duyệt (Pending)
         // Nếu là Admin thì duyệt luôn (Approved)
         var initialStatus = (role == "Admin") ? ListingStatus.Approved : ListingStatus.Pending;
 

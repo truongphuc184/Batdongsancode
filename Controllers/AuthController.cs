@@ -51,6 +51,33 @@ public class AuthController : ControllerBase
         return Ok(new { user.Id, user.Email, user.FullName, Role = user.Role.ToString() });
     }
 
+    // Quản lý người dùng dành riêng cho Admin
+    [HttpGet("users")]
+    [Authorize]
+    public async Task<IActionResult> GetAllUsers([FromServices] Batdongsancode.Data.AppDbContext context)
+    {
+        var role = User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value 
+                ?? User.FindFirst("role")?.Value;
+        if (role != "Admin")
+            return StatusCode(403, new { message = "Chỉ Quản trị viên mới có quyền xem danh sách người dùng" });
+
+        var users = await Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.ToListAsync(
+            context.Users.OrderByDescending(u => u.CreatedAt)
+        );
+
+        return Ok(users.Select(u => new
+        {
+            u.Id,
+            u.Email,
+            u.FullName,
+            Role = u.Role.ToString(),
+            u.CurrentPackage,
+            u.RemainingPushes,
+            u.IsActive,
+            u.CreatedAt
+        }));
+    }
+
     // Chỉnh sửa thông tin cá nhân (Họ tên, Đổi mật khẩu)
     [HttpPut("profile")]
     [Authorize]

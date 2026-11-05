@@ -25,9 +25,9 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 // JWT Authentication
 var jwtSettings = configuration.GetSection("JwtSettings");
-var secretKey = jwtSettings["SecretKey"];
-var issuer = jwtSettings["Issuer"];
-var audience = jwtSettings["Audience"];
+var secretKey = jwtSettings["SecretKey"] ?? "BatDongSanSuperSecretKey2026!@#$%^&*()VeryLongKey";
+var issuer = jwtSettings["Issuer"] ?? "BatDongSanAPI";
+var audience = jwtSettings["Audience"] ?? "BatDongSanClients";
 var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
 
 builder.Services.AddAuthentication(options =>

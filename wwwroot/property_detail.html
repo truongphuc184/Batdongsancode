@@ -76,6 +76,8 @@
           // Phân quyền người dùng: Chỉ Chủ tin hoặc Quản trị viên mới được xóa tin
           let currentUserId = null;
           let currentUserRole = '';
+          let currentUserName = '';
+          let currentUserEmail = '';
           if (token) {
             try {
               const base64Url = token.split('.')[1];
@@ -84,19 +86,58 @@
               const payload = JSON.parse(jsonPayload);
               currentUserId = parseInt(payload.sub);
               currentUserRole = payload.role || '';
+              currentUserName = payload.name || payload.FullName || '';
+              currentUserEmail = payload.email || payload.Email || '';
             } catch (e) {}
           }
           const canDelete = currentUserId && (currentUserId === l.ownerId || currentUserRole.includes('Admin'));
 
           document.getElementById('content').innerHTML = `
             <div class="bg-white rounded-3xl shadow-sm border border-gray-200 overflow-hidden mb-8">
+              ${l.status === 'Rejected' ? `
+              <!-- CẢNH BÁO TIN BỊ TỪ CHỐI -->
+              <div class="p-4 bg-red-600 text-white flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-md">
+                <div class="flex items-start gap-2.5">
+                  <span class="material-symbols-outlined text-2xl shrink-0">error</span>
+                  <div>
+                    <div class="font-black text-sm uppercase tracking-wide">Tin đăng này đã bị Quản trị viên từ chối kiểm duyệt</div>
+                    <p class="text-xs text-red-100 mt-0.5">Lý do từ chối: <strong class="text-white underline">"${l.rejectReason || 'Không đạt tiêu chuẩn kiểm duyệt nội dung của sàn'}"</strong></p>
+                    <p class="text-[11px] text-red-200 mt-0.5">Tin không hiển thị công khai trên thanh tìm kiếm của sàn BĐS.</p>
+                  </div>
+                </div>
+                ${currentUserRole.includes('Admin') ? `
+                <a href="admin.html" class="px-3.5 py-1.5 bg-white text-red-700 text-xs font-bold rounded-xl shrink-0 shadow-sm self-start sm:self-center">
+                  Về trang Quản trị
+                </a>
+                ` : ''}
+              </div>
+              ` : l.status === 'Pending' ? `
+              <!-- THÔNG BÁO TIN CHỜ DUYỆT -->
+              <div class="p-3.5 bg-amber-500 text-white flex items-center justify-between gap-3 shadow-md">
+                <div class="flex items-center gap-2">
+                  <span class="material-symbols-outlined text-xl">hourglass_empty</span>
+                  <div class="text-xs font-bold">Tin đăng đang ở trạng thái chờ Ban quản trị duyệt trước khi hiển thị công khai.</div>
+                </div>
+                ${currentUserRole.includes('Admin') ? `
+                <a href="admin.html" class="px-3 py-1 bg-white text-amber-800 text-xs font-bold rounded-xl shrink-0">
+                  Duyệt ngay
+                </a>
+                ` : ''}
+              </div>
+              ` : ''}
+
               <!-- BỘ SƯU TẬP ẢNH (GALLERY & SLIDER NHIỀU ẢNH) -->
               <div class="relative bg-gray-900 group">
-                <!-- Ảnh to chính -->
-                <div class="w-full h-64 sm:h-80 md:h-[420px] lg:h-[480px] overflow-hidden flex items-center justify-center bg-black/10">
+                <!-- Ảnh to chính (Bấm vào xem ảnh phóng to full-size) -->
+                <div class="w-full h-64 sm:h-80 md:h-[420px] lg:h-[480px] overflow-hidden flex items-center justify-center bg-black/10 cursor-pointer group/img relative" onclick="openLightbox(window.currentImageIdx)">
                   <img id="mainGalleryImage" src="${window.propertyImages[0]}" alt="${l.title}" 
-                    class="w-full h-full object-cover transition-all duration-300"
+                    class="w-full h-full object-cover transition-all duration-300 group-hover/img:scale-102"
                     onerror="this.src='https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1200&q=80'"/>
+                  <div class="absolute inset-0 bg-black/20 opacity-0 group-hover/img:opacity-100 transition-opacity flex items-center justify-center pointer-events-none">
+                    <span class="bg-black/70 text-white text-xs font-semibold px-4 py-2 rounded-full flex items-center gap-1.5 backdrop-blur-sm shadow-lg">
+                      <span class="material-symbols-outlined text-base">zoom_in</span> Bấm xem ảnh đầy đủ (Full-size)
+                    </span>
+                  </div>
                 </div>
 
                 <!-- Tag Loại BĐS -->
@@ -147,7 +188,6 @@
                     <div class="text-3xl font-black text-red-600">${formatPrice(l.price)}</div>
                     <span class="text-xs text-gray-500">${l.price ? l.price.toLocaleString('vi-VN') + ' VNĐ' : ''}</span>
                   </div>
-                  ${l.direction ? `<div class="text-right"><span class="text-xs text-gray-500">Hướng nhà:</span><div class="text-sm font-bold text-gray-800">🧭 Hướng ${l.direction}</div></div>` : ''}
                 </div>
 
                 <!-- Thông số 3 cột -->
@@ -191,9 +231,15 @@
                       <span class="flex items-center" id="favIcon"></span>
                       <span id="favText">Lưu tin yêu thích</span>
                     </button>
+                    ${currentUserRole.includes('Admin') ? `
+                    <a href="/admin.html" class="px-4 py-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 rounded-xl font-bold text-xs transition-colors flex items-center gap-1 border border-indigo-200 shadow-sm">
+                      <span class="material-symbols-outlined text-base">admin_panel_settings</span> Quản trị hệ thống
+                    </a>
+                    ` : `
                     <button onclick="openReportModal(${l.id})" class="px-4 py-2 bg-gray-50 hover:bg-amber-50 text-gray-500 hover:text-amber-700 rounded-xl font-semibold text-xs transition-colors flex items-center gap-1 border border-gray-200">
                       <span class="material-symbols-outlined text-base">flag</span> Báo cáo vi phạm
                     </button>
+                    `}
                   </div>
                   ${canDelete ? `
                   <button onclick="deleteListing(${l.id})" class="px-3.5 py-2 bg-red-50 text-red-600 rounded-xl font-semibold text-xs hover:bg-red-100 transition-colors flex items-center gap-1 border border-red-200">
@@ -219,7 +265,7 @@
                   </div>
                 </div>
 
-                <!-- FORM ĐĂNG KÝ XEM NHÀ & TƯ VẤN (Sơ đồ CRM: Tiếp nhận thông tin khách quan tâm -> Lead) -->
+                <!-- FORM ĐĂNG KÝ XEM NHÀ & TƯ VẤN -->
                 <div class="mt-8 bg-gradient-to-br from-indigo-50/70 to-blue-50/70 p-6 rounded-2xl border border-indigo-100">
                   <div class="flex items-center gap-2 mb-2">
                     <span class="material-symbols-outlined text-indigo-600">contact_mail</span>
@@ -231,7 +277,7 @@
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       <div>
                         <label class="block text-[11px] font-bold text-gray-700 uppercase mb-1">Họ và tên <span class="text-red-500">*</span></label>
-                        <input type="text" id="lead_name" placeholder="VD: Nguyễn Văn A" 
+                        <input type="text" id="lead_name" value="${currentUserName || ''}" placeholder="VD: Nguyễn Văn A" 
                           class="w-full px-3.5 py-2.5 bg-white border border-gray-300 rounded-xl outline-none text-xs font-semibold focus:ring-2 focus:ring-indigo-500"/>
                       </div>
                       <div>
@@ -242,7 +288,7 @@
                     </div>
                     <div>
                       <label class="block text-[11px] font-bold text-gray-700 uppercase mb-1">Email (không bắt buộc)</label>
-                      <input type="email" id="lead_email" placeholder="VD: email@example.com" 
+                      <input type="email" id="lead_email" value="${currentUserEmail || ''}" placeholder="VD: email@example.com" 
                         class="w-full px-3.5 py-2.5 bg-white border border-gray-300 rounded-xl outline-none text-xs focus:ring-2 focus:ring-indigo-500"/>
                     </div>
                     <div>
@@ -299,11 +345,66 @@
       selectGalleryImage(newIdx);
     }
 
-    // Bấm phím mũi tên trái / phải trên bàn phím để chuyển ảnh
+    // Bấm phím mũi tên trái / phải trên bàn phím để chuyển ảnh, ESC để thoát lightbox
     document.addEventListener('keydown', e => {
-      if (e.key === 'ArrowLeft') prevImage();
-      if (e.key === 'ArrowRight') nextImage();
+      const lightboxModal = document.getElementById('imageLightboxModal');
+      const isLightboxOpen = lightboxModal && !lightboxModal.classList.contains('hidden');
+      if (e.key === 'Escape') {
+        if (isLightboxOpen) closeLightbox();
+        closeReportModal();
+      }
+      if (e.key === 'ArrowLeft') {
+        if (isLightboxOpen) prevLightboxImage();
+        else prevImage();
+      }
+      if (e.key === 'ArrowRight') {
+        if (isLightboxOpen) nextLightboxImage();
+        else nextImage();
+      }
     });
+
+    // FULLSCREEN LIGHTBOX XEM ẢNH GỐC ĐẦY ĐỦ (UNCROPPED)
+    function openLightbox(idx = 0) {
+      if (!window.propertyImages || window.propertyImages.length === 0) return;
+      window.currentLightboxIdx = idx;
+      updateLightboxImage();
+      const modal = document.getElementById('imageLightboxModal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeLightbox() {
+      const modal = document.getElementById('imageLightboxModal');
+      if (modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }
+      document.body.style.overflow = '';
+    }
+
+    function updateLightboxImage() {
+      const img = document.getElementById('lightboxImage');
+      const counter = document.getElementById('lightboxCounter');
+      if (img && window.propertyImages) {
+        img.src = window.propertyImages[window.currentLightboxIdx];
+      }
+      if (counter && window.propertyImages) {
+        counter.textContent = `${window.currentLightboxIdx + 1} / ${window.propertyImages.length} ảnh`;
+      }
+    }
+
+    function nextLightboxImage() {
+      if (!window.propertyImages || window.propertyImages.length <= 1) return;
+      window.currentLightboxIdx = (window.currentLightboxIdx + 1) % window.propertyImages.length;
+      updateLightboxImage();
+    }
+
+    function prevLightboxImage() {
+      if (!window.propertyImages || window.propertyImages.length <= 1) return;
+      window.currentLightboxIdx = (window.currentLightboxIdx - 1 + window.propertyImages.length) % window.propertyImages.length;
+      updateLightboxImage();
+    }
 
     async function deleteListing(listingId) {
       if (!confirm('Bạn có chắc chắn muốn xóa tin đăng này không?')) return;
@@ -413,7 +514,7 @@
           document.getElementById('lead_phone').value = '';
           document.getElementById('lead_email').value = '';
           document.getElementById('lead_notes').value = '';
-          alert('🎉 Yêu cầu của bạn đã được chuyển tới chủ tin đăng!');
+          alert('🎉 Gửi yêu cầu xem nhà thành công! Thông tin của bạn đã được chuyển tới môi giới và người đăng tin để liên hệ sắp xếp lịch hẹn.');
         } else {
           msgEl.textContent = '⚠️ ' + (data.message || 'Lỗi khi gửi yêu cầu');
           msgEl.className = 'text-xs font-bold text-red-600 mt-2 text-center';
@@ -521,6 +622,31 @@
         </button>
       </div>
     </div>
+  </div>
+  <!-- LIGHTBOX XEM ẢNH GỐC FULL-SIZE UNROPPED -->
+  <div id="imageLightboxModal" class="fixed inset-0 bg-black/95 z-60 hidden items-center justify-center select-none backdrop-blur-md">
+    <!-- Nút đóng -->
+    <button onclick="closeLightbox()" class="absolute top-4 right-4 z-70 w-11 h-11 rounded-full bg-white/10 hover:bg-white/25 text-white flex items-center justify-center transition-all cursor-pointer" title="Đóng (ESC)">
+      <span class="material-symbols-outlined text-2xl">close</span>
+    </button>
+
+    <!-- Chỉ số ảnh -->
+    <div id="lightboxCounter" class="absolute top-5 left-5 z-70 bg-black/60 text-white text-xs font-bold px-3.5 py-1.5 rounded-full border border-white/20">
+      1 / 1
+    </div>
+
+    <!-- Khung hiển thị ảnh gốc uncropped -->
+    <div class="relative w-full h-full flex items-center justify-center p-4 sm:p-8" onclick="if(event.target === this) closeLightbox()">
+      <img id="lightboxImage" src="" alt="Ảnh BĐS phóng to" class="max-w-full max-h-[90vh] object-contain rounded-lg shadow-2xl transition-all duration-200">
+    </div>
+
+    <!-- Nút Prev / Next -->
+    <button onclick="prevLightboxImage()" class="absolute left-4 top-1/2 -translate-y-1/2 z-70 w-12 h-12 rounded-full bg-white/15 hover:bg-white/30 text-white flex items-center justify-center backdrop-blur-sm transition-all cursor-pointer shadow-lg" title="Ảnh trước (Mũi tên trái)">
+      <span class="material-symbols-outlined text-2xl">chevron_left</span>
+    </button>
+    <button onclick="nextLightboxImage()" class="absolute right-4 top-1/2 -translate-y-1/2 z-70 w-12 h-12 rounded-full bg-white/15 hover:bg-white/30 text-white flex items-center justify-center backdrop-blur-sm transition-all cursor-pointer shadow-lg" title="Ảnh tiếp (Mũi tên phải)">
+      <span class="material-symbols-outlined text-2xl">chevron_right</span>
+    </button>
   </div>
 </body>
 </html>

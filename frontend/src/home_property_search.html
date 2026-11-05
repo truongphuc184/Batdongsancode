@@ -497,11 +497,8 @@
       <h3 class="text-lg font-bold text-gray-800">Không tìm thấy bất động sản phù hợp</h3>
       <p class="text-xs text-gray-500 mt-1 max-w-sm mx-auto">Vui lòng thử tìm với từ khóa khác hoặc xóa bớt tiêu chí lọc khu vực, mức giá, diện tích.</p>
       <div class="flex items-center justify-center gap-2 mt-4">
-        <button onclick="resetFilters()" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-800 rounded-xl font-bold text-xs transition-colors border">
+        <button onclick="resetFilters()" class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold text-xs transition-colors shadow-sm">
           🔄 Xóa bộ lọc & Xem tất cả
-        </button>
-        <button id="emptyStateCreateBtn" onclick="showCreateForm()" class="px-5 py-2 bg-indigo-600 text-white rounded-xl font-bold text-xs shadow-sm hover:bg-indigo-700">
-          + Đăng tin mới
         </button>
       </div>
     </div>
@@ -514,13 +511,7 @@
         <span class="material-symbols-outlined text-2xl">travel_explore</span>
         <span class="text-[11px] mt-0.5 font-bold">Khám phá</span>
       </a>
-      <a id="navCreateBtn" href="#" onclick="showCreateForm(); window.scrollTo({top: 0, behavior: 'smooth'}); return false;" class="flex flex-col items-center text-gray-500 hover:text-indigo-600 transition-colors">
-        <div class="w-9 h-9 bg-indigo-600 text-white rounded-full flex items-center justify-center -mt-3 shadow-md hover:bg-indigo-700">
-          <span class="material-symbols-outlined text-xl">add</span>
-        </div>
-        <span class="text-[11px] mt-1 font-semibold">Đăng tin</span>
-      </a>
-      <a id="navSavedBtn" href="#" onclick="loadSavedListingsTab(); window.scrollTo({top: 0, behavior: 'smooth'}); return false;" class="hidden flex flex-col items-center text-gray-500 hover:text-red-500 transition-colors">
+      <a id="navSavedBtn" href="#" onclick="loadSavedListingsTab(); window.scrollTo({top: 0, behavior: 'smooth'}); return false;" class="flex flex-col items-center text-gray-500 hover:text-red-500 transition-colors">
         <div class="w-9 h-9 bg-red-50 text-red-600 rounded-full flex items-center justify-center -mt-3 shadow-md border border-red-200 hover:bg-red-100">
           <span class="material-symbols-outlined text-xl">favorite</span>
         </div>
@@ -582,7 +573,7 @@
       return viParts.length > 0 ? viParts.join(' & ') : roleStr;
     }
 
-    // Phân quyền giao diện theo nghiệp vụ (Use Case Quản trị & Người dùng):
+    // Phân quyền giao diện theo nghiệp vụ và vai trò người dùng:
     // - Quản trị viên (Admin): Chỉ Quản trị hệ thống & Kiểm duyệt tin, KHÔNG đăng tin, KHÔNG mua gói hội viên
     // - Người bán / Cho thuê / Môi giới: Hiển thị đầy đủ công cụ đăng tin, quản lý tin và gói hội viên
     // - Người mua thuần túy: Ẩn đăng tin và không quảng cáo gói hội viên
@@ -592,9 +583,6 @@
       const canPost = !isAdmin && (currentUserRole.includes('Seller') || currentUserRole.includes('Landlord') || currentUserRole.includes('Agent'));
 
       const createForm = document.getElementById('createForm');
-      const navCreateBtn = document.getElementById('navCreateBtn');
-      const navSavedBtn = document.getElementById('navSavedBtn');
-      const emptyCreateBtn = document.getElementById('emptyStateCreateBtn');
       const myTab = document.getElementById('btnMyListingsTab');
       const headerBtn = document.getElementById('headerCreateListingBtn');
       const pkgBanner = document.getElementById('membershipPackagesBanner');
@@ -604,9 +592,6 @@
       if (isAdmin) {
         // Quản trị viên (QTV): Chỉ quản trị hệ thống, duyệt tin & xử lý báo cáo
         if (createForm) createForm.classList.add('hidden');
-        if (navCreateBtn) navCreateBtn.classList.add('hidden');
-        if (navSavedBtn) navSavedBtn.classList.remove('hidden');
-        if (emptyCreateBtn) emptyCreateBtn.classList.add('hidden');
         if (myTab) myTab.classList.add('hidden');
         if (headerBtn) headerBtn.classList.add('hidden');
         if (pkgBanner) pkgBanner.classList.add('hidden');
@@ -620,18 +605,12 @@
       if (!canPost) {
         // Người mua thuần túy: Không quảng cáo gói hội viên, ẩn chức năng đăng tin
         if (createForm) createForm.classList.add('hidden');
-        if (navCreateBtn) navCreateBtn.classList.add('hidden');
-        if (navSavedBtn) navSavedBtn.classList.remove('hidden');
-        if (emptyCreateBtn) emptyCreateBtn.classList.add('hidden');
         if (myTab) myTab.classList.add('hidden');
         if (headerBtn) headerBtn.classList.add('hidden');
         if (pkgBanner) pkgBanner.classList.add('hidden');
         if (headerPkg) headerPkg.classList.add('hidden');
       } else {
         // Seller, Landlord, Agent: Có quyền đăng tin, quản lý tin & gói hội viên
-        if (navCreateBtn) navCreateBtn.classList.remove('hidden');
-        if (navSavedBtn) navSavedBtn.classList.add('hidden');
-        if (emptyCreateBtn) emptyCreateBtn.classList.remove('hidden');
         if (myTab) myTab.classList.remove('hidden');
         if (headerBtn) headerBtn.classList.remove('hidden');
         if (pkgBanner) pkgBanner.classList.remove('hidden');
@@ -1098,21 +1077,91 @@
           return;
         }
 
-        container.innerHTML = data.map(l => {
+        const rejectedListings = data.filter(l => l.status === 'Rejected');
+        let rejectedBannerHtml = '';
+        if (rejectedListings.length > 0) {
+          rejectedBannerHtml = `
+            <div class="mb-4 p-4 bg-red-50 border border-red-200 rounded-2xl flex items-start justify-between gap-3 shadow-sm">
+              <div class="flex items-start gap-2.5">
+                <span class="material-symbols-outlined text-red-600 text-xl shrink-0 mt-0.5">error</span>
+                <div>
+                  <div class="text-xs font-black text-red-700">Thông báo từ Quản trị viên: Bạn có ${rejectedListings.length} tin không được phê duyệt!</div>
+                  <p class="text-[11px] text-red-600 mt-0.5">Một số tin chưa đạt chuẩn kiểm duyệt. Bấm bên dưới để xem lý do từ chối cụ thể của Admin.</p>
+                </div>
+              </div>
+              <button onclick="openFirstRejectedNoticeHome()" class="px-3.5 py-1.5 bg-red-600 hover:bg-red-700 text-white rounded-xl text-xs font-bold shrink-0 transition-all shadow">
+                Xem lý do
+              </button>
+            </div>
+          `;
+        }
+
+        window.homeRejectedListings = rejectedListings;
+
+        // Tự động mở cửa sổ thông báo nếu có tin mới bị từ chối
+        if (rejectedListings.length > 0 && !sessionStorage.getItem('rejected_notified_home')) {
+          sessionStorage.setItem('rejected_notified_home', '1');
+          setTimeout(() => {
+            openFirstRejectedNoticeHome();
+          }, 400);
+        }
+
+        container.innerHTML = rejectedBannerHtml + data.map(l => {
           let statusBadge = '';
+          let rejectBoxHtml = '';
+          const safeDataStr = encodeURIComponent(JSON.stringify(l));
+
           if (l.status === 'Approved') statusBadge = '<span class="px-2.5 py-1 bg-emerald-100 text-emerald-800 rounded-full text-xs font-bold">🟢 Đã duyệt (Đang hiển thị)</span>';
           else if (l.status === 'Pending') statusBadge = '<span class="px-2.5 py-1 bg-amber-100 text-amber-800 rounded-full text-xs font-bold">🟡 Chờ Admin duyệt</span>';
-          else if (l.status === 'Rejected') statusBadge = `<span class="px-2.5 py-1 bg-red-100 text-red-800 rounded-full text-xs font-bold" title="${l.rejectReason || ''}">🔴 Bị từ chối: ${l.rejectReason || ''}</span>`;
+          else if (l.status === 'Rejected') {
+            statusBadge = `<button onclick="showRejectedNoticeModalHome('${safeDataStr}')" class="px-2.5 py-1 bg-red-100 text-red-800 hover:bg-red-200 rounded-full text-xs font-bold flex items-center gap-1 transition-colors">🔴 Bị từ chối (Xem lý do)</button>`;
+            rejectBoxHtml = `
+              <div class="mt-2.5 p-3 bg-red-50/80 rounded-xl border border-red-200 text-xs text-red-800 flex items-start justify-between gap-2">
+                <div class="flex-1">
+                  <div class="font-bold flex items-center gap-1 text-red-700 text-xs">
+                    <span class="material-symbols-outlined text-sm">cancel</span> Lý do Admin từ chối duyệt:
+                  </div>
+                  <p class="mt-1 text-xs text-red-800 font-semibold italic bg-white/80 p-2 rounded-lg border border-red-100">
+                    "${l.rejectReason || 'Nội dung chưa đầy đủ hoặc không đạt tiêu chuẩn kiểm duyệt của sàn'}"
+                  </p>
+                </div>
+                <button onclick="showRejectedNoticeModalHome('${safeDataStr}')" class="px-3 py-1 bg-red-600 hover:bg-red-700 text-white font-bold rounded-lg text-xs shrink-0 self-center shadow-sm">
+                  Chi tiết
+                </button>
+              </div>
+            `;
+          }
           else if (l.status === 'Sold') statusBadge = '<span class="px-2.5 py-1 bg-purple-100 text-purple-800 rounded-full text-xs font-bold">🟣 Đã bán</span>';
           else if (l.status === 'Rented') statusBadge = '<span class="px-2.5 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-bold">🔵 Đã cho thuê</span>';
           else statusBadge = `<span class="px-2.5 py-1 bg-gray-100 text-gray-700 rounded-full text-xs font-bold">${l.status}</span>`;
 
+          let pushButtonHtml = '';
+          if (l.status === 'Rejected') {
+            pushButtonHtml = `
+              <button disabled class="flex-1 md:flex-none px-4 py-2 bg-gray-200 text-gray-400 rounded-xl text-xs font-bold flex items-center justify-center gap-1 cursor-not-allowed opacity-75" title="Tin bị từ chối kiểm duyệt, không thể đẩy tin">
+                <span class="material-symbols-outlined text-xs">block</span> Không thể đẩy tin
+              </button>
+            `;
+          } else if (l.status === 'Pending') {
+            pushButtonHtml = `
+              <button disabled class="flex-1 md:flex-none px-4 py-2 bg-amber-50 text-amber-500 rounded-xl text-xs font-bold flex items-center justify-center gap-1 cursor-not-allowed opacity-80" title="Tin đang chờ duyệt, chưa thể đẩy">
+                <span class="material-symbols-outlined text-xs">hourglass_empty</span> Chờ duyệt
+              </button>
+            `;
+          } else {
+            pushButtonHtml = `
+              <button onclick="pushListing(${l.id})" class="flex-1 md:flex-none px-4 py-2 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white rounded-xl text-xs font-bold flex items-center justify-center gap-1 shadow-sm">
+                🚀 Đẩy tin lên đầu
+              </button>
+            `;
+          }
+
           return `
-            <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-5 flex flex-col md:flex-row gap-4 items-start">
+            <div class="bg-white rounded-2xl shadow-sm border ${l.status === 'Rejected' ? 'border-red-300' : 'border-gray-200'} p-5 flex flex-col md:flex-row gap-4 items-start">
               <div class="w-full md:w-44 h-32 bg-gray-100 rounded-xl overflow-hidden shrink-0">
                 ${l.imageUrls ? `<img src="${l.imageUrls.split(',')[0]}" class="w-full h-full object-cover"/>` : '<div class="w-full h-full flex items-center justify-center text-3xl">🏠</div>'}
               </div>
-              <div class="flex-1">
+              <div class="flex-1 min-w-0">
                 <div class="flex flex-wrap items-center gap-2 mb-1">
                   ${statusBadge}
                   <span class="text-xs text-gray-400">Lượt xem: <strong>${l.viewCount || 0}</strong></span>
@@ -1121,11 +1170,10 @@
                 <div class="text-lg font-black text-red-600 mt-1">${formatPrice(l.price)}</div>
                 <p class="text-xs text-gray-500 mt-1">📍 ${l.address ? l.address + ', ' : ''}${l.city}</p>
                 <div class="text-xs text-gray-400 mt-2">Ngày tạo: ${new Date(l.createdAt).toLocaleDateString('vi-VN')}</div>
+                ${rejectBoxHtml}
               </div>
               <div class="flex flex-wrap md:flex-col gap-2 w-full md:w-auto shrink-0 justify-end">
-                <button onclick="pushListing(${l.id})" class="flex-1 md:flex-none px-4 py-2 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white rounded-xl text-xs font-bold flex items-center justify-center gap-1 shadow-sm">
-                  🚀 Đẩy tin lên đầu
-                </button>
+                ${pushButtonHtml}
                 <button onclick="markStatus(${l.id}, 'Sold')" class="flex-1 md:flex-none px-3.5 py-1.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl text-xs font-semibold">
                   Đã bán
                 </button>
@@ -1144,6 +1192,33 @@
       }
     }
 
+    // CỬA SỔ THÔNG BÁO TIN BỊ TỪ CHỐI BỞI ADMIN
+    function showRejectedNoticeModalHome(safeDataStr) {
+      try {
+        const l = typeof safeDataStr === 'string' ? JSON.parse(decodeURIComponent(safeDataStr)) : safeDataStr;
+        document.getElementById('rejHomeListingTitle').textContent = l.title || '--';
+        document.getElementById('rejHomeListingPrice').textContent = formatPrice(l.price);
+        document.getElementById('rejHomeListingId').textContent = '#BDS-' + l.id;
+        document.getElementById('rejHomeReason').textContent = l.rejectReason || 'Nội dung chưa đầy đủ hoặc không đạt tiêu chuẩn kiểm duyệt của sàn';
+        
+        const modal = document.getElementById('rejectedNoticeModalHome');
+        if (modal) modal.classList.remove('hidden');
+      } catch (err) {
+        console.error('Error opening rejected notice modal:', err);
+      }
+    }
+
+    function closeRejectedNoticeModalHome() {
+      const modal = document.getElementById('rejectedNoticeModalHome');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function openFirstRejectedNoticeHome() {
+      if (window.homeRejectedListings && window.homeRejectedListings.length > 0) {
+        showRejectedNoticeModalHome(window.homeRejectedListings[0]);
+      }
+    }
+
     // Đẩy tin
     async function pushListing(id) {
       try {
@@ -1152,10 +1227,14 @@
           headers: { 'Authorization': 'Bearer ' + token }
         });
         const data = await res.json();
-        alert(data.message || 'Đã đẩy tin thành công!');
+        if (res.ok) {
+          alert('🚀 ' + (data.message || 'Đã đẩy tin lên đầu trang thành công!'));
+        } else {
+          alert('⚠️ ' + (data.message || 'Không thể đẩy tin này'));
+        }
         loadMyListingsTab();
       } catch (err) {
-        alert('Lỗi khi đẩy tin');
+        alert('Lỗi kết nối khi đẩy tin');
       }
     }
 
@@ -1623,7 +1702,7 @@
         const data = await res.json().catch(() => ({}));
 
         if (res.ok) {
-          alert('🎉 Chúc mừng! Tin bất động sản đã được đăng thành công!');
+          alert('⏳ ' + (data.message || 'Đăng tin thành công! Tin của bạn đang ở trạng thái chờ Ban quản trị duyệt trước khi hiển thị.'));
           
           // Reset form
           document.getElementById('c_title').value = '';
@@ -1673,10 +1752,16 @@
       if (e.key === 'Enter') searchListings();
     });
 
-    // Tự động mở tab Tin đã lưu nếu chuyển từ Hồ sơ sang (?tab=saved)
+    // Tự động mở tab Tin đã lưu hoặc Tin của tôi nếu chuyển từ Hồ sơ sang (?tab=saved hoặc ?tab=my)
     const searchParams = new URLSearchParams(window.location.search);
     if (searchParams.get('tab') === 'saved') {
       setTimeout(() => loadSavedListingsTab(), 200);
+    } else if (searchParams.get('tab') === 'my') {
+      setTimeout(() => {
+        loadMyListingsTab();
+        const el = document.getElementById('listings');
+        if (el) el.scrollIntoView({ behavior: 'smooth' });
+      }, 200);
     } else {
       loadListings();
     }
@@ -1706,6 +1791,56 @@
         </button>
         <button onclick="closeCompareModal()" class="px-6 py-2.5 bg-gray-900 hover:bg-black text-white text-xs font-bold rounded-xl shadow">
           Đóng lại
+        </button>
+      </div>
+    </div>
+  </div>
+  <!-- MODAL THÔNG BÁO TIN ĐĂNG BỊ TỪ CHỐI BỞI ADMIN -->
+  <div id="rejectedNoticeModalHome" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl relative">
+      <div class="flex items-center justify-between pb-3 border-b mb-4">
+        <div class="flex items-center gap-2">
+          <div class="w-9 h-9 rounded-full bg-red-100 text-red-600 flex items-center justify-center shrink-0">
+            <span class="material-symbols-outlined text-xl">report</span>
+          </div>
+          <div>
+            <h3 class="font-black text-gray-900 text-base">Thông báo kiểm duyệt tin</h3>
+            <p class="text-[11px] text-gray-400">Từ Ban quản trị hệ thống BĐS</p>
+          </div>
+        </div>
+        <button onclick="closeRejectedNoticeModalHome()" class="text-gray-400 hover:text-gray-600 font-bold text-lg">✕</button>
+      </div>
+
+      <div class="space-y-3 text-xs">
+        <div class="p-3 bg-gray-50 rounded-xl border">
+          <span class="text-gray-400 text-[11px] block">Tin đăng bị từ chối:</span>
+          <h4 id="rejHomeListingTitle" class="font-bold text-gray-900 mt-0.5 text-sm">--</h4>
+          <div class="flex items-center gap-2 mt-1">
+            <span id="rejHomeListingPrice" class="font-black text-red-600">--</span>
+            <span id="rejHomeListingId" class="text-gray-400 text-[11px]">#BDS--</span>
+          </div>
+        </div>
+
+        <div class="p-4 bg-red-50 border border-red-200 rounded-xl">
+          <div class="flex items-center gap-1.5 text-red-700 font-extrabold uppercase text-[11px] mb-1">
+            <span class="material-symbols-outlined text-base">cancel</span> Lý do từ chối của Quản trị viên:
+          </div>
+          <p id="rejHomeReason" class="text-xs text-red-800 leading-relaxed font-semibold bg-white p-2.5 rounded-lg border border-red-100">
+            --
+          </p>
+        </div>
+
+        <div class="p-3 bg-amber-50 border border-amber-200 rounded-xl text-amber-900 text-[11px] leading-relaxed">
+          💡 <strong>Quy định & Hướng dẫn:</strong><br>
+          • Tin đăng bị từ chối sẽ <strong>bị khóa chức năng đẩy tin</strong>.<br>
+          • Vui lòng chỉnh sửa lại thông tin, giá bán, địa chỉ hoặc hình ảnh theo đúng yêu cầu kiểm duyệt.<br>
+          • Sau khi chỉnh sửa, tin sẽ được gửi lại để Ban quản trị xem xét phê duyệt.
+        </div>
+      </div>
+
+      <div class="flex items-center justify-end gap-2 mt-5 pt-3 border-t">
+        <button onclick="closeRejectedNoticeModalHome()" class="w-full py-2.5 bg-gray-900 hover:bg-black text-white text-xs font-bold rounded-xl shadow transition-all">
+          Tôi đã hiểu
         </button>
       </div>
     </div>

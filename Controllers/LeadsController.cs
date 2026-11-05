@@ -21,10 +21,21 @@ public class LeadsController : ControllerBase
         _context = context;
     }
 
-    public record CreateLeadDto(int ListingId, string CustomerName, string CustomerPhone, string? CustomerEmail, string? Notes);
-    public record UpdateLeadStatusDto(LeadStatus Status);
+    public class CreateLeadDto
+    {
+        public int ListingId { get; set; }
+        public string? CustomerName { get; set; }
+        public string? CustomerPhone { get; set; }
+        public string? CustomerEmail { get; set; }
+        public string? Notes { get; set; }
+    }
 
-    // 1. Khách hàng gửi yêu cầu tư vấn / Đặt lịch xem BĐS (Use Case: Liên hệ người đăng -> Tiếp nhận thông tin khách quan tâm)
+    public class UpdateLeadStatusDto
+    {
+        public LeadStatus Status { get; set; }
+    }
+
+    // 1. Khách hàng gửi yêu cầu tư vấn / Đặt lịch xem BĐS
     [HttpPost]
     public async Task<IActionResult> CreateLead([FromBody] CreateLeadDto dto)
     {
@@ -53,7 +64,7 @@ public class LeadsController : ControllerBase
         return Ok(new { message = "Gửi yêu cầu liên hệ thành công! Người đăng sẽ liên hệ lại bạn sớm nhất.", leadId = lead.Id });
     }
 
-    // 2. Môi giới / Người bán xem danh sách khách hàng quan tâm (Use Case: Quản lý khách hàng CRM)
+    // 2. Môi giới / Người bán xem danh sách khách hàng quan tâm (CRM)
     [Authorize]
     [HttpGet("my-leads")]
     public async Task<IActionResult> GetMyLeads()
@@ -63,9 +74,24 @@ public class LeadsController : ControllerBase
         if (string.IsNullOrEmpty(userIdStr) || !int.TryParse(userIdStr, out var userId))
             return Unauthorized(new { message = "Không xác định được danh tính người dùng" });
 
-        var leads = await _context.Leads
+        var user = await _context.Users.FindAsync(userId);
+        if (user == null)
+            return Unauthorized(new { message = "Không tìm thấy thông tin tài khoản người dùng" });
+
+        bool isAgentOrAdmin = user.Role.HasFlag(Role.Agent) || user.Role.HasFlag(Role.Admin);
+
+        var query = _context.Leads
             .Include(ld => ld.Listing)
-            .Where(ld => ld.OwnerId == userId)
+            .AsQueryable();
+
+        // Môi giới (Agent) & Admin: Có quyền tiếp nhận và tư vấn toàn bộ khách hàng quan tâm trên sàn
+        // Người bán (Seller) & Cho thuê (Landlord): Tiếp nhận khách hàng gửi yêu cầu cho chính tin đăng của mình
+        if (!isAgentOrAdmin)
+        {
+            query = query.Where(ld => ld.OwnerId == userId);
+        }
+
+        var leads = await query
             .OrderByDescending(ld => ld.CreatedAt)
             .Select(ld => new
             {
@@ -95,10 +121,14 @@ public class LeadsController : ControllerBase
         if (string.IsNullOrEmpty(userIdStr) || !int.TryParse(userIdStr, out var userId))
             return Unauthorized(new { message = "Không xác định được danh tính" });
 
+        var user = await _context.Users.FindAsync(userId);
+        if (user == null) return Unauthorized();
+
         var lead = await _context.Leads.FindAsync(id);
         if (lead == null) return NotFound(new { message = "Không tìm thấy khách hàng" });
 
-        if (lead.OwnerId != userId)
+        bool isAgentOrAdmin = user.Role.HasFlag(Role.Agent) || user.Role.HasFlag(Role.Admin);
+        if (lead.OwnerId != userId && !isAgentOrAdmin)
             return Forbid();
 
         lead.Status = dto.Status;

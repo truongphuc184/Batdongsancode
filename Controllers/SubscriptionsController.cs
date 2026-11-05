@@ -17,7 +17,7 @@ public class SubscriptionsController : ControllerBase
         _context = context;
     }
 
-    // 1. Xem danh sách các gói dịch vụ hội viên (Use Case 1 & Ad5)
+    // 1. Xem danh sách các gói dịch vụ hội viên
     [HttpGet("packages")]
     public IActionResult GetPackages()
     {
@@ -122,7 +122,7 @@ public class SubscriptionsController : ControllerBase
         });
     }
 
-    // 3. Mua gói dịch vụ & Thanh toán (Sequence Diagram 4 & Ad5)
+    // 3. Mua gói dịch vụ & Thanh toán
     [HttpPost("buy")]
     [Authorize]
     public async Task<IActionResult> BuyPackage([FromBody] BuyPackageRequest request)
@@ -164,7 +164,7 @@ public class SubscriptionsController : ControllerBase
                 return BadRequest(new { message = "Gói dịch vụ không hợp lệ" });
         }
 
-        // Mô phỏng quy trình thanh toán thành công (Sequence Diagram 4: Webhook / Callback -> Success)
+        // Mô phỏng quy trình thanh toán thành công
         user.CurrentPackage = packageName;
         user.RemainingPushes += addedPushes;
         await _context.SaveChangesAsync();

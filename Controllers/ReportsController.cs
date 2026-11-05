@@ -21,10 +21,21 @@ public class ReportsController : ControllerBase
         _context = context;
     }
 
-    public record CreateReportDto(int ListingId, string Reason, string? Details, string? ReporterName, string? ReporterPhone);
-    public record ResolveReportDto(string Action); // "HideListing" hoặc "Dismiss"
+    public class CreateReportDto
+    {
+        public int ListingId { get; set; }
+        public string? Reason { get; set; }
+        public string? Details { get; set; }
+        public string? ReporterName { get; set; }
+        public string? ReporterPhone { get; set; }
+    }
 
-    // 1. Gửi báo cáo tin đăng vi phạm (Use Case: Báo cáo tin đăng vi phạm)
+    public class ResolveReportDto
+    {
+        public string? Action { get; set; } // "HideListing" hoặc "Dismiss"
+    }
+
+    // 1. Gửi báo cáo tin đăng vi phạm
     [HttpPost]
     public async Task<IActionResult> CreateReport([FromBody] CreateReportDto dto)
     {
@@ -52,7 +63,7 @@ public class ReportsController : ControllerBase
         return Ok(new { message = "Đã gửi báo cáo vi phạm tới Ban quản trị. Cảm ơn sự đóng góp của bạn!" });
     }
 
-    // 2. Admin xem danh sách báo cáo vi phạm (Use Case Quản trị: Xử lý báo cáo vi phạm)
+    // 2. Admin xem danh sách báo cáo vi phạm
     [Authorize]
     [HttpGet]
     public async Task<IActionResult> GetAllReports()

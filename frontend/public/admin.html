@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Ban Quản Trị - Kiểm Duyệt Tin Đăng</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@400,0" rel="stylesheet"/>
+  <style>body{font-family:'Inter',sans-serif;}</style>
+</head>
+<body class="bg-gray-100 min-h-screen pb-20 text-gray-800">
+  <!-- Header -->
+  <header class="bg-gray-900 text-white shadow-md sticky top-0 z-50">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-2.5 sm:gap-3">
+        <div class="w-9 h-9 sm:w-10 sm:h-10 bg-amber-500 rounded-xl flex items-center justify-center font-bold text-gray-900 shadow shrink-0">
+          🛡️
+        </div>
+        <div>
+          <h1 class="text-base sm:text-lg font-bold leading-tight flex items-center gap-1.5 sm:gap-2">
+            Hệ Thống Quản Trị
+            <span class="text-[9px] sm:text-[10px] bg-red-600 text-white px-2 py-0.5 rounded font-bold uppercase tracking-wider">Admin</span>
+          </h1>
+          <p class="text-[10px] sm:text-xs text-gray-400">Kiểm duyệt tin đăng & Quản trị hệ thống</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-2 sm:gap-3">
+        <a href="home_property_search.html" class="px-2.5 sm:px-3.5 py-1.5 bg-gray-800 hover:bg-gray-700 rounded-xl text-xs font-semibold text-gray-200 transition-colors flex items-center gap-1 shrink-0">
+          <span class="material-symbols-outlined text-sm">home</span> <span class="hidden sm:inline">Về trang chủ</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mt-4 sm:mt-6">
+    <!-- Thống kê nhanh 4 cột: 2 cột trên điện thoại, 4 cột trên iPad/Máy tính -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mb-6">
+      <div class="bg-white p-5 rounded-2xl shadow-sm border border-amber-200">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-bold text-amber-600 uppercase">Tin chờ duyệt</span>
+          <span class="material-symbols-outlined text-amber-500">pending_actions</span>
+        </div>
+        <div class="text-3xl font-black text-gray-900 mt-2" id="stat-pending">0</div>
+        <p class="text-[11px] text-gray-500 mt-1">Cần Admin phê duyệt</p>
+      </div>
+
+      <div class="bg-white p-5 rounded-2xl shadow-sm border border-emerald-200">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-bold text-emerald-600 uppercase">Tin đã duyệt</span>
+          <span class="material-symbols-outlined text-emerald-500">verified</span>
+        </div>
+        <div class="text-3xl font-black text-gray-900 mt-2" id="stat-approved">0</div>
+        <p class="text-[11px] text-gray-500 mt-1">Đang hiển thị công khai</p>
+      </div>
+
+      <div class="bg-white p-5 rounded-2xl shadow-sm border border-red-200">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-bold text-red-600 uppercase">Báo cáo vi phạm</span>
+          <span class="material-symbols-outlined text-red-500">report</span>
+        </div>
+        <div class="text-3xl font-black text-red-600 mt-2" id="stat-reports">0</div>
+        <p class="text-[11px] text-gray-500 mt-1">Người dùng tố cáo</p>
+      </div>
+
+      <div class="bg-white p-5 rounded-2xl shadow-sm border border-indigo-200">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-bold text-indigo-600 uppercase">Admin phụ trách</span>
+          <span class="material-symbols-outlined text-indigo-500">admin_panel_settings</span>
+        </div>
+        <div class="text-base font-bold text-gray-900 mt-2 truncate" id="admin-name">Admin</div>
+        <p class="text-[11px] text-gray-500 mt-1">admin@batdongsan.vn</p>
+      </div>
+    </div>
+
+    <!-- Thanh chuyển tab nghiệp vụ Quản trị hệ thống (Theo phân quyền Quản trị viên) -->
+    <div class="flex items-center gap-2 mb-4 flex-wrap">
+      <button onclick="switchAdminTab('pending')" id="tabBtnPending" 
+        class="px-5 py-2.5 rounded-xl font-bold text-xs bg-indigo-600 text-white shadow-sm flex items-center gap-1.5 transition-all">
+        <span class="material-symbols-outlined text-base">checklist</span> Tin chờ duyệt (<span id="tabCountPending">0</span>)
+      </button>
+      <button onclick="switchAdminTab('approved')" id="tabBtnApproved" 
+        class="px-5 py-2.5 rounded-xl font-semibold text-xs bg-white text-gray-600 hover:bg-gray-50 border border-gray-200 flex items-center gap-1.5 transition-all">
+        <span class="material-symbols-outlined text-base text-emerald-600">verified</span> Tin đã duyệt (<span id="tabCountApproved">0</span>)
+      </button>
+      <button onclick="switchAdminTab('reports')" id="tabBtnReports" 
+        class="px-5 py-2.5 rounded-xl font-semibold text-xs bg-white text-gray-600 hover:bg-gray-50 border border-gray-200 flex items-center gap-1.5 transition-all">
+        <span class="material-symbols-outlined text-base text-red-500">flag</span> Báo cáo vi phạm (<span id="tabCountReports">0</span>)
+      </button>
+      <button onclick="switchAdminTab('users')" id="tabBtnUsers" 
+        class="px-5 py-2.5 rounded-xl font-semibold text-xs bg-white text-gray-600 hover:bg-gray-50 border border-gray-200 flex items-center gap-1.5 transition-all">
+        <span class="material-symbols-outlined text-base text-blue-600">group</span> Người dùng, Danh mục & Dự án
+      </button>
+      <button onclick="switchAdminTab('articles')" id="tabBtnArticles" 
+        class="px-5 py-2.5 rounded-xl font-semibold text-xs bg-white text-gray-600 hover:bg-gray-50 border border-gray-200 flex items-center gap-1.5 transition-all">
+        <span class="material-symbols-outlined text-base text-purple-600">article</span> Bài viết & Thanh toán
+      </button>
+    </div>
+
+    <!-- Phân hệ 1: Danh sách tin chờ duyệt -->
+    <div id="sectionPending" class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
+      <div class="flex items-center justify-between pb-4 border-b border-gray-100 mb-4">
+        <div>
+          <h2 class="text-base font-bold text-gray-900 flex items-center gap-2">
+            Danh sách tin đăng chờ duyệt
+          </h2>
+          <p class="text-xs text-gray-500">Các tin do Người bán, Người cho thuê, Môi giới đăng lên hệ thống</p>
+        </div>
+        <button onclick="loadPendingListings()" class="px-3.5 py-1.5 bg-gray-100 hover:bg-gray-200 rounded-xl text-xs font-semibold text-gray-700 flex items-center gap-1">
+          <span class="material-symbols-outlined text-sm">refresh</span> Làm mới
+        </button>
+      </div>
+
+      <div id="pendingList" class="flex flex-col gap-4">
+        <div class="text-center py-10 text-gray-400">Đang tải danh sách chờ duyệt...</div>
+      </div>
+    </div>
+
+    <!-- Phân hệ 2: Danh sách tin đã duyệt công khai -->
+    <div id="sectionApproved" class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 hidden">
+      <div class="flex items-center justify-between pb-4 border-b border-gray-100 mb-4">
+        <div>
+          <h2 class="text-base font-bold text-gray-900 flex items-center gap-2">
+            Danh sách tin đăng đã duyệt công khai
+          </h2>
+          <p class="text-xs text-gray-500">Các bất động sản đang hiển thị công khai trên hệ thống sàn</p>
+        </div>
+        <button onclick="loadApprovedListings()" class="px-3.5 py-1.5 bg-gray-100 hover:bg-gray-200 rounded-xl text-xs font-semibold text-gray-700 flex items-center gap-1">
+          <span class="material-symbols-outlined text-sm">refresh</span> Làm mới
+        </button>
+      </div>
+
+      <div id="approvedList" class="flex flex-col gap-4">
+        <div class="text-center py-10 text-gray-400">Đang tải danh sách tin đã duyệt...</div>
+      </div>
+    </div>
+
+    <!-- Phân hệ 3: Danh sách báo cáo vi phạm -->
+    <div id="sectionReports" class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 hidden">
+      <div class="flex items-center justify-between pb-4 border-b border-gray-100 mb-4">
+        <div>
+          <h2 class="text-base font-bold text-gray-900 flex items-center gap-2">
+            Danh sách báo cáo vi phạm từ người dùng
+          </h2>
+          <p class="text-xs text-gray-500">Xử lý tố cáo về tin giả, sai giá, lừa đảo hoặc vi phạm điều khoản</p>
+        </div>
+        <button onclick="loadReports()" class="px-3.5 py-1.5 bg-gray-100 hover:bg-gray-200 rounded-xl text-xs font-semibold text-gray-700 flex items-center gap-1">
+          <span class="material-symbols-outlined text-sm">refresh</span> Làm mới
+        </button>
+      </div>
+
+      <div id="reportsList" class="flex flex-col gap-4">
+        <div class="text-center py-10 text-gray-400">Đang tải danh sách báo cáo...</div>
+      </div>
+    </div>
+
+    <!-- Phân hệ 4: Quản lý Người dùng, Danh mục & Dự án -->
+    <div id="sectionUsers" class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 hidden">
+      <div class="flex items-center justify-between pb-4 border-b border-gray-100 mb-4">
+        <div>
+          <h2 class="text-base font-bold text-gray-900 flex items-center gap-2">
+            Quản lý Người dùng, Danh mục & Dự án
+          </h2>
+          <p class="text-xs text-gray-500">Danh sách tài khoản thành viên hệ thống và cấu trúc danh mục, dự án</p>
+        </div>
+        <button onclick="loadUsersList()" class="px-3.5 py-1.5 bg-gray-100 hover:bg-gray-200 rounded-xl text-xs font-semibold text-gray-700 flex items-center gap-1">
+          <span class="material-symbols-outlined text-sm">refresh</span> Làm mới
+        </button>
+      </div>
+
+      <!-- Bảng danh sách người dùng -->
+      <div class="overflow-x-auto rounded-xl border border-gray-100 mb-6">
+        <table class="w-full text-left text-xs">
+          <thead class="bg-gray-50 text-gray-600 font-bold uppercase text-[11px] border-b">
+            <tr>
+              <th class="py-3 px-4">ID</th>
+              <th class="py-3 px-4">Họ và tên</th>
+              <th class="py-3 px-4">Email</th>
+              <th class="py-3 px-4">Vai trò</th>
+              <th class="py-3 px-4">Gói hội viên</th>
+              <th class="py-3 px-4">Lượt đẩy tin</th>
+              <th class="py-3 px-4">Trạng thái</th>
+              <th class="py-3 px-4">Ngày đăng ký</th>
+            </tr>
+          </thead>
+          <tbody id="usersTableBody" class="divide-y divide-gray-100">
+            <tr><td colspan="8" class="text-center py-8 text-gray-400">Đang tải danh sách người dùng...</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Danh mục Loại hình & Dự án -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t border-gray-100">
+        <div class="p-4 bg-gray-50 rounded-xl border border-gray-200">
+          <h3 class="text-xs font-bold text-gray-800 uppercase mb-2 flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-indigo-600 text-sm">category</span> Danh mục loại hình BĐS
+          </h3>
+          <div class="space-y-1.5 text-xs text-gray-700">
+            <div class="flex items-center justify-between p-2 bg-white rounded border">
+              <span>🏢 Căn hộ chung cư</span>
+              <span class="text-[11px] text-emerald-600 font-bold">Hoạt động</span>
+            </div>
+            <div class="flex items-center justify-between p-2 bg-white rounded border">
+              <span>🏡 Nhà riêng / Nhà mặt phố</span>
+              <span class="text-[11px] text-emerald-600 font-bold">Hoạt động</span>
+            </div>
+            <div class="flex items-center justify-between p-2 bg-white rounded border">
+              <span>🏰 Biệt thự, Liền kề</span>
+              <span class="text-[11px] text-emerald-600 font-bold">Hoạt động</span>
+            </div>
+            <div class="flex items-center justify-between p-2 bg-white rounded border">
+              <span>🏞️ Đất nền dự án</span>
+              <span class="text-[11px] text-emerald-600 font-bold">Hoạt động</span>
+            </div>
+            <div class="flex items-center justify-between p-2 bg-white rounded border">
+              <span>🏬 Mặt bằng / Shophouse</span>
+              <span class="text-[11px] text-emerald-600 font-bold">Hoạt động</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="p-4 bg-gray-50 rounded-xl border border-gray-200">
+          <h3 class="text-xs font-bold text-gray-800 uppercase mb-2 flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-indigo-600 text-sm">apartment</span> Danh mục Dự án trọng điểm
+          </h3>
+          <div class="space-y-1.5 text-xs text-gray-700">
+            <div class="flex items-center justify-between p-2 bg-white rounded border">
+              <div>
+                <strong>Vinhomes Ocean Park</strong>
+                <p class="text-[10px] text-gray-400">Gia Lâm, Hà Nội</p>
+              </div>
+              <span class="text-[11px] bg-blue-50 text-blue-700 px-2 py-0.5 rounded font-bold">Đang mở bán</span>
+            </div>
+            <div class="flex items-center justify-between p-2 bg-white rounded border">
+              <div>
+                <strong>Masteri Centre Point</strong>
+                <p class="text-[10px] text-gray-400">TP. Thủ Đức, TP.HCM</p>
+              </div>
+              <span class="text-[11px] bg-blue-50 text-blue-700 px-2 py-0.5 rounded font-bold">Đang mở bán</span>
+            </div>
+            <div class="flex items-center justify-between p-2 bg-white rounded border">
+              <div>
+                <strong>Ecopark Grand The Island</strong>
+                <p class="text-[10px] text-gray-400">Văn Giang, Hưng Yên</p>
+              </div>
+              <span class="text-[11px] bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded font-bold">Đã bàn giao</span>
+            </div>
+            <div class="flex items-center justify-between p-2 bg-white rounded border">
+              <div>
+                <strong>The Sun Avenue</strong>
+                <p class="text-[10px] text-gray-400">Quận 2, TP.HCM</p>
+              </div>
+              <span class="text-[11px] bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded font-bold">Đã bàn giao</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Phân hệ 5: Quản lý Bài viết & Thanh toán -->
+    <div id="sectionArticles" class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 hidden">
+      <div class="flex items-center justify-between pb-4 border-b border-gray-100 mb-4">
+        <div>
+          <h2 class="text-base font-bold text-gray-900 flex items-center gap-2">
+            Quản lý Bài viết & Thanh toán
+          </h2>
+          <p class="text-xs text-gray-500">Giám sát các gói dịch vụ hội viên và bài viết kiến thức, cẩm nang BĐS</p>
+        </div>
+      </div>
+
+      <!-- Gói dịch vụ & Doanh thu hội viên -->
+      <div class="mb-6">
+        <h3 class="text-xs font-bold text-gray-800 uppercase mb-3 flex items-center gap-1.5">
+          <span class="material-symbols-outlined text-indigo-600 text-sm">payments</span> Cấu hình Gói dịch vụ đăng tin & hội viên
+        </h3>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div class="p-4 bg-indigo-50/50 rounded-xl border border-indigo-100">
+            <span class="text-xs font-bold text-indigo-700 uppercase">Hội viên Cơ bản</span>
+            <div class="text-2xl font-black text-indigo-900 mt-1">467.000 đ</div>
+            <p class="text-[11px] text-gray-500 mt-1">15 lượt đẩy tin + 15 voucher đăng</p>
+            <span class="mt-2 inline-block px-2 py-0.5 bg-emerald-100 text-emerald-800 text-[10px] font-bold rounded">Đang áp dụng</span>
+          </div>
+          <div class="p-4 bg-amber-50/50 rounded-xl border border-amber-200">
+            <span class="text-xs font-bold text-amber-700 uppercase">Hội viên Tiêu chuẩn</span>
+            <div class="text-2xl font-black text-amber-900 mt-1">770.000 đ</div>
+            <p class="text-[11px] text-gray-500 mt-1">30 lượt đẩy tin + 1 tin VIP</p>
+            <span class="mt-2 inline-block px-2 py-0.5 bg-emerald-100 text-emerald-800 text-[10px] font-bold rounded">Phổ biến nhất</span>
+          </div>
+          <div class="p-4 bg-purple-50/50 rounded-xl border border-purple-100">
+            <span class="text-xs font-bold text-purple-700 uppercase">Hội viên Cao cấp</span>
+            <div class="text-2xl font-black text-purple-900 mt-1">1.170.000 đ</div>
+            <p class="text-[11px] text-gray-500 mt-1">50 lượt đẩy tin + 3 tin VIP</p>
+            <span class="mt-2 inline-block px-2 py-0.5 bg-emerald-100 text-emerald-800 text-[10px] font-bold rounded">Ưu tiên cao</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quản lý Bài viết & Tin tức -->
+      <div class="pt-4 border-t border-gray-100">
+        <h3 class="text-xs font-bold text-gray-800 uppercase mb-3 flex items-center gap-1.5">
+          <span class="material-symbols-outlined text-indigo-600 text-sm">newspaper</span> Danh mục Bài viết & Cẩm nang BĐS
+        </h3>
+        <div class="space-y-2">
+          <div class="p-3 bg-gray-50 rounded-xl border border-gray-200 flex items-center justify-between">
+            <div>
+              <h4 class="text-xs font-bold text-gray-900">Quy trình sang tên sổ đỏ, sổ hồng năm 2026 chi tiết từ A-Z</h4>
+              <p class="text-[11px] text-gray-500 mt-0.5">Chuyên mục: Pháp lý Bất động sản • Tác giả: Ban biên tập BĐS</p>
+            </div>
+            <span class="px-2.5 py-1 bg-emerald-50 text-emerald-700 text-[10px] font-bold rounded-lg border border-emerald-200">Đã xuất bản</span>
+          </div>
+          <div class="p-3 bg-gray-50 rounded-xl border border-gray-200 flex items-center justify-between">
+            <div>
+              <h4 class="text-xs font-bold text-gray-900">Kinh nghiệm kiểm tra quy hoạch và pháp lý trước khi đặt cọc mua nhà đất</h4>
+              <p class="text-[11px] text-gray-500 mt-0.5">Chuyên mục: Cẩm nang mua nhà • Tác giả: Ban biên tập BĐS</p>
+            </div>
+            <span class="px-2.5 py-1 bg-emerald-50 text-emerald-700 text-[10px] font-bold rounded-lg border border-emerald-200">Đã xuất bản</span>
+          </div>
+          <div class="p-3 bg-gray-50 rounded-xl border border-gray-200 flex items-center justify-between">
+            <div>
+              <h4 class="text-xs font-bold text-gray-900">Top 5 xu hướng thiết kế nội thất căn hộ thông minh được ưa chuộng</h4>
+              <p class="text-[11px] text-gray-500 mt-0.5">Chuyên mục: Phong cách sống & Nội thất • Tác giả: Ban biên tập BĐS</p>
+            </div>
+            <span class="px-2.5 py-1 bg-emerald-50 text-emerald-700 text-[10px] font-bold rounded-lg border border-emerald-200">Đã xuất bản</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    const token = localStorage.getItem('accessToken');
+    if (!token) window.location.href = 'signin.html';
+
+    // Kiểm tra quyền Admin
+    fetch('/api/auth/me', { headers: { 'Authorization': 'Bearer ' + token } })
+      .then(r => {
+        if (!r.ok) throw new Error();
+        return r.json();
+      })
+      .then(u => {
+        if (u.role !== 'Admin') {
+          alert('Chỉ tài khoản Quản trị viên (Admin) mới có quyền truy cập trang này!');
+          window.location.href = 'home_property_search.html';
+          return;
+        }
+        document.getElementById('admin-name').textContent = u.fullName;
+      })
+      .catch(() => {
+        window.location.href = 'signin.html';
+      });
+
+    function formatPrice(price) {
+      if (!price) return 'Thương lượng';
+      if (price >= 1000000000) return (price / 1000000000).toFixed(2) + ' tỷ';
+      if (price >= 1000000) return (price / 1000000).toFixed(0) + ' triệu';
+      return price.toLocaleString('vi-VN') + ' đ';
+    }
+
+    async function loadPendingListings() {
+      const container = document.getElementById('pendingList');
+      try {
+        const res = await fetch('/api/listings/pending', {
+          headers: { 'Authorization': 'Bearer ' + token }
+        });
+        const data = await res.json();
+
+        // Cập nhật thống kê
+        document.getElementById('stat-pending').textContent = data.length || 0;
+        if (document.getElementById('tabCountPending')) {
+          document.getElementById('tabCountPending').textContent = data.length || 0;
+        }
+
+        // Lấy tổng số tin approved
+        fetch('/api/listings').then(r => r.json()).then(arr => {
+          document.getElementById('stat-approved').textContent = arr.length || 0;
+          if (document.getElementById('tabCountApproved')) {
+            document.getElementById('tabCountApproved').textContent = arr.length || 0;
+          }
+        });
+
+        if (!data || data.length === 0) {
+          container.innerHTML = `
+            <div class="text-center py-12 text-gray-400">
+              <div class="text-4xl mb-2">🎉</div>
+              <p class="font-bold text-gray-700">Tất cả tin đăng đã được duyệt!</p>
+              <p class="text-xs text-gray-400 mt-1">Không có tin đăng nào đang chờ kiểm duyệt.</p>
+            </div>
+          `;
+          return;
+        }
+
+        container.innerHTML = data.map(l => `
+          <div class="border border-gray-200 rounded-xl p-4 hover:border-indigo-300 transition-all flex flex-col md:flex-row gap-4 items-start bg-gray-50/50">
+            <div class="w-full md:w-44 h-32 bg-gray-200 rounded-lg overflow-hidden shrink-0">
+              ${l.imageUrls ? `<img src="${l.imageUrls.split(',')[0]}" class="w-full h-full object-cover"/>` : '<div class="w-full h-full flex items-center justify-center text-3xl">🏠</div>'}
+            </div>
+            <div class="flex-1">
+              <div class="flex items-start justify-between gap-2">
+                <h4 class="font-bold text-gray-900 text-sm">${l.title}</h4>
+                <span class="text-base font-black text-red-600 shrink-0">${formatPrice(l.price)}</span>
+              </div>
+              <p class="text-xs text-gray-500 mt-1">📍 ${l.address ? l.address + ', ' : ''}${l.district ? l.district + ', ' : ''}${l.city}</p>
+              <div class="flex gap-3 text-xs text-gray-600 mt-2 font-medium">
+                <span>Diện tích: <strong>${l.area || '--'} m²</strong></span>
+                <span>Hướng: <strong>${l.direction || 'Chưa rõ'}</strong></span>
+                <span>Loại: <strong>${l.type === 'Sale' ? 'Bán' : 'Cho thuê'}</strong></span>
+              </div>
+              <p class="text-xs text-gray-500 mt-2 bg-white p-2 rounded border line-clamp-2">📝 ${l.description || 'Không có mô tả'}</p>
+              <div class="text-xs text-gray-400 mt-2">Người đăng: <strong class="text-gray-700">${l.ownerName || 'ID: ' + l.ownerId}</strong> • Ngày gửi: ${new Date(l.createdAt).toLocaleString('vi-VN')}</div>
+            </div>
+            <div class="flex md:flex-col gap-2 w-full md:w-auto shrink-0 justify-end">
+              <button onclick="approveListing(${l.id})" class="flex-1 md:flex-none px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold transition-colors shadow-sm flex items-center justify-center gap-1">
+                <span class="material-symbols-outlined text-base">check</span> Duyệt tin
+              </button>
+              <button onclick="openRejectModal(${l.id}, '${l.title.replace(/'/g, "\\'")}')" class="flex-1 md:flex-none px-4 py-2 bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 rounded-xl text-xs font-bold transition-colors flex items-center justify-center gap-1">
+                <span class="material-symbols-outlined text-base">close</span> Từ chối
+              </button>
+            </div>
+          </div>
+        `).join('');
+      } catch (err) {
+        container.innerHTML = '<p class="text-red-500 text-center py-6">Lỗi tải dữ liệu kiểm duyệt</p>';
+      }
+    }
+
+    async function approveListing(id) {
+      if (!confirm('Bạn có đồng ý phê duyệt tin đăng này để hiển thị công khai?')) return;
+      try {
+        const res = await fetch('/api/listings/' + id + '/approve', {
+          method: 'PUT',
+          headers: { 'Authorization': 'Bearer ' + token }
+        });
+        const data = await res.json();
+        alert(data.message || 'Đã duyệt tin thành công!');
+        loadPendingListings();
+      } catch (err) {
+        alert('Lỗi phê duyệt');
+      }
+    }
+
+    let pendingRejectListingId = null;
+
+    function openRejectModal(id, title) {
+      pendingRejectListingId = id;
+      document.getElementById('adminRejectListingTitle').textContent = `#BDS-${id}: ${title}`;
+      document.getElementById('adminRejectReasonInput').value = '';
+      const modal = document.getElementById('adminRejectModal');
+      if (modal) modal.classList.remove('hidden');
+    }
+
+    function closeRejectModal() {
+      pendingRejectListingId = null;
+      const modal = document.getElementById('adminRejectModal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function setRejectQuickReason(text) {
+      const input = document.getElementById('adminRejectReasonInput');
+      if (input) input.value = text;
+    }
+
+    async function confirmSubmitReject() {
+      if (!pendingRejectListingId) return;
+      const input = document.getElementById('adminRejectReasonInput');
+      const reason = input ? input.value.trim() : '';
+      const btn = document.getElementById('btnConfirmRejectSubmit');
+      if (btn) btn.disabled = true;
+
+      try {
+        const res = await fetch('/api/listings/' + pendingRejectListingId + '/reject', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+          body: JSON.stringify({ reason: reason })
+        });
+        const data = await res.json();
+        alert(data.message || 'Đã từ chối tin đăng thành công!');
+        closeRejectModal();
+        loadPendingListings();
+      } catch (err) {
+        alert('Lỗi khi từ chối tin');
+      } finally {
+        if (btn) btn.disabled = false;
+      }
+    }
+
+    function switchAdminTab(tab) {
+      const btnP = document.getElementById('tabBtnPending');
+      const btnA = document.getElementById('tabBtnApproved');
+      const btnR = document.getElementById('tabBtnReports');
+      const btnU = document.getElementById('tabBtnUsers');
+      const btnArt = document.getElementById('tabBtnArticles');
+
+      const secP = document.getElementById('sectionPending');
+      const secA = document.getElementById('sectionApproved');
+      const secR = document.getElementById('sectionReports');
+      const secU = document.getElementById('sectionUsers');
+      const secArt = document.getElementById('sectionArticles');
+
+      const activeClass = 'px-5 py-2.5 rounded-xl font-bold text-xs bg-indigo-600 text-white shadow-sm flex items-center gap-1.5 transition-all';
+      const inactiveClass = 'px-5 py-2.5 rounded-xl font-semibold text-xs bg-white text-gray-600 hover:bg-gray-50 border border-gray-200 flex items-center gap-1.5 transition-all';
+
+      if (btnP) btnP.className = inactiveClass;
+      if (btnA) btnA.className = inactiveClass;
+      if (btnR) btnR.className = inactiveClass;
+      if (btnU) btnU.className = inactiveClass;
+      if (btnArt) btnArt.className = inactiveClass;
+
+      if (secP) secP.classList.add('hidden');
+      if (secA) secA.classList.add('hidden');
+      if (secR) secR.classList.add('hidden');
+      if (secU) secU.classList.add('hidden');
+      if (secArt) secArt.classList.add('hidden');
+
+      if (tab === 'pending') {
+        if (btnP) btnP.className = activeClass;
+        if (secP) secP.classList.remove('hidden');
+        loadPendingListings();
+      } else if (tab === 'approved') {
+        if (btnA) btnA.className = activeClass;
+        if (secA) secA.classList.remove('hidden');
+        loadApprovedListings();
+      } else if (tab === 'reports') {
+        if (btnR) btnR.className = activeClass;
+        if (secR) secR.classList.remove('hidden');
+        loadReports();
+      } else if (tab === 'users') {
+        if (btnU) btnU.className = activeClass;
+        if (secU) secU.classList.remove('hidden');
+        loadUsersList();
+      } else if (tab === 'articles') {
+        if (btnArt) btnArt.className = activeClass;
+        if (secArt) secArt.classList.remove('hidden');
+      }
+    }
+
+    async function loadUsersList() {
+      const tbody = document.getElementById('usersTableBody');
+      if (!tbody) return;
+      tbody.innerHTML = '<tr><td colspan="8" class="text-center py-8 text-gray-400">Đang tải danh sách người dùng...</td></tr>';
+      try {
+        const res = await fetch('/api/auth/users', {
+          headers: { 'Authorization': 'Bearer ' + token }
+        });
+        if (!res.ok) throw new Error();
+        const users = await res.json();
+
+        if (!users || users.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="8" class="text-center py-8 text-gray-400">Chưa có người dùng nào</td></tr>';
+          return;
+        }
+
+        tbody.innerHTML = users.map(u => {
+          let roleBadge = '';
+          if (u.role.includes('Admin')) {
+            roleBadge = '<span class="px-2 py-0.5 rounded-full bg-purple-100 text-purple-700 font-bold text-[10px]">Quản trị viên</span>';
+          } else if (u.role.includes('Agent')) {
+            roleBadge = '<span class="px-2 py-0.5 rounded-full bg-amber-100 text-amber-700 font-bold text-[10px]">Môi giới</span>';
+          } else if (u.role.includes('Seller')) {
+            roleBadge = '<span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700 font-bold text-[10px]">Người bán</span>';
+          } else if (u.role.includes('Landlord')) {
+            roleBadge = '<span class="px-2 py-0.5 rounded-full bg-blue-100 text-blue-700 font-bold text-[10px]">Cho thuê</span>';
+          } else {
+            roleBadge = '<span class="px-2 py-0.5 rounded-full bg-gray-100 text-gray-600 font-medium text-[10px]">Người mua</span>';
+          }
+
+          return `
+            <tr class="hover:bg-gray-50/60 transition-colors">
+              <td class="py-3 px-4 font-bold text-gray-800">#${u.id}</td>
+              <td class="py-3 px-4 font-semibold text-gray-900">${u.fullName || 'Chưa đặt tên'}</td>
+              <td class="py-3 px-4 text-gray-500">${u.email}</td>
+              <td class="py-3 px-4">${roleBadge}</td>
+              <td class="py-3 px-4 font-medium text-gray-700">${u.currentPackage || 'Thành viên thường'}</td>
+              <td class="py-3 px-4 font-bold text-indigo-600">${u.remainingPushes ?? 0} lượt</td>
+              <td class="py-3 px-4"><span class="px-2 py-0.5 rounded bg-emerald-50 text-emerald-700 font-bold text-[10px]">Hoạt động</span></td>
+              <td class="py-3 px-4 text-gray-400 text-[11px]">${u.createdAt ? new Date(u.createdAt).toLocaleDateString('vi-VN') : '--'}</td>
+            </tr>
+          `;
+        }).join('');
+      } catch (err) {
+        tbody.innerHTML = '<tr><td colspan="8" class="text-center py-6 text-red-500">Lỗi khi tải danh sách người dùng</td></tr>';
+      }
+    }
+
+    async function loadApprovedListings() {
+      const container = document.getElementById('approvedList');
+      container.innerHTML = '<div class="text-center py-10 text-gray-400">Đang tải danh sách tin đã duyệt...</div>';
+      try {
+        const res = await fetch('/api/listings');
+        const data = await res.json();
+
+        // Cập nhật số đếm
+        if (document.getElementById('tabCountApproved')) {
+          document.getElementById('tabCountApproved').textContent = data.length || 0;
+        }
+        if (document.getElementById('stat-approved')) {
+          document.getElementById('stat-approved').textContent = data.length || 0;
+        }
+
+        if (!data || data.length === 0) {
+          container.innerHTML = `
+            <div class="text-center py-12 text-gray-400">
+              <div class="text-4xl mb-2">📋</div>
+              <p class="font-bold text-gray-700">Chưa có tin đăng nào được duyệt công khai!</p>
+              <p class="text-xs text-gray-400 mt-1">Khi bạn duyệt tin từ tab "Tin chờ duyệt", tin sẽ xuất hiện tại đây.</p>
+            </div>
+          `;
+          return;
+        }
+
+        container.innerHTML = data.map(l => `
+          <div class="border border-gray-200 rounded-xl p-4 hover:border-emerald-300 transition-all flex flex-col md:flex-row gap-4 items-start bg-white">
+            <div class="w-full md:w-44 h-32 bg-gray-200 rounded-lg overflow-hidden shrink-0 relative">
+              ${l.imageUrls ? `<img src="${l.imageUrls.split(',')[0]}" class="w-full h-full object-cover"/>` : '<div class="w-full h-full flex items-center justify-center text-3xl">🏠</div>'}
+              <span class="absolute top-2 left-2 bg-emerald-600 text-white text-[10px] font-bold px-2 py-0.5 rounded shadow">Đã duyệt</span>
+            </div>
+            <div class="flex-1">
+              <div class="flex items-start justify-between gap-2">
+                <h4 class="font-bold text-gray-900 text-sm hover:text-indigo-600">
+                  <a href="property_detail.html?id=${l.id}" target="_blank">${l.title}</a>
+                </h4>
+                <span class="text-base font-black text-red-600 shrink-0">${formatPrice(l.price)}</span>
+              </div>
+              <p class="text-xs text-gray-500 mt-1">📍 ${l.address ? l.address + ', ' : ''}${l.district ? l.district + ', ' : ''}${l.city}</p>
+              <div class="flex gap-3 text-xs text-gray-600 mt-2 font-medium">
+                <span>Diện tích: <strong>${l.area || '--'} m²</strong></span>
+                <span>Hướng: <strong>${l.direction || 'Chưa rõ'}</strong></span>
+                <span>Loại: <strong>${l.type === 'Sale' ? 'Bán' : 'Cho thuê'}</strong></span>
+              </div>
+              <div class="text-xs text-gray-400 mt-2">
+                Mã tin: <strong class="text-gray-700">#BDS-${l.id}</strong> • 
+                Người đăng: <strong class="text-gray-700">${l.ownerName || 'ID: ' + l.ownerId}</strong> • 
+                Lượt xem: <strong class="text-indigo-600">${l.viewCount || 0}</strong>
+              </div>
+            </div>
+            <div class="flex md:flex-col gap-2 w-full md:w-auto shrink-0 justify-end">
+              <a href="property_detail.html?id=${l.id}" target="_blank" class="flex-1 md:flex-none px-3.5 py-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 rounded-xl text-xs font-bold transition-colors flex items-center justify-center gap-1">
+                <span class="material-symbols-outlined text-base">visibility</span> Xem tin
+              </a>
+              <button onclick="unapproveListing(${l.id})" class="flex-1 md:flex-none px-3.5 py-2 bg-amber-50 hover:bg-amber-100 text-amber-700 border border-amber-200 rounded-xl text-xs font-bold transition-colors flex items-center justify-center gap-1">
+                <span class="material-symbols-outlined text-base">pause_circle</span> Gỡ/Ẩn tin
+              </button>
+              <button onclick="deleteListingAdmin(${l.id})" class="flex-1 md:flex-none px-3.5 py-2 bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 rounded-xl text-xs font-bold transition-colors flex items-center justify-center gap-1">
+                <span class="material-symbols-outlined text-base">delete</span> Xóa tin
+              </button>
+            </div>
+          </div>
+        `).join('');
+      } catch (err) {
+        container.innerHTML = '<p class="text-red-500 text-center py-6">Lỗi tải danh sách tin đã duyệt</p>';
+      }
+    }
+
+    async function unapproveListing(id) {
+      const reason = prompt('Nhập lý do gỡ/hạ tin đăng này khỏi sàn:', 'Vi phạm nội dung hoặc thông tin cần điều chỉnh lại');
+      if (reason === null) return;
+      try {
+        const res = await fetch('/api/listings/' + id + '/reject', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+          body: JSON.stringify({ reason: reason })
+        });
+        const data = await res.json();
+        alert(data.message || 'Đã gỡ tin thành công!');
+        loadApprovedListings();
+        loadPendingListings();
+      } catch (err) {
+        alert('Lỗi gỡ tin');
+      }
+    }
+
+    async function deleteListingAdmin(id) {
+      if (!confirm('Bạn có chắc chắn muốn xóa VĨNH VIỄN tin đăng này không? Thao tác này không thể hoàn tác!')) return;
+      try {
+        const res = await fetch('/api/listings/' + id, {
+          method: 'DELETE',
+          headers: { 'Authorization': 'Bearer ' + token }
+        });
+        const data = await res.json();
+        alert(data.message || 'Đã xóa tin thành công!');
+        loadApprovedListings();
+        loadPendingListings();
+      } catch (err) {
+        alert('Lỗi xóa tin');
+      }
+    }
+
+    async function loadReports() {
+      const container = document.getElementById('reportsList');
+      container.innerHTML = '<div class="text-center py-10 text-gray-400">Đang tải danh sách báo cáo vi phạm...</div>';
+
+      try {
+        const res = await fetch('/api/reports', {
+          headers: { 'Authorization': 'Bearer ' + token }
+        });
+        const data = await res.json();
+        
+        const pendingReports = data.filter(r => r.status === 'Pending');
+        document.getElementById('stat-reports').textContent = pendingReports.length || 0;
+        if (document.getElementById('tabCountReports')) {
+          document.getElementById('tabCountReports').textContent = pendingReports.length || 0;
+        }
+
+        if (!data || data.length === 0) {
+          container.innerHTML = `
+            <div class="text-center py-12 text-gray-400">
+              <div class="text-4xl mb-2">🛡️</div>
+              <p class="font-bold text-gray-700">Không có báo cáo vi phạm nào!</p>
+              <p class="text-xs text-gray-400 mt-1">Hệ thống đang hoạt động ổn định và an toàn.</p>
+            </div>
+          `;
+          return;
+        }
+
+        container.innerHTML = data.map(r => {
+          let statusBadge = '';
+          if (r.status === 'Pending') statusBadge = '<span class="px-2 py-0.5 bg-amber-100 text-amber-800 rounded font-bold text-[11px]">Chờ xử lý</span>';
+          else if (r.status === 'Resolved') statusBadge = '<span class="px-2 py-0.5 bg-red-100 text-red-800 rounded font-bold text-[11px]">Đã gỡ tin</span>';
+          else statusBadge = '<span class="px-2 py-0.5 bg-gray-100 text-gray-600 rounded font-bold text-[11px]">Đã bác bỏ</span>';
+
+          return `
+            <div class="border border-gray-200 rounded-xl p-4 bg-white hover:border-red-300 transition-all flex flex-col md:flex-row gap-4 items-start justify-between">
+              <div class="flex-1">
+                <div class="flex items-center gap-2 mb-1">
+                  <span class="text-xs font-black text-red-600 bg-red-50 border border-red-200 px-2 py-0.5 rounded">🚨 ${r.reason}</span>
+                  ${statusBadge}
+                </div>
+                <h4 class="font-bold text-gray-900 text-sm mt-1">
+                  Tin BĐS: <a href="property_detail.html?id=${r.listingId}" target="_blank" class="text-indigo-600 hover:underline">${r.listingTitle} (Xem chi tiết ↗)</a>
+                </h4>
+                ${r.details ? `<p class="text-xs text-gray-600 mt-1.5 bg-gray-50 p-2 rounded border">Ghi chú của người báo cáo: "${r.details}"</p>` : ''}
+                <div class="text-xs text-gray-400 mt-2">
+                  Người báo cáo: <strong class="text-gray-700">${r.reporterName || 'Khách vãng lai'}</strong> 
+                  ${r.reporterPhone ? `(${r.reporterPhone})` : ''} 
+                  • Gửi lúc: ${new Date(r.createdAt).toLocaleString('vi-VN')}
+                </div>
+              </div>
+
+              ${r.status === 'Pending' ? `
+              <div class="flex md:flex-col gap-2 shrink-0 w-full md:w-auto">
+                <button onclick="resolveReport(${r.id}, 'HideListing')" class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-xl text-xs font-bold transition-colors shadow-sm flex items-center justify-center gap-1">
+                  <span class="material-symbols-outlined text-base">block</span> Gỡ tin ngay
+                </button>
+                <button onclick="resolveReport(${r.id}, 'Dismiss')" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl text-xs font-semibold transition-colors flex items-center justify-center gap-1">
+                  <span class="material-symbols-outlined text-base">close</span> Bác bỏ
+                </button>
+              </div>
+              ` : ''}
+            </div>
+          `;
+        }).join('');
+      } catch (err) {
+        container.innerHTML = '<p class="text-red-500 text-center py-6">Lỗi tải danh sách báo cáo vi phạm</p>';
+      }
+    }
+
+    async function resolveReport(reportId, action) {
+      const confirmMsg = action === 'HideListing' 
+        ? 'Bạn có chắc chắn muốn gỡ bỏ và ẩn tin đăng vi phạm này khỏi hệ thống?' 
+        : 'Bạn có chắc chắn muốn bác bỏ báo cáo này không?';
+      if (!confirm(confirmMsg)) return;
+
+      try {
+        const res = await fetch('/api/reports/' + reportId + '/resolve', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+          body: JSON.stringify({ action: action })
+        });
+        const data = await res.json();
+        alert(data.message || 'Đã xử lý báo cáo!');
+        loadReports();
+      } catch (err) {
+        alert('Lỗi xử lý');
+      }
+    }
+
+    loadPendingListings();
+    loadApprovedListings();
+    loadReports();
+  </script>
+  <!-- MODAL TỪ CHỐI TIN ĐĂNG DÀNH CHO ADMIN -->
+  <div id="adminRejectModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl relative">
+      <div class="flex items-center justify-between pb-3 border-b mb-4">
+        <div class="flex items-center gap-2">
+          <div class="w-10 h-10 rounded-full bg-red-100 text-red-600 flex items-center justify-center">
+            <span class="material-symbols-outlined text-xl">block</span>
+          </div>
+          <div>
+            <h3 class="font-black text-gray-900 text-base">Từ chối duyệt tin đăng</h3>
+            <p class="text-[11px] text-gray-400">Nêu lý do để người đăng biết và điều chỉnh lại</p>
+          </div>
+        </div>
+        <button onclick="closeRejectModal()" class="text-gray-400 hover:text-gray-600 font-bold text-lg">✕</button>
+      </div>
+
+      <div class="space-y-3.5">
+        <div class="p-3 bg-gray-50 rounded-xl border border-gray-200">
+          <span class="text-[10px] text-gray-400 uppercase font-bold">Tin đăng:</span>
+          <div id="adminRejectListingTitle" class="text-xs font-bold text-gray-800 mt-0.5 line-clamp-1">--</div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-gray-700 uppercase mb-1.5">Gợi ý lý do nhanh (Bấm để chọn):</label>
+          <div class="flex flex-wrap gap-1.5 text-xs">
+            <button type="button" onclick="setRejectQuickReason(this.innerText)" class="px-2.5 py-1 bg-gray-100 hover:bg-red-50 hover:text-red-700 rounded-lg text-[11px] font-semibold text-gray-700 border transition-all">Sai giá niêm yết (kê giá / giá ảo)</button>
+            <button type="button" onclick="setRejectQuickReason(this.innerText)" class="px-2.5 py-1 bg-gray-100 hover:bg-red-50 hover:text-red-700 rounded-lg text-[11px] font-semibold text-gray-700 border transition-all">Hình ảnh không thực tế hoặc chứa quảng cáo ngoài</button>
+            <button type="button" onclick="setRejectQuickReason(this.innerText)" class="px-2.5 py-1 bg-gray-100 hover:bg-red-50 hover:text-red-700 rounded-lg text-[11px] font-semibold text-gray-700 border transition-all">Địa chỉ bất động sản không chính xác</button>
+            <button type="button" onclick="setRejectQuickReason(this.innerText)" class="px-2.5 py-1 bg-gray-100 hover:bg-red-50 hover:text-red-700 rounded-lg text-[11px] font-semibold text-gray-700 border transition-all">Nội dung mô tả sơ sài, thiếu thông tin pháp lý</button>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-gray-700 uppercase mb-1">
+            Lý do từ chối cụ thể <span class="text-gray-400 font-normal lowercase">(có thể sửa hoặc để trống)</span>:
+          </label>
+          <textarea id="adminRejectReasonInput" rows="3" placeholder="Nhập lý do chi tiết từ chối tin đăng..." 
+            class="w-full px-3.5 py-2.5 bg-gray-50 border border-gray-300 rounded-xl outline-none text-xs text-gray-800 focus:ring-2 focus:ring-red-500 font-medium"></textarea>
+          <p class="text-[11px] text-gray-400 mt-1">💡 Nếu để trống, hệ thống sẽ tự áp dụng lý do: <em>"Không đạt tiêu chuẩn kiểm duyệt nội dung của sàn"</em>.</p>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-end gap-2 mt-5 pt-3 border-t">
+        <button onclick="closeRejectModal()" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-semibold rounded-xl transition-all">
+          Hủy bỏ
+        </button>
+        <button onclick="confirmSubmitReject()" id="btnConfirmRejectSubmit" class="px-5 py-2 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded-xl shadow transition-all flex items-center gap-1">
+          <span class="material-symbols-outlined text-sm">check</span> Xác nhận từ chối
+        </button>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
+
