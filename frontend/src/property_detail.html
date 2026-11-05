@@ -73,6 +73,21 @@
           window.propertyImages = rawImages.length > 0 ? rawImages : ['https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1200&q=80'];
           window.currentImageIdx = 0;
 
+          // Phân quyền người dùng: Chỉ Chủ tin hoặc Quản trị viên mới được xóa tin
+          let currentUserId = null;
+          let currentUserRole = '';
+          if (token) {
+            try {
+              const base64Url = token.split('.')[1];
+              const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+              const jsonPayload = decodeURIComponent(atob(base64).split('').map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join(''));
+              const payload = JSON.parse(jsonPayload);
+              currentUserId = parseInt(payload.sub);
+              currentUserRole = payload.role || '';
+            } catch (e) {}
+          }
+          const canDelete = currentUserId && (currentUserId === l.ownerId || currentUserRole.includes('Admin'));
+
           document.getElementById('content').innerHTML = `
             <div class="bg-white rounded-3xl shadow-sm border border-gray-200 overflow-hidden mb-8">
               <!-- BỘ SƯU TẬP ẢNH (GALLERY & SLIDER NHIỀU ẢNH) -->
@@ -163,7 +178,7 @@
                   <h3 class="text-base font-bold text-gray-900 mb-2">Đặc điểm bất động sản</h3>
                   <div class="grid grid-cols-2 gap-2 text-xs">
                     <div class="bg-gray-50 rounded-xl p-3 border"><span class="text-gray-400">Hướng phong thủy:</span><br><strong class="text-gray-800 text-sm">${l.direction ? 'Hướng ' + l.direction : 'Không xác định'}</strong></div>
-                    <div class="bg-gray-50 rounded-xl p-3 border"><span class="text-gray-400">Trạng thái:</span><br><strong class="text-emerald-600 text-sm">${l.status}</strong></div>
+                    <div class="bg-gray-50 rounded-xl p-3 border"><span class="text-gray-400">Mã tin đăng:</span><br><strong class="text-indigo-600 text-sm">#BDS-${l.id}</strong></div>
                     <div class="bg-gray-50 rounded-xl p-3 border"><span class="text-gray-400">Người đăng tin:</span><br><strong class="text-gray-800 text-sm">${l.ownerName || 'Thành viên BĐS'}</strong></div>
                     <div class="bg-gray-50 rounded-xl p-3 border"><span class="text-gray-400">Ngày đăng:</span><br><strong class="text-gray-800 text-sm">${new Date(l.createdAt).toLocaleDateString('vi-VN')}</strong></div>
                   </div>
@@ -180,12 +195,14 @@
                       <span class="material-symbols-outlined text-base">flag</span> Báo cáo vi phạm
                     </button>
                   </div>
+                  ${canDelete ? `
                   <button onclick="deleteListing(${l.id})" class="px-3.5 py-2 bg-red-50 text-red-600 rounded-xl font-semibold text-xs hover:bg-red-100 transition-colors flex items-center gap-1 border border-red-200">
                     <span class="material-symbols-outlined text-base">delete</span> Xóa tin
                   </button>
+                  ` : ''}
                 </div>
 
-                <!-- VỊ TRÍ TRÊN BẢN ĐỒ (Use case: Xem chi tiết BĐS -> Xem vị trí trên bản đồ) -->
+                <!-- VỊ TRÍ TRÊN BẢN ĐỒ -->
                 <div class="mt-6">
                   <h3 class="text-base font-bold text-gray-900 mb-2 flex items-center gap-1.5">
                     <span class="material-symbols-outlined text-indigo-600">map</span> Vị trí trên bản đồ
@@ -239,13 +256,6 @@
                     </button>
                     <p id="leadMsg" class="text-xs font-semibold mt-1 text-center"></p>
                   </div>
-                </div>
-
-                <!-- Chân trang chi tiết: Quay lại -->
-                <div class="mt-8 text-center">
-                  <button onclick="history.back()" class="px-8 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl font-semibold text-xs transition-colors">
-                    ← Quay lại danh sách
-                  </button>
                 </div>
               </div>
             </div>
@@ -461,7 +471,7 @@
     }
   </script>
 
-  <!-- MODAL BÁO CÁO VI PHẠM (Use case: Báo cáo tin đăng vi phạm) -->
+  <!-- MODAL BÁO CÁO VI PHẠM -->
   <div id="reportModal" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-3 sm:p-4 hidden backdrop-blur-sm">
     <div class="bg-white rounded-2xl max-w-md w-full p-4 sm:p-6 shadow-2xl max-h-[90vh] overflow-y-auto">
       <div class="flex items-center justify-between pb-3 border-b mb-4">

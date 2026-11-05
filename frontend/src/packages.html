@@ -295,7 +295,30 @@
 
   <script>
     const token = localStorage.getItem('accessToken');
-    if (!token) window.location.href = 'signin.html';
+    if (!token) {
+      alert('Vui lòng đăng nhập để xem thông tin Gói dịch vụ!');
+      window.location.href = 'signin.html';
+    }
+
+    // Kiểm tra quyền đăng tin: Chỉ Seller, Landlord, Agent mới được sử dụng và mua gói dịch vụ
+    fetch('/api/auth/me', { headers: { 'Authorization': 'Bearer ' + token } })
+      .then(r => {
+        if (!r.ok) throw new Error();
+        return r.json();
+      })
+      .then(u => {
+        const role = u.role || '';
+        const canPost = role.includes('Seller') || role.includes('Landlord') || role.includes('Agent');
+        if (!canPost) {
+          alert('⚠️ Gói dịch vụ hội viên chỉ dành cho các tài khoản có quyền đăng tin (Người bán, Cho thuê, Môi giới). Tài khoản Người mua, Người thuê hoặc Quản trị viên không có quyền truy cập trang này!');
+          window.location.href = 'home_property_search.html';
+          return;
+        }
+        loadStatus();
+      })
+      .catch(() => {
+        window.location.href = 'signin.html';
+      });
 
     let selectedPackageId = '';
 
@@ -358,8 +381,6 @@
         btn.innerHTML = '<span class="material-symbols-outlined text-base">payments</span> Xác nhận thanh toán';
       }
     }
-
-    loadStatus();
   </script>
 </body>
 </html>

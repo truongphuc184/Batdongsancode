@@ -100,6 +100,11 @@ public class AuthController : ControllerBase
         if (user == null)
             return NotFound(new { message = "Không tìm thấy tài khoản người dùng" });
 
+        if (user.Role == Role.Admin)
+        {
+            return BadRequest(new { message = "Tài khoản Quản trị viên hệ thống có vai trò cố định, không thể chuyển đổi sang vai trò người dùng thường." });
+        }
+
         Role targetRole = Role.None;
         List<string> selectedRoles = new List<string>();
 
@@ -110,7 +115,10 @@ public class AuthController : ControllerBase
             {
                 if (Enum.TryParse<Role>(r, true, out var parsedRole))
                 {
-                    targetRole |= parsedRole;
+                    if (parsedRole != Role.Admin)
+                    {
+                        targetRole |= parsedRole;
+                    }
                 }
             }
         }

@@ -345,11 +345,18 @@ public class ListingsController : ControllerBase
         if (user == null)
             return Unauthorized(new { message = "Không tìm thấy thông tin tài khoản người dùng" });
 
-        bool canPost = user.Role.HasFlag(Role.Seller) || user.Role.HasFlag(Role.Landlord) || user.Role.HasFlag(Role.Agent) || user.Role.HasFlag(Role.Admin);
+        if (user.Role == Role.Admin)
+        {
+            return StatusCode(403, new { 
+                message = "Tài khoản Quản trị viên (Admin) chỉ thực hiện nhiệm vụ quản trị hệ thống và kiểm duyệt tin, không tham gia đăng tin bất động sản." 
+            });
+        }
+
+        bool canPost = user.Role.HasFlag(Role.Seller) || user.Role.HasFlag(Role.Landlord) || user.Role.HasFlag(Role.Agent);
         if (!canPost)
         {
             return StatusCode(403, new { 
-                message = "Tài khoản của bạn chưa có quyền đăng tin. Vui lòng vào Hồ sơ cá nhân tích thêm vai trò Người bán hoặc Cho thuê để đăng tin bất động sản!" 
+                message = "Tài khoản của bạn chưa có quyền đăng tin. Vui lòng vào Hồ sơ cá nhân chọn vai trò Người bán, Cho thuê hoặc Môi giới để đăng tin bất động sản!" 
             });
         }
 

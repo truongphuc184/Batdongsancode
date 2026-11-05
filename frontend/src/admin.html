@@ -22,7 +22,7 @@
             Hệ Thống Quản Trị
             <span class="text-[9px] sm:text-[10px] bg-red-600 text-white px-2 py-0.5 rounded font-bold uppercase tracking-wider">Admin</span>
           </h1>
-          <p class="text-[10px] sm:text-xs text-gray-400">Kiểm duyệt tin đăng & Quản trị hệ thống (Use Case 4)</p>
+          <p class="text-[10px] sm:text-xs text-gray-400">Kiểm duyệt tin đăng & Quản trị hệ thống</p>
         </div>
       </div>
       <div class="flex items-center gap-2 sm:gap-3">
@@ -74,14 +74,18 @@
     </div>
 
     <!-- Thanh chuyển tab nghiệp vụ Admin -->
-    <div class="flex items-center gap-2 mb-4">
+    <div class="flex items-center gap-2 mb-4 flex-wrap">
       <button onclick="switchAdminTab('pending')" id="tabBtnPending" 
         class="px-5 py-2.5 rounded-xl font-bold text-xs bg-indigo-600 text-white shadow-sm flex items-center gap-1.5 transition-all">
-        <span class="material-symbols-outlined text-base">checklist</span> Kiểm duyệt tin đăng
+        <span class="material-symbols-outlined text-base">checklist</span> Tin chờ duyệt (<span id="tabCountPending">0</span>)
+      </button>
+      <button onclick="switchAdminTab('approved')" id="tabBtnApproved" 
+        class="px-5 py-2.5 rounded-xl font-semibold text-xs bg-white text-gray-600 hover:bg-gray-50 border border-gray-200 flex items-center gap-1.5 transition-all">
+        <span class="material-symbols-outlined text-base text-emerald-600">verified</span> Danh sách tin đã duyệt (<span id="tabCountApproved">0</span>)
       </button>
       <button onclick="switchAdminTab('reports')" id="tabBtnReports" 
         class="px-5 py-2.5 rounded-xl font-semibold text-xs bg-white text-gray-600 hover:bg-gray-50 border border-gray-200 flex items-center gap-1.5 transition-all">
-        <span class="material-symbols-outlined text-base text-red-500">flag</span> Xử lý báo cáo vi phạm
+        <span class="material-symbols-outlined text-base text-red-500">flag</span> Báo cáo vi phạm (<span id="tabCountReports">0</span>)
       </button>
     </div>
 
@@ -90,7 +94,7 @@
       <div class="flex items-center justify-between pb-4 border-b border-gray-100 mb-4">
         <div>
           <h2 class="text-base font-bold text-gray-900 flex items-center gap-2">
-            Danh sách tin đăng chờ duyệt (Sequence Diagram 1)
+            Danh sách tin đăng chờ duyệt
           </h2>
           <p class="text-xs text-gray-500">Các tin do Người bán, Người cho thuê, Môi giới đăng lên hệ thống</p>
         </div>
@@ -104,7 +108,26 @@
       </div>
     </div>
 
-    <!-- Phân hệ 2: Danh sách báo cáo vi phạm (Sơ đồ Use Case 4: Xử lý báo cáo vi phạm) -->
+    <!-- Phân hệ 2: Danh sách tin đã duyệt công khai -->
+    <div id="sectionApproved" class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 hidden">
+      <div class="flex items-center justify-between pb-4 border-b border-gray-100 mb-4">
+        <div>
+          <h2 class="text-base font-bold text-gray-900 flex items-center gap-2">
+            Danh sách tin đăng đã duyệt công khai
+          </h2>
+          <p class="text-xs text-gray-500">Các bất động sản đang hiển thị công khai trên hệ thống sàn</p>
+        </div>
+        <button onclick="loadApprovedListings()" class="px-3.5 py-1.5 bg-gray-100 hover:bg-gray-200 rounded-xl text-xs font-semibold text-gray-700 flex items-center gap-1">
+          <span class="material-symbols-outlined text-sm">refresh</span> Làm mới
+        </button>
+      </div>
+
+      <div id="approvedList" class="flex flex-col gap-4">
+        <div class="text-center py-10 text-gray-400">Đang tải danh sách tin đã duyệt...</div>
+      </div>
+    </div>
+
+    <!-- Phân hệ 3: Danh sách báo cáo vi phạm -->
     <div id="sectionReports" class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 hidden">
       <div class="flex items-center justify-between pb-4 border-b border-gray-100 mb-4">
         <div>
@@ -163,10 +186,16 @@
 
         // Cập nhật thống kê
         document.getElementById('stat-pending').textContent = data.length || 0;
+        if (document.getElementById('tabCountPending')) {
+          document.getElementById('tabCountPending').textContent = data.length || 0;
+        }
 
         // Lấy tổng số tin approved
         fetch('/api/listings').then(r => r.json()).then(arr => {
           document.getElementById('stat-approved').textContent = arr.length || 0;
+          if (document.getElementById('tabCountApproved')) {
+            document.getElementById('tabCountApproved').textContent = arr.length || 0;
+          }
         });
 
         if (!data || data.length === 0) {
@@ -248,22 +277,138 @@
 
     function switchAdminTab(tab) {
       const btnP = document.getElementById('tabBtnPending');
+      const btnA = document.getElementById('tabBtnApproved');
       const btnR = document.getElementById('tabBtnReports');
       const secP = document.getElementById('sectionPending');
+      const secA = document.getElementById('sectionApproved');
       const secR = document.getElementById('sectionReports');
 
+      const activeClass = 'px-5 py-2.5 rounded-xl font-bold text-xs bg-indigo-600 text-white shadow-sm flex items-center gap-1.5 transition-all';
+      const inactiveClass = 'px-5 py-2.5 rounded-xl font-semibold text-xs bg-white text-gray-600 hover:bg-gray-50 border border-gray-200 flex items-center gap-1.5 transition-all';
+
+      btnP.className = inactiveClass;
+      if (btnA) btnA.className = inactiveClass;
+      btnR.className = inactiveClass;
+
+      secP.classList.add('hidden');
+      if (secA) secA.classList.add('hidden');
+      secR.classList.add('hidden');
+
       if (tab === 'pending') {
-        btnP.className = 'px-5 py-2.5 rounded-xl font-bold text-xs bg-indigo-600 text-white shadow-sm flex items-center gap-1.5 transition-all';
-        btnR.className = 'px-5 py-2.5 rounded-xl font-semibold text-xs bg-white text-gray-600 hover:bg-gray-50 border border-gray-200 flex items-center gap-1.5 transition-all';
+        btnP.className = activeClass;
         secP.classList.remove('hidden');
-        secR.classList.add('hidden');
         loadPendingListings();
+      } else if (tab === 'approved') {
+        if (btnA) btnA.className = activeClass;
+        if (secA) secA.classList.remove('hidden');
+        loadApprovedListings();
       } else {
-        btnR.className = 'px-5 py-2.5 rounded-xl font-bold text-xs bg-indigo-600 text-white shadow-sm flex items-center gap-1.5 transition-all';
-        btnP.className = 'px-5 py-2.5 rounded-xl font-semibold text-xs bg-white text-gray-600 hover:bg-gray-50 border border-gray-200 flex items-center gap-1.5 transition-all';
+        btnR.className = activeClass;
         secR.classList.remove('hidden');
-        secP.classList.add('hidden');
         loadReports();
+      }
+    }
+
+    async function loadApprovedListings() {
+      const container = document.getElementById('approvedList');
+      container.innerHTML = '<div class="text-center py-10 text-gray-400">Đang tải danh sách tin đã duyệt...</div>';
+      try {
+        const res = await fetch('/api/listings');
+        const data = await res.json();
+
+        // Cập nhật số đếm
+        if (document.getElementById('tabCountApproved')) {
+          document.getElementById('tabCountApproved').textContent = data.length || 0;
+        }
+        if (document.getElementById('stat-approved')) {
+          document.getElementById('stat-approved').textContent = data.length || 0;
+        }
+
+        if (!data || data.length === 0) {
+          container.innerHTML = `
+            <div class="text-center py-12 text-gray-400">
+              <div class="text-4xl mb-2">📋</div>
+              <p class="font-bold text-gray-700">Chưa có tin đăng nào được duyệt công khai!</p>
+              <p class="text-xs text-gray-400 mt-1">Khi bạn duyệt tin từ tab "Tin chờ duyệt", tin sẽ xuất hiện tại đây.</p>
+            </div>
+          `;
+          return;
+        }
+
+        container.innerHTML = data.map(l => `
+          <div class="border border-gray-200 rounded-xl p-4 hover:border-emerald-300 transition-all flex flex-col md:flex-row gap-4 items-start bg-white">
+            <div class="w-full md:w-44 h-32 bg-gray-200 rounded-lg overflow-hidden shrink-0 relative">
+              ${l.imageUrls ? `<img src="${l.imageUrls.split(',')[0]}" class="w-full h-full object-cover"/>` : '<div class="w-full h-full flex items-center justify-center text-3xl">🏠</div>'}
+              <span class="absolute top-2 left-2 bg-emerald-600 text-white text-[10px] font-bold px-2 py-0.5 rounded shadow">Đã duyệt</span>
+            </div>
+            <div class="flex-1">
+              <div class="flex items-start justify-between gap-2">
+                <h4 class="font-bold text-gray-900 text-sm hover:text-indigo-600">
+                  <a href="property_detail.html?id=${l.id}" target="_blank">${l.title}</a>
+                </h4>
+                <span class="text-base font-black text-red-600 shrink-0">${formatPrice(l.price)}</span>
+              </div>
+              <p class="text-xs text-gray-500 mt-1">📍 ${l.address ? l.address + ', ' : ''}${l.district ? l.district + ', ' : ''}${l.city}</p>
+              <div class="flex gap-3 text-xs text-gray-600 mt-2 font-medium">
+                <span>Diện tích: <strong>${l.area || '--'} m²</strong></span>
+                <span>Hướng: <strong>${l.direction || 'Chưa rõ'}</strong></span>
+                <span>Loại: <strong>${l.type === 'Sale' ? 'Bán' : 'Cho thuê'}</strong></span>
+              </div>
+              <div class="text-xs text-gray-400 mt-2">
+                Mã tin: <strong class="text-gray-700">#BDS-${l.id}</strong> • 
+                Người đăng: <strong class="text-gray-700">${l.ownerName || 'ID: ' + l.ownerId}</strong> • 
+                Lượt xem: <strong class="text-indigo-600">${l.viewCount || 0}</strong>
+              </div>
+            </div>
+            <div class="flex md:flex-col gap-2 w-full md:w-auto shrink-0 justify-end">
+              <a href="property_detail.html?id=${l.id}" target="_blank" class="flex-1 md:flex-none px-3.5 py-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 rounded-xl text-xs font-bold transition-colors flex items-center justify-center gap-1">
+                <span class="material-symbols-outlined text-base">visibility</span> Xem tin
+              </a>
+              <button onclick="unapproveListing(${l.id})" class="flex-1 md:flex-none px-3.5 py-2 bg-amber-50 hover:bg-amber-100 text-amber-700 border border-amber-200 rounded-xl text-xs font-bold transition-colors flex items-center justify-center gap-1">
+                <span class="material-symbols-outlined text-base">pause_circle</span> Gỡ/Ẩn tin
+              </button>
+              <button onclick="deleteListingAdmin(${l.id})" class="flex-1 md:flex-none px-3.5 py-2 bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 rounded-xl text-xs font-bold transition-colors flex items-center justify-center gap-1">
+                <span class="material-symbols-outlined text-base">delete</span> Xóa tin
+              </button>
+            </div>
+          </div>
+        `).join('');
+      } catch (err) {
+        container.innerHTML = '<p class="text-red-500 text-center py-6">Lỗi tải danh sách tin đã duyệt</p>';
+      }
+    }
+
+    async function unapproveListing(id) {
+      const reason = prompt('Nhập lý do gỡ/hạ tin đăng này khỏi sàn:', 'Vi phạm nội dung hoặc thông tin cần điều chỉnh lại');
+      if (reason === null) return;
+      try {
+        const res = await fetch('/api/listings/' + id + '/reject', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+          body: JSON.stringify({ reason: reason })
+        });
+        const data = await res.json();
+        alert(data.message || 'Đã gỡ tin thành công!');
+        loadApprovedListings();
+        loadPendingListings();
+      } catch (err) {
+        alert('Lỗi gỡ tin');
+      }
+    }
+
+    async function deleteListingAdmin(id) {
+      if (!confirm('Bạn có chắc chắn muốn xóa VĨNH VIỄN tin đăng này không? Thao tác này không thể hoàn tác!')) return;
+      try {
+        const res = await fetch('/api/listings/' + id, {
+          method: 'DELETE',
+          headers: { 'Authorization': 'Bearer ' + token }
+        });
+        const data = await res.json();
+        alert(data.message || 'Đã xóa tin thành công!');
+        loadApprovedListings();
+        loadPendingListings();
+      } catch (err) {
+        alert('Lỗi xóa tin');
       }
     }
 
@@ -279,6 +424,9 @@
         
         const pendingReports = data.filter(r => r.status === 'Pending');
         document.getElementById('stat-reports').textContent = pendingReports.length || 0;
+        if (document.getElementById('tabCountReports')) {
+          document.getElementById('tabCountReports').textContent = pendingReports.length || 0;
+        }
 
         if (!data || data.length === 0) {
           container.innerHTML = `
@@ -354,6 +502,7 @@
     }
 
     loadPendingListings();
+    loadApprovedListings();
     loadReports();
   </script>
 </body>

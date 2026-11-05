@@ -103,6 +103,15 @@ public class SubscriptionsController : ControllerBase
         var user = await _context.Users.FindAsync(userId.Value);
         if (user == null) return NotFound();
 
+        bool canPost = user.Role.HasFlag(Role.Seller) || user.Role.HasFlag(Role.Landlord) || user.Role.HasFlag(Role.Agent);
+        if (!canPost)
+        {
+            return StatusCode(403, new 
+            { 
+                message = "Gói dịch vụ hội viên chỉ dành cho tài khoản có quyền đăng tin (Người bán, Cho thuê, Môi giới)." 
+            });
+        }
+
         return Ok(new
         {
             user.FullName,
@@ -123,6 +132,16 @@ public class SubscriptionsController : ControllerBase
 
         var user = await _context.Users.FindAsync(userId.Value);
         if (user == null) return NotFound();
+
+        // Chỉ tài khoản có quyền đăng tin mới được mua gói dịch vụ
+        bool canPost = user.Role.HasFlag(Role.Seller) || user.Role.HasFlag(Role.Landlord) || user.Role.HasFlag(Role.Agent);
+        if (!canPost)
+        {
+            return StatusCode(403, new 
+            { 
+                message = "Gói dịch vụ hội viên chỉ dành riêng cho tài khoản có quyền đăng tin (Người bán, Cho thuê, Môi giới). Tài khoản Người mua, Người thuê hoặc Quản trị viên không thể mua các gói dịch vụ này." 
+            });
+        }
 
         int addedPushes = 0;
         string packageName = "";

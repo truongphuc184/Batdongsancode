@@ -29,11 +29,11 @@
           <span class="material-symbols-outlined text-sm">add_circle</span>
           <span class="hidden sm:inline">Đăng tin</span>
         </button>
-        <a href="packages.html" class="px-2.5 sm:px-3 py-1.5 bg-gradient-to-r from-red-600 to-pink-600 hover:from-red-700 hover:to-pink-700 text-white rounded-xl text-xs font-bold transition-all flex items-center gap-1 shadow-sm shrink-0">
+        <a href="packages.html" id="headerPackagesLink" class="hidden px-2.5 sm:px-3 py-1.5 bg-gradient-to-r from-red-600 to-pink-600 hover:from-red-700 hover:to-pink-700 text-white rounded-xl text-xs font-bold transition-all flex items-center gap-1 shadow-sm shrink-0">
           <span>💎</span> <span class="hidden sm:inline">Gói Hội viên</span>
         </a>
         <a href="admin.html" id="adminLink" class="hidden px-2.5 sm:px-3.5 py-1.5 bg-amber-500 hover:bg-amber-600 text-gray-900 rounded-xl text-xs font-bold transition-colors flex items-center gap-1 shadow-sm shrink-0">
-          <span>🛡️</span> <span class="hidden sm:inline">Kiểm duyệt tin</span>
+          <span>🛡️</span> <span class="hidden sm:inline">Hệ Thống Quản Trị</span>
         </a>
         <a href="user_profile.html" class="flex items-center gap-1.5 sm:gap-2 bg-gray-50 hover:bg-gray-100 py-1 sm:py-1.5 px-2.5 sm:px-3 rounded-full transition-colors border shrink-0">
           <div class="w-7 h-7 bg-indigo-600 rounded-full flex items-center justify-center text-white text-xs font-bold shrink-0" id="avatar">U</div>
@@ -44,7 +44,7 @@
     </div>
   </header>
 
-  <!-- Thanh tìm kiếm & Lọc nâng cao (Theo Sơ đồ Use Case: Tìm kiếm & Tra cứu) -->
+  <!-- Thanh tìm kiếm & Lọc nâng cao -->
   <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mt-4 sm:mt-6">
     <div class="bg-white rounded-2xl shadow-sm p-3.5 sm:p-5 border border-gray-200">
       <!-- Hàng tìm kiếm chính -->
@@ -108,7 +108,7 @@
         <button onclick="resetFilters()" class="text-indigo-600 hover:underline font-bold text-[11px] ml-1">Xóa tất cả</button>
       </div>
 
-      <!-- BẢNG BỘ LỌC NÂNG CAO (Sơ đồ Use Case: Lọc BĐS nâng cao) -->
+      <!-- BẢNG BỘ LỌC NÂNG CAO -->
       <div id="advancedFilterBox" class="mt-4 pt-4 border-t border-gray-100 hidden">
         <!-- Hàng 1: Khu vực, Loại BĐS, Mức giá, Diện tích -->
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
@@ -265,8 +265,8 @@
     </div>
   </div>
 
-  <!-- Banner Giới thiệu Gói Hội viên (Theo mẫu 3 gói mới) -->
-  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mt-4">
+  <!-- Banner Giới thiệu Gói Hội viên (Chỉ hiển thị cho Người bán / Cho thuê / Môi giới) -->
+  <div id="membershipPackagesBanner" class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mt-4 hidden">
     <div class="bg-gradient-to-r from-red-600 via-purple-600 to-indigo-700 rounded-2xl p-4 sm:p-5 text-white flex flex-col sm:flex-row items-center justify-between gap-4 shadow-md">
       <div class="flex items-center gap-3.5">
         <div class="w-12 h-12 rounded-xl bg-white/20 backdrop-blur-md flex items-center justify-center text-2xl shrink-0">
@@ -285,14 +285,6 @@
         <span class="material-symbols-outlined text-sm">arrow_forward</span>
       </a>
     </div>
-  </div>
-
-  <!-- Nút Bật Form Đăng Tin (Chỉ hiển thị cho Seller, Landlord, Agent, Admin - Tự động ẩn với Buyer) -->
-  <div id="createListingBannerWrapper" class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mt-4">
-    <button onclick="showCreateForm()" id="toggleCreateBtn"
-      class="w-full py-3.5 bg-gradient-to-r from-indigo-600 to-blue-600 text-white font-semibold rounded-2xl shadow-md hover:from-indigo-700 hover:to-blue-700 transition-all flex items-center justify-center gap-2">
-      <span class="material-symbols-outlined text-xl">add_circle</span> Đăng tin bất động sản mới
-    </button>
   </div>
 
   <!-- Form Đăng Tin BĐS -->
@@ -436,17 +428,31 @@
         <!-- Địa chỉ, Tỉnh/Thành, Quận/Huyện -->
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div>
-            <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Tỉnh / Thành phố <span class="text-red-500">*</span></label>
-            <input type="text" id="c_city" placeholder="VD: TP. Hồ Chí Minh"
-              class="w-full px-3 py-2.5 bg-gray-50 border border-gray-300 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 text-sm font-medium"/>
+            <label class="block text-xs font-bold text-gray-700 uppercase mb-1">📍 Tỉnh / Thành phố <span class="text-red-500">*</span></label>
+            <select id="c_city" onchange="handleFormCityChange(this.value)" class="w-full px-3 py-2.5 bg-gray-50 border border-gray-300 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 text-sm font-semibold bg-white cursor-pointer">
+              <option value="">-- Chọn Tỉnh / Thành phố --</option>
+              <option value="Hà Nội">Hà Nội</option>
+              <option value="Hồ Chí Minh">TP. Hồ Chí Minh</option>
+              <option value="Đà Nẵng">Đà Nẵng</option>
+              <option value="Bình Dương">Bình Dương</option>
+              <option value="Đồng Nai">Đồng Nai</option>
+              <option value="Hải Phòng">Hải Phòng</option>
+              <option value="Cần Thơ">Cần Thơ</option>
+              <option value="Bà Rịa - Vũng Tàu">Bà Rịa - Vũng Tàu</option>
+              <option value="Khánh Hòa">Khánh Hòa (Nha Trang)</option>
+              <option value="Quảng Ninh">Quảng Ninh (Hạ Long)</option>
+              <option value="Lâm Đồng">Lâm Đồng (Đà Lạt)</option>
+              <option value="Khác">Tỉnh / Thành khác</option>
+            </select>
           </div>
           <div>
-            <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Quận / Huyện</label>
-            <input type="text" id="c_district" placeholder="VD: Bình Thạnh"
-              class="w-full px-3 py-2.5 bg-gray-50 border border-gray-300 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 text-sm font-medium"/>
+            <label class="block text-xs font-bold text-gray-700 uppercase mb-1">🏘️ Quận / Huyện <span class="text-red-500">*</span></label>
+            <select id="c_district" class="w-full px-3 py-2.5 bg-gray-50 border border-gray-300 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 text-sm font-semibold bg-white cursor-pointer">
+              <option value="">-- Vui lòng chọn Tỉnh/Thành trước --</option>
+            </select>
           </div>
           <div>
-            <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Địa chỉ cụ thể / Đường</label>
+            <label class="block text-xs font-bold text-gray-700 uppercase mb-1">🏠 Địa chỉ cụ thể / Tên đường</label>
             <input type="text" id="c_address" placeholder="VD: 208 Nguyễn Hữu Cảnh, Phường 22"
               class="w-full px-3 py-2.5 bg-gray-50 border border-gray-300 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 text-sm font-medium"/>
           </div>
@@ -576,35 +582,60 @@
       return viParts.length > 0 ? viParts.join(' & ') : roleStr;
     }
 
-    // Phân quyền giao diện 2 chiều: Ẩn với Người mua thuần túy, Hiển thị đầy đủ cho Người bán/Môi giới/Admin
+    // Phân quyền giao diện theo nghiệp vụ (Use Case Quản trị & Người dùng):
+    // - Quản trị viên (Admin): Chỉ Quản trị hệ thống & Kiểm duyệt tin, KHÔNG đăng tin, KHÔNG mua gói hội viên
+    // - Người bán / Cho thuê / Môi giới: Hiển thị đầy đủ công cụ đăng tin, quản lý tin và gói hội viên
+    // - Người mua thuần túy: Ẩn đăng tin và không quảng cáo gói hội viên
     function applyRoleRestrictions(role) {
       currentUserRole = role || '';
-      const canPost = (currentUserRole.includes('Seller') || currentUserRole.includes('Landlord') || currentUserRole.includes('Agent') || currentUserRole.includes('Admin'));
+      const isAdmin = currentUserRole.includes('Admin');
+      const canPost = !isAdmin && (currentUserRole.includes('Seller') || currentUserRole.includes('Landlord') || currentUserRole.includes('Agent'));
 
-      const bannerWrap = document.getElementById('createListingBannerWrapper');
       const createForm = document.getElementById('createForm');
       const navCreateBtn = document.getElementById('navCreateBtn');
       const navSavedBtn = document.getElementById('navSavedBtn');
       const emptyCreateBtn = document.getElementById('emptyStateCreateBtn');
       const myTab = document.getElementById('btnMyListingsTab');
       const headerBtn = document.getElementById('headerCreateListingBtn');
+      const pkgBanner = document.getElementById('membershipPackagesBanner');
+      const headerPkg = document.getElementById('headerPackagesLink');
+      const adminLink = document.getElementById('adminLink');
 
-      if (!canPost) {
-        if (bannerWrap) bannerWrap.classList.add('hidden');
+      if (isAdmin) {
+        // Quản trị viên (QTV): Chỉ quản trị hệ thống, duyệt tin & xử lý báo cáo
         if (createForm) createForm.classList.add('hidden');
         if (navCreateBtn) navCreateBtn.classList.add('hidden');
         if (navSavedBtn) navSavedBtn.classList.remove('hidden');
         if (emptyCreateBtn) emptyCreateBtn.classList.add('hidden');
         if (myTab) myTab.classList.add('hidden');
         if (headerBtn) headerBtn.classList.add('hidden');
+        if (pkgBanner) pkgBanner.classList.add('hidden');
+        if (headerPkg) headerPkg.classList.add('hidden');
+        if (adminLink) adminLink.classList.remove('hidden');
+        return;
+      }
+
+      if (adminLink) adminLink.classList.add('hidden');
+
+      if (!canPost) {
+        // Người mua thuần túy: Không quảng cáo gói hội viên, ẩn chức năng đăng tin
+        if (createForm) createForm.classList.add('hidden');
+        if (navCreateBtn) navCreateBtn.classList.add('hidden');
+        if (navSavedBtn) navSavedBtn.classList.remove('hidden');
+        if (emptyCreateBtn) emptyCreateBtn.classList.add('hidden');
+        if (myTab) myTab.classList.add('hidden');
+        if (headerBtn) headerBtn.classList.add('hidden');
+        if (pkgBanner) pkgBanner.classList.add('hidden');
+        if (headerPkg) headerPkg.classList.add('hidden');
       } else {
-        // Seller, Landlord, Agent, Admin -> Hiển thị đầy đủ chức năng đăng tin & quản lý tin
-        if (bannerWrap) bannerWrap.classList.remove('hidden');
+        // Seller, Landlord, Agent: Có quyền đăng tin, quản lý tin & gói hội viên
         if (navCreateBtn) navCreateBtn.classList.remove('hidden');
         if (navSavedBtn) navSavedBtn.classList.add('hidden');
         if (emptyCreateBtn) emptyCreateBtn.classList.remove('hidden');
         if (myTab) myTab.classList.remove('hidden');
         if (headerBtn) headerBtn.classList.remove('hidden');
+        if (pkgBanner) pkgBanner.classList.remove('hidden');
+        if (headerPkg) headerPkg.classList.remove('hidden');
       }
     }
 
@@ -893,7 +924,7 @@
       }
     }
 
-    // Tab xem các tin đã lưu yêu thích (Use Case: Lưu BĐS yêu thích)
+    // Tab xem các tin đã lưu yêu thích
     async function loadSavedListingsTab() {
       currentActiveTab = 'saved';
       const storageKey = getFavStorageKey();
@@ -933,7 +964,7 @@
       }
     }
 
-    // So sánh BĐS (Use Case: So sánh BĐS)
+    // So sánh BĐS
     function toggleCompare(id) {
       if (compareList.includes(id)) {
         compareList = compareList.filter(x => x !== id);
@@ -1039,7 +1070,7 @@
       renderListings(allCurrentListings);
     }
 
-    // Xem danh sách tin của chính mình (Ad1, Ad2, Sequence Diagram 3)
+    // Xem danh sách tin của chính mình
     async function loadMyListingsTab() {
       currentActiveTab = 'my';
       const container = document.getElementById('listings');
@@ -1113,7 +1144,7 @@
       }
     }
 
-    // Đẩy tin (Sequence Diagram 3 & Ad6)
+    // Đẩy tin
     async function pushListing(id) {
       try {
         const res = await fetch('/api/listings/' + id + '/push', {
@@ -1342,7 +1373,7 @@
       executeSearch();
     }
 
-    // TÌM KIẾM & LỌC NÂNG CAO (Theo Sơ đồ Use Case Tìm kiếm & Tra cứu)
+    // TÌM KIẾM & LỌC NÂNG CAO
     async function executeSearch() {
       updateFilterUI();
       const keyword = document.getElementById('searchInput')?.value?.trim() || '';
@@ -1433,13 +1464,70 @@
         alert('Tài khoản của bạn là Người mua (Buyer), không có quyền đăng tin.\n\nTương tự như sàn Shopee, muốn đăng tin bán bạn cần tạo hoặc đăng nhập tài khoản Người bán (Seller) hoặc Môi giới (Agent)!');
         return;
       }
-      document.getElementById('createForm').classList.remove('hidden');
-      document.getElementById('toggleCreateBtn').classList.add('hidden');
+      const form = document.getElementById('createForm');
+      if (form) {
+        form.classList.remove('hidden');
+        form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        setTimeout(() => document.getElementById('c_title')?.focus(), 250);
+      }
     }
 
     function hideCreateForm() {
-      document.getElementById('createForm').classList.add('hidden');
-      document.getElementById('toggleCreateBtn').classList.remove('hidden');
+      const form = document.getElementById('createForm');
+      if (form) form.classList.add('hidden');
+    }
+
+    // Danh sách Quận/Huyện tương ứng theo Tỉnh/Thành phố
+    const cityDistrictsMap = {
+      'Hà Nội': [
+        'Ba Đình', 'Cầu Giấy', 'Đống Đa', 'Hai Bà Trưng', 'Hoàn Kiếm', 'Hoàng Mai', 
+        'Long Biên', 'Nam Từ Liêm', 'Bắc Từ Liêm', 'Tây Hồ', 'Thanh Xuân', 'Hà Đông', 
+        'Gia Lâm', 'Đông Anh', 'Thanh Trì', 'Hoài Đức', 'Đan Phượng', 'Sơn Tây', 'Khác'
+      ],
+      'Hồ Chí Minh': [
+        'Quận 1', 'Quận 3', 'Quận 4', 'Quận 5', 'Quận 6', 'Quận 7', 'Quận 8', 'Quận 10', 
+        'Quận 11', 'Quận 12', 'Bình Thạnh', 'Gò Vấp', 'Phú Nhuận', 'Tân Bình', 'Tân Phú', 
+        'TP. Thủ Đức', 'Bình Chánh', 'Hóc Môn', 'Nhà Bè', 'Củ Chi', 'Khác'
+      ],
+      'Đà Nẵng': [
+        'Hải Châu', 'Thanh Khê', 'Sơn Trà', 'Ngũ Hành Sơn', 'Liên Chiểu', 'Cẩm Lệ', 'Hòa Vang', 'Khác'
+      ],
+      'Bình Dương': [
+        'TP. Thủ Dầu Một', 'TP. Thuận An', 'TP. Dĩ An', 'TP. Tân Uyên', 'Bến Cát', 'Bàu Bàng', 'Bắc Tân Uyên', 'Khác'
+      ],
+      'Đồng Nai': [
+        'TP. Biên Hòa', 'Long Thành', 'Nhơn Trạch', 'Trảng Bom', 'Vĩnh Cửu', 'TP. Long Khánh', 'Khác'
+      ],
+      'Hải Phòng': [
+        'Hồng Bàng', 'Ngô Quyền', 'Lê Chân', 'Hải An', 'Kiến An', 'Đồ Sơn', 'Thủy Nguyên', 'An Dương', 'Khác'
+      ],
+      'Cần Thơ': [
+        'Ninh Kiều', 'Cái Răng', 'Bình Thủy', 'Ô Môn', 'Thốt Nốt', 'Phong Điền', 'Khác'
+      ],
+      'Bà Rịa - Vũng Tàu': [
+        'TP. Vũng Tàu', 'TP. Bà Rịa', 'TX. Phú Mỹ', 'Long Điền', 'Xuyên Mộc', 'Khác'
+      ],
+      'Khánh Hòa': [
+        'TP. Nha Trang', 'TP. Cam Ranh', 'TX. Ninh Hòa', 'Diên Khánh', 'Khác'
+      ],
+      'Quảng Ninh': [
+        'TP. Hạ Long', 'TP. Cẩm Phả', 'TP. Uông Bí', 'TP. Móng Cái', 'TX. Quảng Yên', 'Khác'
+      ],
+      'Lâm Đồng': [
+        'TP. Đà Lạt', 'TP. Bảo Lộc', 'Đức Trọng', 'Lạc Dương', 'Khác'
+      ]
+    };
+
+    function handleFormCityChange(city) {
+      const distSelect = document.getElementById('c_district');
+      if (!distSelect) return;
+      distSelect.innerHTML = '';
+      if (!city || !cityDistrictsMap[city]) {
+        distSelect.innerHTML = '<option value="">-- Chọn Quận / Huyện --</option><option value="Quận / Huyện trung tâm">Quận / Huyện trung tâm</option><option value="Khu vực khác">Khu vực khác</option>';
+        return;
+      }
+      distSelect.innerHTML = '<option value="">-- Chọn Quận / Huyện --</option>' +
+        cityDistrictsMap[city].map(d => `<option value="${d}">${d}</option>`).join('');
     }
 
     // ĐĂNG TIN BẤT ĐỘNG SẢN
@@ -1463,8 +1551,14 @@
         return;
       }
       if (!city) {
-        alert('⚠️ Vui lòng nhập Tỉnh/Thành phố!');
+        alert('⚠️ Vui lòng chọn Tỉnh/Thành phố!');
         document.getElementById('c_city').focus();
+        return;
+      }
+      const district = document.getElementById('c_district').value.trim();
+      if (!district) {
+        alert('⚠️ Vui lòng chọn Quận/Huyện!');
+        document.getElementById('c_district').focus();
         return;
       }
 
@@ -1537,7 +1631,7 @@
           document.getElementById('c_price').value = '';
           document.getElementById('c_address').value = '';
           document.getElementById('c_city').value = '';
-          document.getElementById('c_district').value = '';
+          handleFormCityChange('');
           document.getElementById('c_area').value = '';
           document.getElementById('c_bed').value = '';
           document.getElementById('c_bath').value = '';
@@ -1545,7 +1639,8 @@
           document.getElementById('c_direction').value = '';
           if (document.getElementById('c_project')) document.getElementById('c_project').value = '';
           document.getElementById('priceHint').textContent = '';
-          document.getElementById('imagePreviewContainer').classList.add('hidden');
+          uploadedImagesList = [];
+          updateImageGalleryPreview();
 
           hideCreateForm(); 
           msgEl.textContent = '';
@@ -1587,7 +1682,7 @@
     }
   </script>
 
-  <!-- MODAL SO SÁNH BẤT ĐỘNG SẢN (Use Case: So sánh BĐS) -->
+  <!-- MODAL SO SÁNH BẤT ĐỘNG SẢN -->
   <div id="compareModal" class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-3 sm:p-4 hidden backdrop-blur-sm">
     <div class="bg-white rounded-3xl max-w-5xl w-full p-4 sm:p-6 shadow-2xl max-h-[92vh] flex flex-col">
       <div class="flex items-center justify-between pb-4 border-b">
