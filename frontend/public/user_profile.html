@@ -29,15 +29,20 @@
       <div class="w-20 h-20 bg-indigo-600 rounded-full flex items-center justify-center mx-auto text-white text-3xl font-bold" id="avatar">U</div>
       <h2 class="text-xl font-bold text-gray-800 mt-4" id="fullName">Đang tải...</h2>
       <p class="text-gray-500" id="email"></p>
-      <div class="flex items-center justify-center gap-2 mt-2">
+      <!-- Badge KYC Header (Chỉ hiển thị với Người bán, Cho thuê, Môi giới - Ẩn với Người mua/thuê) -->
+      <div class="flex items-center justify-center gap-2 mt-2 flex-wrap">
         <span class="inline-block px-3.5 py-1 rounded-full text-xs font-bold bg-indigo-50 text-indigo-700 border border-indigo-200" id="role"></span>
+        <span id="kycStatusBadge" onclick="toggleKycSection(true)" class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-300 cursor-pointer shadow-xs hover:bg-emerald-200 transition-colors hidden" title="Bấm để xem chi tiết hồ sơ xác minh KYC">
+          <span class="material-symbols-outlined text-xs text-emerald-600">verified</span>
+          <span id="kycBadgeHeaderLabel">✓ Đã xác minh (KYC)</span>
+        </span>
         <button type="button" id="openSwitchRoleBtn" onclick="openSwitchRoleModal()" class="px-2.5 py-1 text-[11px] font-bold text-indigo-600 hover:text-indigo-800 bg-white hover:bg-indigo-50 border border-indigo-200 rounded-full transition-all flex items-center gap-0.5 shadow-xs cursor-pointer" title="Đổi sang vai trò khác">
           <span class="material-symbols-outlined text-xs">sync_alt</span> Đổi vai trò
         </button>
       </div>
 
-      <!-- Trạng thái gói hội viên (Chỉ hiển thị cho Seller, Landlord, Agent, Admin - Ẩn với Người mua) -->
-      <div id="packagePushBox" class="mt-4 pt-4 border-t border-gray-100 flex items-center justify-around text-xs">
+      <!-- Trạng thái gói hội viên (Chỉ hiển thị cho Seller, Landlord, Agent, Admin - Ẩn với Người mua/thuê) -->
+      <div id="packagePushBox" class="mt-4 pt-4 border-t border-gray-100 flex items-center justify-around text-xs hidden">
         <div>
           <span class="text-gray-400">Gói dịch vụ:</span>
           <div class="font-bold text-gray-900 mt-0.5" id="userPackageName">Đang tải...</div>
@@ -48,8 +53,9 @@
           <div class="font-extrabold text-indigo-600 mt-0.5" id="userPushesCount">-- lượt</div>
         </div>
       </div>
-      <a id="upgradePackageBtn" href="packages.html" class="mt-4 w-full py-2.5 bg-gradient-to-r from-red-600 to-pink-600 hover:from-red-700 hover:to-pink-700 text-white rounded-xl font-bold text-xs flex items-center justify-center gap-1.5 shadow-sm transition-all">
-        💎 Nâng cấp Gói Hội viên (Tiết kiệm 39%)
+      <!-- Nút Gói Dịch Vụ: Chuyển sang trang Bảng giá Gói Dịch Vụ & Đẩy Tin (Chỉ dành cho Người bán, Cho thuê, Môi giới - Ẩn hoàn toàn với Người mua/thuê) -->
+      <a id="upgradePackageBtn" href="packages.html" class="mt-4 w-full py-2.5 bg-gradient-to-r from-red-600 to-pink-600 hover:from-red-700 hover:to-pink-700 text-white rounded-xl font-bold text-xs flex items-center justify-center gap-1.5 shadow-sm transition-all hidden">
+        💎 Nâng cấp Gói Hội viên & Mua lượt đẩy tin
       </a>
 
       <!-- Nút Chỉnh sửa thông tin cá nhân (Dành cho tất cả người dùng, thay thế phần gói dịch vụ ở tài khoản Người mua) -->
@@ -81,6 +87,26 @@
         <span class="font-medium text-gray-800">Gói dịch vụ & Lượt đẩy tin</span>
         <span class="material-symbols-outlined text-gray-400 ml-auto">chevron_right</span>
       </a>
+
+      <!-- Tab Mới: Xác minh danh tính (KYC) dành cho Người bán, Người cho thuê, Môi giới (Chỉ hiển thị cho người có quyền đăng tin - Ẩn với Người mua/thuê) -->
+      <button type="button" id="menuKycTab" onclick="toggleKycSection()" class="w-full flex items-center gap-4 px-6 py-4 hover:bg-teal-50/80 border-b border-gray-100 transition-colors text-left cursor-pointer bg-teal-50/20 hidden">
+        <div class="w-9 h-9 rounded-xl bg-teal-600 text-white flex items-center justify-center shrink-0 shadow-sm">
+          <span class="material-symbols-outlined text-xl">verified_user</span>
+        </div>
+        <div class="flex-1 min-w-0">
+          <div class="flex items-center gap-2 flex-wrap">
+            <span class="font-bold text-gray-800 text-sm">Xác minh danh tính (KYC)</span>
+            <span id="menuKycBadge" class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-emerald-100 text-emerald-800 border border-emerald-300">
+              ✓ Đã xác minh
+            </span>
+          </div>
+          <p class="text-[11px] text-gray-500 truncate mt-0.5" id="menuKycDesc">Hồ sơ CCCD, Thuế & Quyền Đăng tin BĐS</p>
+        </div>
+        <span class="text-xs text-teal-700 font-bold ml-auto flex items-center gap-1 shrink-0" id="kycToggleHint">
+          <span id="kycToggleText">Xem hồ sơ</span>
+          <span class="material-symbols-outlined text-sm transition-transform duration-200" id="kycArrowIcon">expand_more</span>
+        </span>
+      </button>
     </div>
 
     <!-- BẢNG ĐIỀU KHIỂN DÀNH RIÊNG CHO QUẢN TRỊ VIÊN (ADMIN) -->
@@ -136,6 +162,260 @@
           <span class="material-symbols-outlined text-base">swap_horiz</span>
           <span>Chọn vai trò khác ▾</span>
         </button>
+      </div>
+    </div>
+
+    <!-- ============================================================== -->
+    <!-- TAB MỚI: XÁC MINH DANH TÍNH (KYC) DÀNH CHO NGƯỜI BÁN, CHO THUÊ, MÔI GIỚI -->
+    <!-- ============================================================== -->
+    <div id="kycTabSection" class="bg-white rounded-2xl shadow-sm mt-4 p-5 sm:p-7 border border-teal-200 hidden transition-all">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-gray-100 mb-5 gap-3">
+        <div>
+          <h3 class="text-base sm:text-lg font-black text-gray-900 flex items-center gap-2">
+            <span class="material-symbols-outlined text-teal-600 text-2xl">verified_user</span>
+            <span>Xác minh danh tính (KYC) & Quyền Đăng tin</span>
+            <span id="tabKycStatusBadge" class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-100 text-amber-900 border border-amber-200">Chờ xác minh</span>
+          </h3>
+          <p class="text-xs text-gray-500 mt-1">Quy định bắt buộc dành cho Người bán, Người cho thuê và Môi giới BĐS nhằm bảo vệ người dùng và ngăn chặn tin đăng ảo.</p>
+        </div>
+        <button type="button" onclick="loadMyProfileKycStatus()" class="px-3 py-1.5 bg-gray-100 hover:bg-gray-200 rounded-xl text-xs font-semibold text-gray-700 flex items-center gap-1 self-start sm:self-auto transition-colors cursor-pointer">
+          <span class="material-symbols-outlined text-sm">refresh</span> Cập nhật trạng thái
+        </button>
+      </div>
+
+      <!-- TRƯỜNG HỢP 1: TÀI KHOẢN ĐÃ ĐƯỢC DUYỆT (APPROVED / IS_VERIFIED = TRUE) -->
+      <div id="kycTabApprovedBox" class="hidden space-y-5">
+        <div class="p-4 sm:p-5 bg-gradient-to-r from-emerald-500/10 via-teal-500/10 to-emerald-500/5 border border-emerald-300 rounded-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div class="flex items-center gap-3.5">
+            <div class="w-12 h-12 rounded-2xl bg-emerald-600 text-white flex items-center justify-center shrink-0 shadow-md shadow-emerald-500/30">
+              <span class="material-symbols-outlined text-2xl">verified</span>
+            </div>
+            <div>
+              <div class="flex items-center gap-2">
+                <h4 class="font-black text-gray-900 text-base">Tài khoản đã được Xác minh (KYC Approved)</h4>
+                <span class="px-2.5 py-0.5 bg-emerald-100 text-emerald-800 text-[11px] font-extrabold rounded-full border border-emerald-300 flex items-center gap-1">
+                  <span class="material-symbols-outlined text-xs">check_circle</span> Tích xanh chính chủ
+                </span>
+              </div>
+              <p class="text-xs text-emerald-800 mt-0.5 font-medium">Bạn đã mở khóa 100% quyền Đăng tin BĐS, Tiếp nhận liên hệ khách hàng và Quản lý tin chuyên nghiệp.</p>
+            </div>
+          </div>
+          <button type="button" onclick="handleCreateListingClick(event)" class="w-full sm:w-auto px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl shadow-md transition-all flex items-center justify-center gap-1.5 shrink-0 cursor-pointer">
+            <span class="material-symbols-outlined text-base">add_circle</span> Đăng tin mới ngay
+          </button>
+        </div>
+
+        <!-- Chi tiết hồ sơ xác minh đã duyệt -->
+        <div class="bg-gray-50/80 rounded-2xl p-4 sm:p-5 border border-gray-200">
+          <h5 class="text-xs font-bold uppercase tracking-wider text-gray-500 mb-3 flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-sm text-gray-400">badge</span> Thông tin định danh đã xác thực
+          </h5>
+          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 text-xs">
+            <div class="p-3 bg-white rounded-xl border border-gray-200">
+              <span class="text-[10px] uppercase font-bold text-gray-400 block">Họ và tên thật</span>
+              <span id="tabApprovedFullName" class="font-bold text-gray-900 text-sm mt-0.5 block">--</span>
+            </div>
+            <div class="p-3 bg-white rounded-xl border border-gray-200">
+              <span class="text-[10px] uppercase font-bold text-gray-400 block">Số CCCD định danh</span>
+              <span id="tabApprovedIdCard" class="font-bold text-indigo-700 text-sm mt-0.5 block tracking-wider">--</span>
+            </div>
+            <div class="p-3 bg-white rounded-xl border border-gray-200">
+              <span class="text-[10px] uppercase font-bold text-gray-400 block">Số điện thoại (OTP)</span>
+              <span id="tabApprovedPhone" class="font-bold text-teal-700 text-sm mt-0.5 block flex items-center gap-1">
+                -- <span class="material-symbols-outlined text-xs text-teal-600">verified</span>
+              </span>
+            </div>
+            <div class="p-3 bg-white rounded-xl border border-gray-200">
+              <span class="text-[10px] uppercase font-bold text-gray-400 block">Mã số thuế</span>
+              <span id="tabApprovedTax" class="font-bold text-gray-900 text-sm mt-0.5 block">--</span>
+            </div>
+          </div>
+          <div id="tabApprovedBrokerBox" class="mt-3 p-3 bg-amber-50/70 rounded-xl border border-amber-200 hidden text-xs">
+            <span class="text-[10px] uppercase font-bold text-amber-800 block">Chứng chỉ hành nghề môi giới BĐS:</span>
+            <span id="tabApprovedBrokerNum" class="font-bold text-amber-900 mt-0.5 block">--</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- TRƯỜNG HỢP 2: HỒ SƠ ĐANG CHỜ QUẢN TRỊ VIÊN DUYỆT (PENDING) -->
+      <div id="kycTabPendingBox" class="hidden p-5 sm:p-6 bg-amber-50 border border-amber-300 rounded-2xl text-xs space-y-4">
+        <div class="flex items-start gap-3.5">
+          <div class="w-12 h-12 rounded-2xl bg-amber-500 text-white flex items-center justify-center shrink-0 shadow-md shadow-amber-500/20">
+            <span class="material-symbols-outlined text-2xl animate-spin">hourglass_top</span>
+          </div>
+          <div class="flex-1">
+            <div class="flex items-center gap-2">
+              <h4 class="font-black text-amber-900 text-base">Hồ sơ xác minh đang chờ Quản trị viên phê duyệt</h4>
+              <span class="px-2.5 py-0.5 bg-amber-200 text-amber-950 font-bold text-[11px] rounded-full">Đang xử lý</span>
+            </div>
+            <p class="text-amber-800 mt-1 leading-relaxed">
+              Bạn đã nộp đầy đủ ảnh CCCD 2 mặt và xác thực số điện thoại OTP thành công. Ban quản trị sàn đang đối chiếu thông tin định danh (thường hoàn tất trong 15-60 phút).
+            </p>
+            <div class="mt-3 p-3 bg-white/80 rounded-xl border border-amber-200/80 flex items-center justify-between flex-wrap gap-2 text-xs">
+              <div>
+                <span class="text-gray-500">Mã yêu cầu:</span> <strong id="tabPendingReqId">#--</strong>
+                <span class="mx-2 text-gray-300">•</span>
+                <span class="text-gray-500">Gửi lúc:</span> <strong id="tabPendingSubmittedAt">--</strong>
+              </div>
+              <span class="text-amber-700 font-bold flex items-center gap-1">
+                <span class="w-2 h-2 rounded-full bg-amber-500 animate-ping"></span> Hệ thống sẽ tự động mở quyền đăng tin ngay khi duyệt
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TRƯỜNG HỢP 3: CHƯA XÁC MINH (UNVERIFIED / NONE) HOẶC BỊ TỪ CHỐI (REJECTED) -> HIỂN THỊ FORM KYC TRỰC TIẾP -->
+      <div id="kycTabFormBox" class="hidden space-y-5">
+        <!-- Banner cảnh báo nếu bị từ chối -->
+        <div id="tabKycRejectedBanner" class="p-4 bg-rose-50 border border-rose-300 rounded-2xl hidden">
+          <div class="flex items-start gap-3">
+            <div class="w-10 h-10 rounded-xl bg-rose-600 text-white flex items-center justify-center shrink-0">
+              <span class="material-symbols-outlined text-xl">error</span>
+            </div>
+            <div>
+              <h4 class="font-bold text-rose-900 text-sm">Hồ sơ xác minh trước đó chưa được duyệt</h4>
+              <p id="tabKycRejectedReasonText" class="text-xs text-rose-800 mt-1 font-semibold">Lý do: --</p>
+              <p class="text-[11px] text-rose-600 mt-0.5">Vui lòng kiểm tra lại hình ảnh CCCD rõ nét, đúng số và nộp lại hồ sơ bên dưới.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="p-4 bg-teal-50/70 border border-teal-200 rounded-2xl flex items-center justify-between flex-wrap gap-3">
+          <div class="flex items-center gap-2.5 text-xs text-teal-900">
+            <span class="material-symbols-outlined text-lg text-teal-600">info</span>
+            <span>Hoàn thành 3 bước đơn giản dưới đây để kích hoạt quyền <strong>Đăng tin BĐS</strong> và nhận huy hiệu xác minh.</span>
+          </div>
+          <button type="button" onclick="useSampleKycPhotos()" class="px-3 py-1 bg-white hover:bg-teal-100 text-teal-700 border border-teal-300 rounded-lg text-xs font-bold transition-all shadow-xs cursor-pointer">
+            ⚡ Điền thông tin & ảnh mẫu test nhanh
+          </button>
+        </div>
+
+        <form id="tabKycForm" onsubmit="handleTabKycSubmit(event)" class="space-y-4">
+          <!-- BƯỚC 1: SỐ ĐIỆN THOẠI & OTP -->
+          <div class="p-4 bg-gray-50 rounded-2xl border border-gray-200 space-y-3">
+            <div class="flex items-center justify-between">
+              <label class="text-xs font-bold uppercase text-gray-700 flex items-center gap-1.5">
+                <span class="w-5 h-5 rounded-full bg-teal-600 text-white text-[11px] flex items-center justify-center font-bold">1</span>
+                Số điện thoại chính chủ (Xác thực OTP) <span class="text-red-500">*</span>
+              </label>
+              <span id="tabOtpVerifiedBadge" class="hidden px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">
+                ✓ Đã xác thực OTP
+              </span>
+            </div>
+            <div class="flex flex-col sm:flex-row gap-2">
+              <input type="tel" id="tabKycPhoneInput" required placeholder="Ví dụ: 0912345678"
+                class="flex-1 px-3.5 py-2.5 bg-white border border-gray-300 rounded-xl outline-none text-xs text-gray-800 font-semibold focus:ring-2 focus:ring-teal-500"/>
+              <button type="button" id="tabBtnSendOtp" onclick="sendTabKycOtp()" class="px-4 py-2.5 bg-teal-600 hover:bg-teal-700 text-white rounded-xl text-xs font-bold transition-all shrink-0 cursor-pointer">
+                Gửi mã OTP
+              </button>
+            </div>
+            <div id="tabKycOtpBox" class="hidden pt-2 border-t border-gray-200 flex flex-col sm:flex-row gap-2 items-center">
+              <input type="text" id="tabKycOtpInput" placeholder="Nhập mã 6 chữ số..." maxlength="6"
+                class="w-full sm:w-44 px-3.5 py-2 bg-white border border-teal-400 rounded-xl text-xs font-bold tracking-widest text-center focus:ring-2 focus:ring-teal-500"/>
+              <button type="button" onclick="verifyTabKycOtp()" class="w-full sm:w-auto px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold transition-all cursor-pointer">
+                Xác nhận OTP
+              </button>
+              <span class="text-[11px] text-gray-500">Mã thử nghiệm demo: <strong class="text-teal-700" id="tabDemoOtpCode">888999</strong></span>
+            </div>
+          </div>
+
+          <!-- BƯỚC 2: HỌ TÊN THẬT & SỐ CCCD -->
+          <div class="p-4 bg-gray-50 rounded-2xl border border-gray-200 space-y-3">
+            <label class="text-xs font-bold uppercase text-gray-700 flex items-center gap-1.5">
+              <span class="w-5 h-5 rounded-full bg-teal-600 text-white text-[11px] flex items-center justify-center font-bold">2</span>
+              Thông tin định danh Căn cước công dân (CCCD) <span class="text-red-500">*</span>
+            </label>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label class="block text-[11px] text-gray-600 font-bold mb-1">Họ và tên trên CCCD:</label>
+                <input type="text" id="tabKycFullNameInput" required placeholder="NGUYEN VAN A"
+                  class="w-full px-3.5 py-2.5 bg-white border border-gray-300 rounded-xl outline-none text-xs text-gray-800 font-bold focus:ring-2 focus:ring-teal-500 uppercase"/>
+              </div>
+              <div>
+                <label class="block text-[11px] text-gray-600 font-bold mb-1">Số CCCD (12 chữ số):</label>
+                <input type="text" id="tabKycIdCardNumberInput" required maxlength="12" placeholder="001095012345"
+                  class="w-full px-3.5 py-2.5 bg-white border border-gray-300 rounded-xl outline-none text-xs text-gray-800 font-bold tracking-wider focus:ring-2 focus:ring-teal-500"/>
+              </div>
+            </div>
+
+            <!-- Upload ảnh Mặt trước & Mặt sau CCCD -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+              <div>
+                <label class="block text-[11px] text-gray-600 font-bold mb-1">Ảnh Mặt trước CCCD:</label>
+                <input type="file" id="tabKycFrontFileInput" accept="image/*" onchange="previewTabKycPhoto(event, 'tabKycFrontPreview', 'tabKycFrontUrl')" class="text-xs text-gray-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-teal-50 file:text-teal-700 hover:file:bg-teal-100 cursor-pointer"/>
+                <input type="hidden" id="tabKycFrontUrl"/>
+                <div class="mt-2 h-36 bg-gray-200 rounded-xl overflow-hidden border border-gray-300 relative">
+                  <img id="tabKycFrontPreview" src="" class="w-full h-full object-cover hidden"/>
+                  <div id="tabKycFrontEmpty" class="w-full h-full flex flex-col items-center justify-center text-gray-400 text-xs">
+                    <span class="material-symbols-outlined text-3xl">add_photo_alternate</span>
+                    <span class="mt-1">Chưa tải ảnh mặt trước</span>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-[11px] text-gray-600 font-bold mb-1">Ảnh Mặt sau CCCD:</label>
+                <input type="file" id="tabKycBackFileInput" accept="image/*" onchange="previewTabKycPhoto(event, 'tabKycBackPreview', 'tabKycBackUrl')" class="text-xs text-gray-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-teal-50 file:text-teal-700 hover:file:bg-teal-100 cursor-pointer"/>
+                <input type="hidden" id="tabKycBackUrl"/>
+                <div class="mt-2 h-36 bg-gray-200 rounded-xl overflow-hidden border border-gray-300 relative">
+                  <img id="tabKycBackPreview" src="" class="w-full h-full object-cover hidden"/>
+                  <div id="tabKycBackEmpty" class="w-full h-full flex flex-col items-center justify-center text-gray-400 text-xs">
+                    <span class="material-symbols-outlined text-3xl">add_photo_alternate</span>
+                    <span class="mt-1">Chưa tải ảnh mặt sau</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- BƯỚC 3: MÃ SỐ THUẾ & CHỨNG CHỈ NGHỀ (TÙY CHỌN / MÔI GIỚI) -->
+          <div class="p-4 bg-gray-50 rounded-2xl border border-gray-200 space-y-3">
+            <label class="text-xs font-bold uppercase text-gray-700 flex items-center gap-1.5">
+              <span class="w-5 h-5 rounded-full bg-teal-600 text-white text-[11px] flex items-center justify-center font-bold">3</span>
+              Mã số thuế & Chứng chỉ hành nghề môi giới
+            </label>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label class="block text-[11px] text-gray-600 font-bold mb-1">Loại tài khoản thuế:</label>
+                <select id="tabKycTaxTypeInput" class="w-full px-3.5 py-2.5 bg-white border border-gray-300 rounded-xl outline-none text-xs text-gray-800 font-semibold focus:ring-2 focus:ring-teal-500">
+                  <option value="Cá nhân">Cá nhân (MST Thu nhập cá nhân)</option>
+                  <option value="Doanh nghiệp / Hộ kinh doanh">Doanh nghiệp / Hộ kinh doanh BĐS</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-[11px] text-gray-600 font-bold mb-1">Mã số thuế (nếu có):</label>
+                <input type="text" id="tabKycTaxCodeInput" placeholder="Ví dụ: 8012345678"
+                  class="w-full px-3.5 py-2.5 bg-white border border-gray-300 rounded-xl outline-none text-xs text-gray-800 font-semibold focus:ring-2 focus:ring-teal-500"/>
+              </div>
+            </div>
+
+            <!-- Nếu là Môi giới: Cho phép nhập số CCHN -->
+            <div id="tabKycBrokerSection" class="pt-3 border-t border-gray-200 space-y-2">
+              <div class="flex items-center gap-1.5 text-xs text-amber-800 font-bold">
+                <span class="material-symbols-outlined text-base text-amber-600">workspace_premium</span>
+                <span>Dành riêng cho Môi giới BĐS (Được gắn tích xanh Môi giới chuyên nghiệp):</span>
+              </div>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label class="block text-[11px] text-gray-600 font-bold mb-1">Số Chứng chỉ hành nghề:</label>
+                  <input type="text" id="tabKycBrokerLicenseNum" placeholder="VD: BĐS-HN-2024-1234"
+                    class="w-full px-3.5 py-2 bg-white border border-gray-300 rounded-xl outline-none text-xs text-gray-800 font-semibold focus:ring-2 focus:ring-teal-500"/>
+                </div>
+                <div>
+                  <label class="block text-[11px] text-gray-600 font-bold mb-1">Ảnh Chứng chỉ hành nghề:</label>
+                  <input type="file" id="tabKycBrokerLicenseFile" accept="image/*" onchange="previewTabKycPhoto(event, 'tabKycBrokerPreview', 'tabKycBrokerUrl')" class="text-xs text-gray-500 file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-[11px] file:font-semibold file:bg-amber-50 file:text-amber-800 cursor-pointer"/>
+                  <input type="hidden" id="tabKycBrokerUrl"/>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <button type="submit" id="btnSubmitTabKyc" class="w-full py-3.5 bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-700 hover:to-emerald-700 text-white rounded-2xl font-bold text-sm shadow-lg shadow-teal-500/25 transition-all flex items-center justify-center gap-2 cursor-pointer">
+            <span class="material-symbols-outlined text-lg">send</span>
+            <span>Gửi hồ sơ Xác minh danh tính (KYC)</span>
+          </button>
+        </form>
       </div>
     </div>
 
@@ -397,6 +677,179 @@
     </div>
   </div>
 
+  <!-- MODAL XÁC THỰC DANH TÍNH (KYC MODAL) -->
+  <div id="kycModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-3xl max-w-xl w-full p-6 sm:p-7 shadow-2xl relative max-h-[92vh] overflow-y-auto">
+      <div class="flex items-center justify-between pb-3.5 border-b border-gray-100 mb-3.5">
+        <div>
+          <h3 class="font-black text-gray-900 text-base sm:text-lg flex items-center gap-2">
+            <span class="material-symbols-outlined text-indigo-600">badge</span>
+            Xác minh danh tính & Kích hoạt quyền Đăng tin (KYC)
+          </h3>
+          <p class="text-xs text-gray-500 mt-0.5">Xác thực CCCD, SĐT & Mã số thuế để phòng chống tin ảo và bảo vệ người dùng</p>
+        </div>
+        <button onclick="closeKycModal()" class="text-gray-400 hover:text-gray-600 p-1">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+
+      <form id="kycForm" onsubmit="handleKycSubmit(event)" class="space-y-3.5 text-xs">
+        <!-- Thông báo vai trò đang đăng ký -->
+        <div class="p-3 bg-indigo-50 border border-indigo-200 rounded-xl flex items-center gap-2 text-indigo-900 font-semibold">
+          <span class="material-symbols-outlined text-lg text-indigo-600 shrink-0">info</span>
+          <span>Đăng ký quyền đăng tin cho: <strong id="kycTargetRoleBadge" class="text-indigo-700">Người bán (Chủ nhà)</strong></span>
+        </div>
+
+        <!-- BƯỚC 1: SỐ ĐIỆN THOẠI & XÁC THỰC OTP -->
+        <div class="p-4 bg-gray-50 border border-gray-200 rounded-2xl space-y-2.5">
+          <div class="flex items-center justify-between">
+            <label class="font-bold text-gray-900 flex items-center gap-1.5">
+              <span>📱 1. Số điện thoại liên hệ (Bắt buộc)</span>
+              <span class="text-red-500">*</span>
+            </label>
+            <span id="phoneVerifiedBadge" class="hidden text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 flex items-center gap-0.5">
+              <span class="material-symbols-outlined text-xs">check_circle</span> Đã xác thực OTP
+            </span>
+          </div>
+
+          <div class="flex gap-2">
+            <input type="tel" id="kycPhone" placeholder="VD: 0912345678" required
+              class="flex-1 px-3.5 py-2.5 bg-white border border-gray-300 rounded-xl font-medium outline-none focus:ring-2 focus:ring-indigo-500 text-xs">
+            <button type="button" id="btnSendOtp" onclick="sendKycOtp()"
+              class="px-3.5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl transition-colors shrink-0 flex items-center gap-1">
+              <span class="material-symbols-outlined text-sm">sms</span> Gửi mã OTP
+            </button>
+          </div>
+
+          <!-- Khung nhập OTP -->
+          <div id="otpInputBox" class="space-y-2 pt-2 border-t border-gray-200 hidden">
+            <div class="flex items-center justify-between text-[11px]">
+              <span class="text-gray-600 font-medium">Nhập mã OTP xác thực:</span>
+              <span id="otpDemoHint" class="text-indigo-600 font-bold bg-indigo-50 px-2 py-0.5 rounded-md"></span>
+            </div>
+            <div class="flex gap-2">
+              <input type="text" id="kycOtpCode" placeholder="Nhập mã 6 số" maxlength="6"
+                class="flex-1 px-3.5 py-2 bg-white border border-gray-300 rounded-xl font-bold tracking-widest outline-none focus:ring-2 focus:ring-indigo-500 text-xs">
+              <button type="button" onclick="verifyKycOtp()"
+                class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl transition-colors shrink-0">
+                Xác nhận OTP
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- BƯỚC 2: CĂN CƯỚC CÔNG DÂN (CCCD) -->
+        <div class="p-4 bg-gray-50 border border-gray-200 rounded-2xl space-y-3">
+          <label class="font-bold text-gray-900 block">
+            🆔 2. Thông tin Căn cước công dân (Bắt buộc) <span class="text-red-500">*</span>
+          </label>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <span class="text-gray-600 block mb-1 font-semibold">Họ và tên thật trên CCCD:</span>
+              <input type="text" id="kycFullName" placeholder="VD: NGUYỄN VĂN AN" required
+                class="w-full px-3.5 py-2 bg-white border border-gray-300 rounded-xl font-semibold outline-none focus:ring-2 focus:ring-indigo-500 text-xs">
+            </div>
+            <div>
+              <span class="text-gray-600 block mb-1 font-semibold">Số CCCD (12 chữ số):</span>
+              <input type="text" id="kycIdCardNumber" placeholder="VD: 001201008899" maxlength="12" required
+                class="w-full px-3.5 py-2 bg-white border border-gray-300 rounded-xl font-semibold outline-none focus:ring-2 focus:ring-indigo-500 text-xs">
+            </div>
+          </div>
+
+          <!-- Nút chọn ảnh mẫu test nhanh -->
+          <div class="flex items-center justify-between pt-1">
+            <span class="text-[11px] text-gray-600 font-semibold">Ảnh CCCD mặt trước & mặt sau:</span>
+            <button type="button" onclick="useSampleKycPhotos()" class="text-[11px] text-indigo-600 hover:underline font-bold flex items-center gap-0.5">
+              <span class="material-symbols-outlined text-xs">auto_awesome</span> Điền ảnh mẫu test nhanh
+            </button>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <span class="text-[11px] text-gray-600 font-medium block mb-1">Mặt trước CCCD:</span>
+              <input type="text" id="kycIdCardFront" placeholder="URL ảnh mặt trước" required onchange="previewKycPhoto('front', this.value)"
+                class="w-full px-3 py-1.5 bg-white border border-gray-300 rounded-lg text-xs outline-none">
+              <div id="previewFrontBox" class="mt-2 h-28 rounded-xl bg-gray-200 border flex items-center justify-center overflow-hidden">
+                <span class="text-gray-400 text-xs">Chưa có ảnh</span>
+              </div>
+            </div>
+            <div>
+              <span class="text-[11px] text-gray-600 font-medium block mb-1">Mặt sau CCCD:</span>
+              <input type="text" id="kycIdCardBack" placeholder="URL ảnh mặt sau" required onchange="previewKycPhoto('back', this.value)"
+                class="w-full px-3 py-1.5 bg-white border border-gray-300 rounded-lg text-xs outline-none">
+              <div id="previewBackBox" class="mt-2 h-28 rounded-xl bg-gray-200 border flex items-center justify-center overflow-hidden">
+                <span class="text-gray-400 text-xs">Chưa có ảnh</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- BƯỚC 3: MÃ SỐ THUẾ (MST) -->
+        <div class="p-4 bg-gray-50 border border-gray-200 rounded-2xl space-y-2.5">
+          <div class="flex items-center justify-between">
+            <label class="font-bold text-gray-900 block">
+              🧾 3. Mã số thuế (MST)
+            </label>
+            <span class="text-[10px] text-gray-500 font-medium">Xuất hóa đơn & Kê khai thuế</span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+            <div>
+              <span class="text-gray-600 block mb-1 font-semibold">Loại đối tượng:</span>
+              <select id="kycTaxType" class="w-full px-3 py-2 bg-white border border-gray-300 rounded-xl outline-none text-xs font-semibold">
+                <option value="Cá nhân">Cá nhân</option>
+                <option value="Doanh nghiệp / Hộ kinh doanh">Doanh nghiệp / Hộ KD</option>
+              </select>
+            </div>
+            <div class="sm:col-span-2">
+              <span class="text-gray-600 block mb-1 font-semibold">Mã số thuế:</span>
+              <input type="text" id="kycTaxCode" placeholder="VD: 8401928374 (Không bắt buộc với cá nhân)"
+                class="w-full px-3.5 py-2 bg-white border border-gray-300 rounded-xl outline-none text-xs">
+            </div>
+          </div>
+        </div>
+
+        <!-- BƯỚC 4: DÀNH RIÊNG CHO MÔI GIỚI (AGENT) -->
+        <div id="kycBrokerSection" class="p-4 bg-purple-50/70 border border-purple-200 rounded-2xl space-y-2.5 hidden">
+          <div class="flex items-center justify-between">
+            <label class="font-bold text-purple-900 flex items-center gap-1.5">
+              <span>👔 4. Chứng chỉ hành nghề Môi giới BĐS</span>
+              <span class="text-[10px] px-2 py-0.5 rounded-full bg-purple-100 text-purple-800 font-bold">Gắn Tích Xanh Uy Tín</span>
+            </label>
+          </div>
+          <p class="text-[11px] text-purple-800/80">Tải lên chứng chỉ do Sở Xây dựng cấp để được gắn huy hiệu Môi giới chuyên nghiệp trên toàn sàn.</p>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <span class="text-gray-600 block mb-1 font-semibold">Số hiệu chứng chỉ:</span>
+              <input type="text" id="kycBrokerLicenseNumber" placeholder="VD: BĐS-HN-2024-8899"
+                class="w-full px-3.5 py-2 bg-white border border-purple-200 rounded-xl outline-none text-xs">
+            </div>
+            <div>
+              <span class="text-gray-600 block mb-1 font-semibold">Ảnh chứng chỉ hành nghề:</span>
+              <input type="text" id="kycBrokerLicenseImage" placeholder="URL ảnh chứng chỉ" onchange="previewKycPhoto('license', this.value)"
+                class="w-full px-3 py-2 bg-white border border-purple-200 rounded-xl outline-none text-xs">
+            </div>
+          </div>
+          <div id="previewLicenseBox" class="mt-1 h-24 rounded-xl bg-purple-100/50 border border-purple-200 flex items-center justify-center overflow-hidden hidden"></div>
+        </div>
+
+        <div id="kycSubmitErrorMsg" class="text-xs font-semibold text-red-500 bg-red-50 p-2.5 rounded-xl border border-red-200 hidden"></div>
+
+        <div class="mt-4 pt-3 border-t flex items-center justify-end gap-2.5">
+          <button type="button" onclick="closeKycModal()" class="px-4 py-2.5 text-xs font-bold text-gray-600 hover:bg-gray-100 rounded-xl transition-colors cursor-pointer">
+            Để sau
+          </button>
+          <button type="submit" id="btnSubmitKyc" class="px-6 py-2.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-bold text-xs rounded-xl shadow-md shadow-emerald-500/25 transition-all flex items-center gap-1.5 cursor-pointer">
+            <span class="material-symbols-outlined text-sm">send</span>
+            <span>Gửi hồ sơ xác minh</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <!-- MODAL CHỈNH SỬA THÔNG TIN CÁ NHÂN -->
   <div id="editProfileModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
     <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl relative">
@@ -544,6 +997,9 @@
       const adminBtn = document.getElementById('adminPortalBtn');
       const adminCard = document.getElementById('adminCardBox');
       const openRoleModalBtn = document.getElementById('openSwitchRoleBtn');
+      const kycMenuTab = document.getElementById('menuKycTab');
+      const kycBadge = document.getElementById('kycStatusBadge');
+      const kycSection = document.getElementById('kycTabSection');
 
       if (isAdmin) {
         // Quản trị viên (QTV): Chỉ quản trị hệ thống, KHÔNG đăng tin, KHÔNG dùng gói hội viên, KHÔNG dùng CRM cá nhân
@@ -558,6 +1014,9 @@
         if (crmBox) crmBox.classList.add('hidden');
         if (marketAnalyticsBox) marketAnalyticsBox.classList.add('hidden');
         if (sentReqSec) sentReqSec.classList.add('hidden');
+        if (kycMenuTab) kycMenuTab.classList.add('hidden');
+        if (kycBadge) kycBadge.classList.add('hidden');
+        if (kycSection) kycSection.classList.add('hidden');
         if (adminBtn) adminBtn.classList.remove('hidden');
         if (adminCard) adminCard.classList.remove('hidden');
         if (openRoleModalBtn) openRoleModalBtn.classList.add('hidden');
@@ -569,7 +1028,15 @@
       if (openRoleModalBtn) openRoleModalBtn.classList.remove('hidden');
 
       if (!canPost) {
-        // Chỉ có vai trò Người mua / Người thuê: 
+        // NGƯỜI MUA / NGƯỜI THUÊ: 
+        // TUYỆT ĐỐI ẨN TẤT CẢ CÁC GÓI ĐẨY TIN, NÂNG CẤP VÀ TAB KYC
+        if (pkgPushBox) pkgPushBox.classList.add('hidden');
+        if (upgradeBtn) upgradeBtn.classList.add('hidden');
+        if (menuPkg) menuPkg.classList.add('hidden');
+        if (kycMenuTab) kycMenuTab.classList.add('hidden');
+        if (kycBadge) kycBadge.classList.add('hidden');
+        if (kycSection) kycSection.classList.add('hidden');
+
         // Linh hoạt tiêu đề: Khách thuê -> "từ Người cho thuê"; Người mua -> "từ Người bán"
         const sentTitleEl = document.getElementById('sentRequestsTitle');
         const sentSubEl = document.getElementById('sentRequestsSubtitle');
@@ -587,9 +1054,6 @@
         if (myListingLink) myListingLink.classList.add('hidden');
         const mySec = document.getElementById('myListingsSection');
         if (mySec) mySec.classList.add('hidden');
-        if (pkgPushBox) pkgPushBox.classList.add('hidden');
-        if (upgradeBtn) upgradeBtn.classList.add('hidden');
-        if (menuPkg) menuPkg.classList.add('hidden');
         if (upgradeBanner) upgradeBanner.classList.remove('hidden');
         if (sellerActionsBox) sellerActionsBox.classList.add('hidden');
         if (crmBox) crmBox.classList.add('hidden');
@@ -597,12 +1061,14 @@
         if (sentReqSec) sentReqSec.classList.remove('hidden');
         loadMySentRequests();
       } else {
-        // Có vai trò Bán / Cho thuê / Môi giới: 
-        // Hiển thị CRM khách hàng & Thống kê thị trường; Ẩn hộp "Yêu cầu gửi đi"
+        // CÓ VAI TRÒ BÁN / CHO THUÊ / MÔI GIỚI: 
+        // Hiển thị nút Gói dịch vụ & Đẩy tin, KYC, CRM khách hàng & Thống kê thị trường; Ẩn hộp "Yêu cầu gửi đi"
         if (myListingLink) myListingLink.classList.remove('hidden');
         if (pkgPushBox) pkgPushBox.classList.remove('hidden');
         if (upgradeBtn) upgradeBtn.classList.remove('hidden');
         if (menuPkg) menuPkg.classList.remove('hidden');
+        if (kycMenuTab) kycMenuTab.classList.remove('hidden');
+        if (kycBadge) kycBadge.classList.remove('hidden');
         if (upgradeBanner) upgradeBanner.classList.add('hidden');
         if (sellerActionsBox) {
           sellerActionsBox.classList.remove('hidden');
@@ -651,6 +1117,7 @@
       }
 
       applyProfileRole(uRole);
+      loadMyProfileKycStatus();
     }
 
     // 2. Tải thêm trạng thái gói hội viên & lượt đẩy tin
@@ -741,6 +1208,15 @@
           return;
         }
 
+        // Nếu vai trò yêu cầu xác minh KYC (Người bán, Cho thuê, Môi giới)
+        if (data.requiresKyc) {
+          closeSwitchRoleModal();
+          btn.disabled = false;
+          btn.innerHTML = '<span class="material-symbols-outlined text-sm">check_circle</span><span>Cập nhật vai trò</span>';
+          openKycModal(data.pendingRoles || selectedRoles, data.message, data.kycStatus, data.rejectReason);
+          return;
+        }
+
         const newToken = data.accessToken || data.token;
         if (newToken) {
           localStorage.setItem('accessToken', newToken);
@@ -767,6 +1243,593 @@
 
     function upgradeToSeller() {
       openSwitchRoleModal();
+    }
+
+    // ====================================================================
+    // HỆ THỐNG XÁC THỰC DANH TÍNH (KYC) & PHÂN QUYỀN ĐĂNG TIN
+    // ====================================================================
+    let currentKycState = { isVerified: false, kycStatus: 'None', phone: '', phoneVerified: false, rejectReason: '' };
+    let currentKycPendingRoles = ['Seller'];
+    let isPhoneOtpVerified = false;
+
+    function toggleKycSection(forceOpen) {
+      const sec = document.getElementById('kycTabSection');
+      if (!sec) return;
+      const isHidden = sec.classList.contains('hidden');
+      const arrow = document.getElementById('kycArrowIcon');
+      const txt = document.getElementById('kycToggleText');
+
+      if (forceOpen === true || isHidden) {
+        sec.classList.remove('hidden');
+        if (arrow) arrow.style.transform = 'rotate(180deg)';
+        if (txt) txt.textContent = 'Thu gọn';
+        sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } else {
+        sec.classList.add('hidden');
+        if (arrow) arrow.style.transform = 'rotate(0deg)';
+        if (txt) txt.textContent = 'Xem hồ sơ';
+      }
+    }
+
+    async function loadMyProfileKycStatus() {
+      if (!token) return;
+      try {
+        const res = await fetch('/api/kyc/my-status', {
+          headers: { 'Authorization': 'Bearer ' + token }
+        });
+        if (!res.ok) return;
+        const data = await res.json();
+        currentKycState = data;
+
+        const isVerified = data.isVerified || (data.kycStatus && data.kycStatus.toLowerCase() === 'approved');
+        const isPosterRole = currentUserRole.includes('Seller') || 
+                             currentUserRole.includes('Landlord') || 
+                             currentUserRole.includes('Agent') || 
+                             currentUserRole.includes('Broker') || 
+                             Boolean(data.pendingRoles);
+
+        // 1. Quản lý hiển thị Tab / Menu KYC trong màn hình Hồ sơ cá nhân
+        // Chỉ hiển thị đối với người bán, cho thuê, môi giới (hoặc tài khoản đang chờ vai trò)
+        const menuTab = document.getElementById('menuKycTab');
+        const menuBadge = document.getElementById('menuKycBadge');
+        if (menuTab) {
+          if (isPosterRole) {
+            menuTab.classList.remove('hidden');
+          } else {
+            menuTab.classList.add('hidden');
+          }
+        }
+
+        if (menuBadge) {
+          if (isVerified) {
+            menuBadge.className = 'px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-emerald-100 text-emerald-800 border border-emerald-300';
+            menuBadge.innerHTML = '✓ Đã xác minh';
+          } else if (data.kycStatus === 'Pending') {
+            menuBadge.className = 'px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-amber-100 text-amber-900 border border-amber-300';
+            menuBadge.innerHTML = '⏳ Chờ duyệt';
+          } else if (data.kycStatus === 'Rejected') {
+            menuBadge.className = 'px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-rose-100 text-rose-900 border border-rose-300';
+            menuBadge.innerHTML = '✕ Bị từ chối';
+          } else {
+            menuBadge.className = 'px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-gray-100 text-gray-700 border border-gray-300';
+            menuBadge.innerHTML = 'Chưa xác minh';
+          }
+        }
+
+        // 2. Cập nhật Badge trên Header hồ sơ (Chỉ hiển thị cho người có vai trò Đăng tin BĐS)
+        const badgeEl = document.getElementById('kycStatusBadge');
+        if (badgeEl) {
+          if (!isPosterRole) {
+            badgeEl.classList.add('hidden');
+          } else {
+            badgeEl.classList.remove('hidden');
+            if (isVerified) {
+              badgeEl.className = 'inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-300 cursor-pointer shadow-xs hover:bg-emerald-200 transition-colors';
+              badgeEl.innerHTML = '<span class="material-symbols-outlined text-xs text-emerald-600">verified</span> <span>✓ Đã xác minh (KYC)</span>';
+            } else if (data.kycStatus === 'Pending') {
+              badgeEl.className = 'inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-900 border border-amber-300 cursor-pointer shadow-xs hover:bg-amber-200 transition-colors';
+              badgeEl.innerHTML = '<span class="material-symbols-outlined text-xs text-amber-600">hourglass_top</span> <span>⏳ Chờ duyệt KYC</span>';
+            } else if (data.kycStatus === 'Rejected') {
+              badgeEl.className = 'inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold bg-red-100 text-red-900 border border-red-300 cursor-pointer shadow-xs hover:bg-red-200 transition-colors';
+              badgeEl.innerHTML = '<span class="material-symbols-outlined text-xs text-red-600">cancel</span> <span>✕ KYC bị từ chối</span>';
+            } else {
+              badgeEl.className = 'inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold bg-gray-100 text-gray-700 border border-gray-300 cursor-pointer shadow-xs hover:bg-gray-200 transition-colors';
+              badgeEl.innerHTML = '<span class="material-symbols-outlined text-xs text-gray-500">shield</span> <span>Chưa xác minh KYC</span>';
+            }
+          }
+        }
+
+        // 3. Cập nhật Section Tab KYC
+        const approvedBox = document.getElementById('kycTabApprovedBox');
+        const pendingBox = document.getElementById('kycTabPendingBox');
+        const formBox = document.getElementById('kycTabFormBox');
+        const tabStatusBadge = document.getElementById('tabKycStatusBadge');
+
+        if (isVerified) {
+          if (approvedBox) approvedBox.classList.remove('hidden');
+          if (pendingBox) pendingBox.classList.add('hidden');
+          if (formBox) formBox.classList.add('hidden');
+
+          if (tabStatusBadge) {
+            tabStatusBadge.className = 'px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-300';
+            tabStatusBadge.textContent = 'Đã xác minh';
+          }
+
+          // Điền thông tin đã duyệt
+          const safeName = document.getElementById('fullName')?.textContent || 'Người dùng';
+          if (document.getElementById('tabApprovedFullName')) document.getElementById('tabApprovedFullName').textContent = safeName;
+          if (document.getElementById('tabApprovedIdCard')) document.getElementById('tabApprovedIdCard').textContent = data.idCardNumber || '001095******';
+          if (document.getElementById('tabApprovedPhone')) {
+            document.getElementById('tabApprovedPhone').innerHTML = `${data.phone || '0912345678'} <span class="material-symbols-outlined text-xs text-teal-600">verified</span>`;
+          }
+          if (document.getElementById('tabApprovedTax')) {
+            document.getElementById('tabApprovedTax').textContent = data.taxCode ? `${data.taxCode} (${data.taxType || 'Cá nhân'})` : 'Chưa kê khai';
+          }
+          if (data.brokerLicenseNumber && document.getElementById('tabApprovedBrokerBox')) {
+            document.getElementById('tabApprovedBrokerBox').classList.remove('hidden');
+            document.getElementById('tabApprovedBrokerNum').textContent = data.brokerLicenseNumber;
+          }
+        } else if (data.kycStatus === 'Pending') {
+          if (approvedBox) approvedBox.classList.add('hidden');
+          if (pendingBox) pendingBox.classList.remove('hidden');
+          if (formBox) formBox.classList.add('hidden');
+
+          if (tabStatusBadge) {
+            tabStatusBadge.className = 'px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-100 text-amber-900 border border-amber-300';
+            tabStatusBadge.textContent = 'Đang chờ duyệt';
+          }
+
+          if (document.getElementById('tabPendingReqId')) document.getElementById('tabPendingReqId').textContent = data.latestRequestId ? `#KYC-${data.latestRequestId}` : '#KYC-PENDING';
+          if (document.getElementById('tabPendingSubmittedAt')) {
+            document.getElementById('tabPendingSubmittedAt').textContent = data.submittedAt ? new Date(data.submittedAt).toLocaleString('vi-VN') : 'Hôm nay';
+          }
+        } else {
+          // Unverified / None / Rejected
+          if (approvedBox) approvedBox.classList.add('hidden');
+          if (pendingBox) pendingBox.classList.add('hidden');
+          if (formBox) formBox.classList.remove('hidden');
+
+          const rejBanner = document.getElementById('tabKycRejectedBanner');
+          if (data.kycStatus === 'Rejected') {
+            if (rejBanner) rejBanner.classList.remove('hidden');
+            if (document.getElementById('tabKycRejectedReasonText')) {
+              document.getElementById('tabKycRejectedReasonText').textContent = 'Lý do: ' + (data.rejectReason || 'Thông tin giấy tờ chưa chính xác');
+            }
+            if (tabStatusBadge) {
+              tabStatusBadge.className = 'px-2.5 py-0.5 rounded-full text-xs font-bold bg-rose-100 text-rose-900 border border-rose-300';
+              tabStatusBadge.textContent = 'Bị từ chối';
+            }
+          } else {
+            if (rejBanner) rejBanner.classList.add('hidden');
+            if (tabStatusBadge) {
+              tabStatusBadge.className = 'px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-100 text-amber-900 border border-amber-200';
+              tabStatusBadge.textContent = 'Chưa xác minh';
+            }
+          }
+
+          // Pre-fill
+          if (document.getElementById('tabKycFullNameInput') && !document.getElementById('tabKycFullNameInput').value) {
+            document.getElementById('tabKycFullNameInput').value = document.getElementById('fullName')?.textContent || '';
+          }
+          if (document.getElementById('tabKycPhoneInput') && data.phone && !document.getElementById('tabKycPhoneInput').value) {
+            document.getElementById('tabKycPhoneInput').value = data.phone;
+          }
+        }
+
+        // 4. Cập nhật warning box trong sellerActionsBox
+        const warningBox = document.getElementById('sellerKycWarningBox');
+        const alertPending = document.getElementById('kycStatusPendingAlert');
+        const alertRejected = document.getElementById('kycStatusRejectedAlert');
+        const alertNone = document.getElementById('kycStatusNoneAlert');
+        const rejectReasonEl = document.getElementById('kycRejectReasonText');
+
+        if (warningBox) {
+          if (isVerified) {
+            warningBox.classList.add('hidden');
+          } else {
+            warningBox.classList.remove('hidden');
+            if (alertPending) alertPending.classList.add('hidden');
+            if (alertRejected) alertRejected.classList.add('hidden');
+            if (alertNone) alertNone.classList.add('hidden');
+
+            if (data.kycStatus === 'Pending') {
+              if (alertPending) alertPending.classList.remove('hidden');
+            } else if (data.kycStatus === 'Rejected') {
+              if (alertRejected) alertRejected.classList.remove('hidden');
+              if (rejectReasonEl) rejectReasonEl.textContent = 'Lý do: ' + (data.rejectReason || 'Thông tin CCCD chưa đạt yêu cầu');
+            } else {
+              if (alertNone) alertNone.classList.remove('hidden');
+            }
+          }
+        }
+      } catch (err) {
+        console.error('Error fetching KYC status:', err);
+      }
+    }
+
+    // ====================================================================
+    // RÀO CHẮN ĐĂNG TIN MỚI (GATEKEEPING: kyc_status == 'approved')
+    // ====================================================================
+    function handleCreateListingClick(e) {
+      if (e) e.preventDefault();
+      const isApproved = currentKycState.isVerified || (currentKycState.kycStatus && currentKycState.kycStatus.toLowerCase() === 'approved');
+      if (isApproved) {
+        window.location.href = 'home_property_search.html?action=create';
+        return true;
+      }
+      showKycGatekeepingModal();
+      return false;
+    }
+
+    function showKycGatekeepingModal() {
+      const modal = document.getElementById('kycGatekeepingModal');
+      const text = document.getElementById('gatekeepingStatusText');
+      if (text) {
+        if (currentKycState.kycStatus === 'Pending') {
+          text.textContent = 'Trạng thái: Hồ sơ đang chờ Quản trị viên duyệt';
+        } else if (currentKycState.kycStatus === 'Rejected') {
+          text.textContent = 'Trạng thái: Hồ sơ KYC bị từ chối (' + (currentKycState.rejectReason || 'Cần nộp lại') + ')';
+        } else {
+          text.textContent = 'Trạng thái: Chưa hoàn tất xác minh tài khoản';
+        }
+      }
+      if (modal) modal.classList.remove('hidden');
+    }
+
+    function closeGatekeepingModal() {
+      const modal = document.getElementById('kycGatekeepingModal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function goToKycVerification() {
+      closeGatekeepingModal();
+      toggleKycSection(true);
+    }
+
+    // ====================================================================
+    // HÀM XỬ LÝ FORM TRONG TAB KYC
+    // ====================================================================
+    async function sendTabKycOtp() {
+      const phone = document.getElementById('tabKycPhoneInput')?.value?.trim();
+      if (!phone || phone.length < 9) {
+        alert('Vui lòng nhập số điện thoại hợp lệ để nhận mã OTP');
+        return;
+      }
+      const btn = document.getElementById('tabBtnSendOtp');
+      try {
+        btn.disabled = true;
+        btn.innerHTML = '<span class="material-symbols-outlined text-sm animate-spin">sync</span> Đang gửi...';
+
+        const res = await fetch('/api/kyc/send-otp', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+          body: JSON.stringify({ phone })
+        });
+        const data = await res.json();
+        btn.disabled = false;
+        btn.textContent = 'Gửi lại OTP';
+
+        if (res.ok) {
+          document.getElementById('tabKycOtpBox')?.classList.remove('hidden');
+          const hint = document.getElementById('tabDemoOtpCode');
+          if (hint) hint.textContent = data.otpCode || data.otp || '888999';
+          document.getElementById('tabKycOtpInput').value = data.otpCode || data.otp || '888999';
+          alert('📱 Mã OTP đã được gửi: ' + (data.otpCode || data.otp || '888999'));
+        } else {
+          alert(data.message || 'Lỗi gửi mã OTP');
+        }
+      } catch (err) {
+        btn.disabled = false;
+        btn.textContent = 'Gửi mã OTP';
+        alert('Lỗi kết nối máy chủ');
+      }
+    }
+
+    function verifyTabKycOtp() {
+      const otp = document.getElementById('tabKycOtpInput')?.value?.trim();
+      if (!otp) {
+        alert('Vui lòng nhập mã OTP gồm 6 chữ số');
+        return;
+      }
+      isPhoneOtpVerified = true;
+      document.getElementById('tabOtpVerifiedBadge')?.classList.remove('hidden');
+      document.getElementById('tabKycOtpBox')?.classList.add('hidden');
+      alert('✅ Xác thực số điện thoại OTP thành công!');
+    }
+
+    function previewTabKycPhoto(event, imgId, hiddenId) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const dataUrl = e.target.result;
+        const img = document.getElementById(imgId);
+        if (img) {
+          img.src = dataUrl;
+          img.classList.remove('hidden');
+        }
+        const empty = document.getElementById(imgId.replace('Preview', 'Empty'));
+        if (empty) empty.classList.add('hidden');
+        const hidden = document.getElementById(hiddenId);
+        if (hidden) hidden.value = dataUrl;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    async function handleTabKycSubmit(e) {
+      e.preventDefault();
+      const fullName = document.getElementById('tabKycFullNameInput')?.value?.trim();
+      const phone = document.getElementById('tabKycPhoneInput')?.value?.trim();
+      const idCardNumber = document.getElementById('tabKycIdCardNumberInput')?.value?.trim();
+      const idCardFront = document.getElementById('tabKycFrontUrl')?.value?.trim() || 'https://images.unsplash.com/photo-1544717305-2782549b5136';
+      const idCardBack = document.getElementById('tabKycBackUrl')?.value?.trim() || 'https://images.unsplash.com/photo-1544717305-2782549b5136';
+      const taxType = document.getElementById('tabKycTaxTypeInput')?.value;
+      const taxCode = document.getElementById('tabKycTaxCodeInput')?.value?.trim();
+      const brokerLicenseNumber = document.getElementById('tabKycBrokerLicenseNum')?.value?.trim();
+      const brokerLicenseImage = document.getElementById('tabKycBrokerUrl')?.value?.trim();
+      const otpCode = document.getElementById('tabKycOtpInput')?.value?.trim() || '888999';
+
+      if (!fullName || !phone || !idCardNumber) {
+        alert('Vui lòng điền đầy đủ Họ tên, Số điện thoại và Số CCCD!');
+        return;
+      }
+
+      const btn = document.getElementById('btnSubmitTabKyc');
+      btn.disabled = true;
+      btn.innerHTML = '<span class="material-symbols-outlined text-sm animate-spin">sync</span> Đang gửi hồ sơ...';
+
+      try {
+        const res = await fetch('/api/kyc/submit', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
+          },
+          body: JSON.stringify({
+            fullName,
+            phone,
+            otpCode,
+            idCardNumber,
+            idCardFront,
+            idCardBack,
+            taxType,
+            taxCode: taxCode || null,
+            requestedRole: currentKycPendingRoles[0] || 'Seller',
+            requestedRoles: currentKycPendingRoles,
+            brokerLicenseNumber: brokerLicenseNumber || null,
+            brokerLicenseImage: brokerLicenseImage || null
+          })
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          alert('❌ Lỗi nộp hồ sơ KYC: ' + (data.message || 'Vui lòng kiểm tra lại thông tin'));
+          return;
+        }
+
+        alert('🎉 ' + data.message);
+        await loadMyProfileKycStatus();
+      } catch (err) {
+        alert('Lỗi kết nối máy chủ khi nộp hồ sơ KYC');
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<span class="material-symbols-outlined text-lg">send</span><span>Gửi hồ sơ Xác minh danh tính (KYC)</span>';
+      }
+    }
+
+    function openKycModal(roles, customMsg, status, rejectReason) {
+      if (roles && Array.isArray(roles) && roles.length > 0) {
+        currentKycPendingRoles = roles;
+      }
+      
+      const badgeEl = document.getElementById('kycTargetRoleBadge');
+      if (badgeEl) {
+        const roleLabels = currentKycPendingRoles.map(r => {
+          if (r === 'Seller') return 'Người bán (Chủ nhà)';
+          if (r === 'Landlord') return 'Người cho thuê';
+          if (r === 'Agent') return 'Môi giới chuyên nghiệp';
+          return r;
+        });
+        badgeEl.textContent = roleLabels.join(' & ');
+      }
+
+      // Hiện/Ẩn mục chứng chỉ môi giới nếu có vai trò Agent
+      const brokerSec = document.getElementById('kycBrokerSection');
+      if (brokerSec) {
+        if (currentKycPendingRoles.some(r => r.toLowerCase().includes('agent') || r.toLowerCase().includes('broker'))) {
+          brokerSec.classList.remove('hidden');
+        } else {
+          brokerSec.classList.add('hidden');
+        }
+      }
+
+      // Điền sẵn SĐT hoặc tên nếu có
+      if (currentKycState.phone) {
+        const phoneInput = document.getElementById('kycPhone');
+        if (phoneInput && !phoneInput.value) phoneInput.value = currentKycState.phone;
+      }
+      const nameInput = document.getElementById('kycFullName');
+      const curName = document.getElementById('fullName')?.textContent;
+      if (nameInput && !nameInput.value && curName && curName !== 'Đang tải...') {
+        nameInput.value = curName;
+      }
+
+      const errEl = document.getElementById('kycSubmitErrorMsg');
+      if (errEl) {
+        if (customMsg) {
+          errEl.textContent = customMsg;
+          errEl.className = 'text-xs font-semibold text-indigo-700 bg-indigo-50 p-2.5 rounded-xl border border-indigo-200';
+          errEl.classList.remove('hidden');
+        } else if (rejectReason) {
+          errEl.textContent = 'Lý do bị từ chối trước đó: ' + rejectReason;
+          errEl.className = 'text-xs font-semibold text-red-600 bg-red-50 p-2.5 rounded-xl border border-red-200';
+          errEl.classList.remove('hidden');
+        } else {
+          errEl.classList.add('hidden');
+        }
+      }
+
+      document.getElementById('kycModal')?.classList.remove('hidden');
+    }
+
+    function closeKycModal() {
+      document.getElementById('kycModal')?.classList.add('hidden');
+    }
+
+    async function sendKycOtp() {
+      const phone = document.getElementById('kycPhone')?.value?.trim();
+      if (!phone || phone.length < 9) {
+        alert('Vui lòng nhập số điện thoại hợp lệ (10 số)');
+        return;
+      }
+      const btn = document.getElementById('btnSendOtp');
+      btn.disabled = true;
+      btn.textContent = 'Đang gửi...';
+
+      try {
+        const res = await fetch('/api/kyc/send-otp', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ phone })
+        });
+        const data = await res.json();
+        btn.disabled = false;
+        btn.innerHTML = '<span class="material-symbols-outlined text-sm">sms</span> Gửi lại OTP';
+
+        if (res.ok) {
+          document.getElementById('otpInputBox')?.classList.remove('hidden');
+          const hintEl = document.getElementById('otpDemoHint');
+          if (hintEl) hintEl.textContent = 'Mã OTP thử nghiệm: ' + (data.otp || '888999');
+          document.getElementById('kycOtpCode').value = data.otp || '888999';
+          alert('📱 ' + data.message);
+        } else {
+          alert(data.message || 'Lỗi gửi mã OTP');
+        }
+      } catch (err) {
+        btn.disabled = false;
+        btn.textContent = 'Gửi mã OTP';
+        alert('Lỗi kết nối máy chủ');
+      }
+    }
+
+    function verifyKycOtp() {
+      const otp = document.getElementById('kycOtpCode')?.value?.trim();
+      if (!otp) {
+        alert('Vui lòng nhập mã OTP gồm 6 chữ số');
+        return;
+      }
+      isPhoneOtpVerified = true;
+      document.getElementById('phoneVerifiedBadge')?.classList.remove('hidden');
+      document.getElementById('otpInputBox')?.classList.add('hidden');
+      alert('✅ Xác thực số điện thoại thành công!');
+    }
+
+    function useSampleKycPhotos() {
+      document.getElementById('kycFullName').value = document.getElementById('fullName')?.textContent || 'NGUYỄN VĂN AN';
+      document.getElementById('kycIdCardNumber').value = '001201008899';
+      document.getElementById('kycIdCardFront').value = 'https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=600&q=80';
+      document.getElementById('kycIdCardBack').value = 'https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=600&q=80';
+      document.getElementById('kycTaxCode').value = '8401928374';
+      document.getElementById('kycBrokerLicenseNumber').value = 'BĐS-HN-2024-8899';
+      document.getElementById('kycBrokerLicenseImage').value = 'https://images.unsplash.com/photo-1450133064473-71024230f91b?auto=format&fit=crop&w=600&q=80';
+
+      previewKycPhoto('front', document.getElementById('kycIdCardFront').value);
+      previewKycPhoto('back', document.getElementById('kycIdCardBack').value);
+      previewKycPhoto('license', document.getElementById('kycBrokerLicenseImage').value);
+      
+      if (!document.getElementById('kycOtpCode').value) {
+        document.getElementById('kycOtpCode').value = '888999';
+      }
+      isPhoneOtpVerified = true;
+      document.getElementById('phoneVerifiedBadge')?.classList.remove('hidden');
+    }
+
+    function previewKycPhoto(type, url) {
+      if (!url) return;
+      if (type === 'front') {
+        const box = document.getElementById('previewFrontBox');
+        if (box) box.innerHTML = `<img src="${url}" class="w-full h-full object-cover rounded-xl" alt="Mặt trước"/>`;
+      } else if (type === 'back') {
+        const box = document.getElementById('previewBackBox');
+        if (box) box.innerHTML = `<img src="${url}" class="w-full h-full object-cover rounded-xl" alt="Mặt sau"/>`;
+      } else if (type === 'license') {
+        const box = document.getElementById('previewLicenseBox');
+        if (box) {
+          box.classList.remove('hidden');
+          box.innerHTML = `<img src="${url}" class="w-full h-full object-cover rounded-xl" alt="Chứng chỉ môi giới"/>`;
+        }
+      }
+    }
+
+    async function handleKycSubmit(e) {
+      e.preventDefault();
+      const errEl = document.getElementById('kycSubmitErrorMsg');
+      const btn = document.getElementById('btnSubmitKyc');
+
+      const phone = document.getElementById('kycPhone').value.trim();
+      const otpCode = document.getElementById('kycOtpCode').value.trim() || '888999';
+      const fullName = document.getElementById('kycFullName').value.trim();
+      const idCardNumber = document.getElementById('kycIdCardNumber').value.trim();
+      const idCardFront = document.getElementById('kycIdCardFront').value.trim();
+      const idCardBack = document.getElementById('kycIdCardBack').value.trim();
+      const taxType = document.getElementById('kycTaxType').value;
+      const taxCode = document.getElementById('kycTaxCode').value.trim();
+      const brokerLicenseNumber = document.getElementById('kycBrokerLicenseNumber').value.trim();
+      const brokerLicenseImage = document.getElementById('kycBrokerLicenseImage').value.trim();
+
+      if (!idCardFront || !idCardBack) {
+        alert('Vui lòng tải lên hoặc điền link ảnh CCCD cả 2 mặt');
+        return;
+      }
+
+      btn.disabled = true;
+      btn.innerHTML = '<span class="material-symbols-outlined text-sm animate-spin">sync</span> Đang gửi hồ sơ...';
+
+      try {
+        const res = await fetch('/api/kyc/submit', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
+          },
+          body: JSON.stringify({
+            phone,
+            otpCode,
+            fullName,
+            idCardNumber,
+            idCardFront,
+            idCardBack,
+            taxType,
+            taxCode,
+            requestedRole: currentKycPendingRoles[0] || 'Seller',
+            requestedRoles: currentKycPendingRoles,
+            brokerLicenseNumber,
+            brokerLicenseImage
+          })
+        });
+
+        const data = await res.json();
+        btn.disabled = false;
+        btn.innerHTML = '<span class="material-symbols-outlined text-sm">send</span><span>Gửi hồ sơ xác minh</span>';
+
+        if (res.ok) {
+          alert('🎉 ' + data.message);
+          closeKycModal();
+          window.location.reload();
+        } else {
+          if (errEl) {
+            errEl.textContent = data.message || 'Lỗi khi gửi hồ sơ KYC';
+            errEl.className = 'text-xs font-semibold text-red-500 bg-red-50 p-2.5 rounded-xl border border-red-200';
+            errEl.classList.remove('hidden');
+          }
+        }
+      } catch (err) {
+        btn.disabled = false;
+        btn.innerHTML = '<span class="material-symbols-outlined text-sm">send</span><span>Gửi hồ sơ xác minh</span>';
+        if (errEl) {
+          errEl.textContent = 'Lỗi kết nối máy chủ: ' + err.message;
+          errEl.classList.remove('hidden');
+        }
+      }
     }
 
     // ====================================================================
@@ -1512,6 +2575,12 @@
       localStorage.removeItem('token');
       window.location.href = 'signin.html';
     }
+
+    // Kiểm tra tham số URL mở trực tiếp Tab KYC (ví dụ chuyển từ nút Đăng tin mới)
+    const profileUrlParams = new URLSearchParams(window.location.search);
+    if (profileUrlParams.get('tab') === 'kyc') {
+      setTimeout(() => toggleKycSection(true), 400);
+    }
   </script>
   <!-- MODAL THÔNG BÁO TIN ĐĂNG BỊ TỪ CHỐI BỞI ADMIN -->
   <div id="rejectedNoticeModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
@@ -1559,6 +2628,37 @@
       <div class="flex items-center justify-end gap-2 mt-5 pt-3 border-t">
         <button onclick="closeRejectedNoticeModal()" class="w-full py-2.5 bg-gray-900 hover:bg-black text-white text-xs font-bold rounded-xl shadow transition-all">
           Tôi đã hiểu
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL RÀO CHẮN XÁC MINH DANH TÍNH (KYC GATEKEEPING MODAL) -->
+  <div id="kycGatekeepingModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 sm:p-7 shadow-2xl relative border border-gray-100 text-center animate-in fade-in zoom-in duration-200">
+      <div class="w-16 h-16 rounded-3xl bg-amber-100 text-amber-600 flex items-center justify-center mx-auto mb-4 shadow-md shadow-amber-500/20">
+        <span class="material-symbols-outlined text-3xl">verified_user</span>
+      </div>
+      
+      <h3 class="text-lg font-black text-gray-900 tracking-tight">Xác minh danh tính để bắt đầu đăng tin</h3>
+      
+      <p class="text-xs text-gray-600 mt-2 leading-relaxed">
+        Bạn chưa hoàn tất xác minh tài khoản. Vui lòng cập nhật hồ sơ để bắt đầu đăng tin!
+      </p>
+
+      <!-- Badge trạng thái hiện tại -->
+      <div id="gatekeepingStatusBadge" class="mt-3.5 inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-amber-50 text-amber-900 border border-amber-200">
+        <span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
+        <span id="gatekeepingStatusText">Trạng thái: Chưa hoàn tất KYC</span>
+      </div>
+
+      <div class="mt-6 flex flex-col gap-2.5">
+        <button type="button" onclick="goToKycVerification()" class="w-full py-3 bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-700 hover:to-emerald-700 text-white font-bold text-xs rounded-xl shadow-lg shadow-teal-500/25 transition-all flex items-center justify-center gap-1.5 cursor-pointer">
+          <span class="material-symbols-outlined text-base">badge</span>
+          <span>Chuyển tới trang Xác minh</span>
+        </button>
+        <button type="button" onclick="closeGatekeepingModal()" class="w-full py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold text-xs rounded-xl transition-all cursor-pointer">
+          Để sau / Đóng
         </button>
       </div>
     </div>

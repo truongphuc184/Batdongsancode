@@ -477,6 +477,15 @@ public class ListingsController : ControllerBase
             });
         }
 
+        // BẮT BUỘC ĐÃ HOÀN TẤT XÁC MINH DANH TÍNH (KYC) ĐỐI VỚI VAI TRÒ ĐĂNG TIN
+        if (!user.IsVerified && user.KycStatus != "Approved")
+        {
+            return StatusCode(403, new { 
+                code = "KYC_REQUIRED",
+                message = "Tài khoản chưa hoàn tất xác minh danh tính (KYC). Vui lòng gửi hồ sơ xác thực CCCD & SĐT để Ban quản trị phê duyệt trước khi tạo tin đăng mới!" 
+            });
+        }
+
         if (!Enum.TryParse<PropertyType>(request.Type, true, out var pType))
             pType = PropertyType.Sale;
 

@@ -13,6 +13,7 @@ public class AppDbContext : DbContext
     public DbSet<Listing> Listings => Set<Listing>();
     public DbSet<Lead> Leads => Set<Lead>();
     public DbSet<Report> Reports => Set<Report>();
+    public DbSet<KycRequest> KycRequests => Set<KycRequest>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

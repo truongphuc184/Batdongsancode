@@ -12,6 +12,40 @@ public class SubscriptionsController : ControllerBase
 {
     private readonly AppDbContext _context;
 
+    public class PackageTransaction
+    {
+        public string TransactionCode { get; set; } = string.Empty;
+        public string UserName { get; set; } = string.Empty;
+        public string UserEmail { get; set; } = string.Empty;
+        public string PackageId { get; set; } = string.Empty;
+        public string PackageName { get; set; } = string.Empty;
+        public long Amount { get; set; }
+        public string PaymentMethod { get; set; } = "VNPAY QR";
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public string Status { get; set; } = "Thành công";
+        public bool IsRetail { get; set; }
+    }
+
+    private static readonly List<PackageTransaction> _transactions = new()
+    {
+        new PackageTransaction { TransactionCode = "PAY-2099", UserName = "Nguyễn Văn Bán (Chính chủ)", UserEmail = "seller@batdongsan.vn", PackageId = "push_owner_10", PackageName = "Gói Chính chủ 10 lượt (Vĩnh viễn)", Amount = 99000, PaymentMethod = "VNPAY QR", CreatedAt = DateTime.UtcNow.AddMinutes(-35), IsRetail = true },
+        new PackageTransaction { TransactionCode = "PAY-2098", UserName = "Vũ Đình Cường (Chủ biệt thự)", UserEmail = "cuong.vudinh@gmail.com", PackageId = "push_owner_10", PackageName = "Gói Chính chủ 10 lượt (Vĩnh viễn)", Amount = 99000, PaymentMethod = "Ví MoMo", CreatedAt = DateTime.UtcNow.AddHours(-2), IsRetail = true },
+        new PackageTransaction { TransactionCode = "PAY-2088", UserName = "Lê Hoàng Môi Giới BĐS", UserEmail = "agent@batdongsan.vn", PackageId = "premium", PackageName = "Hội viên Cao cấp", Amount = 2200000, PaymentMethod = "VNPAY QR", CreatedAt = DateTime.UtcNow.AddHours(-5), IsRetail = false },
+        new PackageTransaction { TransactionCode = "PAY-2075", UserName = "Trần Thanh Phong (Sàn CenLand)", UserEmail = "phong.tran@cenland.vn", PackageId = "standard", PackageName = "Hội viên Tiêu chuẩn", Amount = 1267000, PaymentMethod = "Chuyển khoản VietQR", CreatedAt = DateTime.UtcNow.AddHours(-11), IsRetail = false },
+        new PackageTransaction { TransactionCode = "PAY-2065", UserName = "Nguyễn Văn Bán (Chính chủ)", UserEmail = "seller@batdongsan.vn", PackageId = "standard", PackageName = "Hội viên Tiêu chuẩn", Amount = 1267000, PaymentMethod = "Ví MoMo", CreatedAt = DateTime.UtcNow.AddHours(-18), IsRetail = false },
+        new PackageTransaction { TransactionCode = "PAY-2055", UserName = "Hoàng Thị Kim Liên", UserEmail = "lien.kimhoang@gmail.com", PackageId = "push_weekend", PackageName = "Gói Cuối tuần vàng (4 lượt)", Amount = 49000, PaymentMethod = "VNPAY QR", CreatedAt = DateTime.UtcNow.AddHours(-23), IsRetail = true },
+        new PackageTransaction { TransactionCode = "PAY-2049", UserName = "Phan Văn Nam (Chủ nhà)", UserEmail = "chuduan.nam@gmail.com", PackageId = "push_weekend", PackageName = "Gói Cuối tuần vàng (4 lượt)", Amount = 49000, PaymentMethod = "Ví MoMo", CreatedAt = DateTime.UtcNow.AddDays(-1).AddHours(-4), IsRetail = true },
+        new PackageTransaction { TransactionCode = "PAY-2042", UserName = "Trần Thị Cho Thuê", UserEmail = "landlord@batdongsan.vn", PackageId = "basic", PackageName = "Hội viên Cơ bản", Amount = 467000, PaymentMethod = "Chuyển khoản VietQR", CreatedAt = DateTime.UtcNow.AddDays(-1).AddHours(-9), IsRetail = false },
+        new PackageTransaction { TransactionCode = "PAY-2039", UserName = "Hoàng Thị Mai (Chủ căn hộ)", UserEmail = "maihoang.bds@gmail.com", PackageId = "push_quick_3", PackageName = "Combo Bán nhanh 3 lượt", Amount = 39000, PaymentMethod = "VNPAY QR", CreatedAt = DateTime.UtcNow.AddDays(-2), IsRetail = true },
+        new PackageTransaction { TransactionCode = "PAY-2038", UserName = "Phạm Quang Dũng", UserEmail = "dung.pham@yahoo.com", PackageId = "push_quick_3", PackageName = "Combo Bán nhanh 3 lượt", Amount = 39000, PaymentMethod = "Chuyển khoản VietQR", CreatedAt = DateTime.UtcNow.AddDays(-2).AddHours(-7), IsRetail = true },
+        new PackageTransaction { TransactionCode = "PAY-2035", UserName = "Ngô Bảo Long (Môi giới Thủ Đức)", UserEmail = "long.ngo@thuduc-land.com", PackageId = "standard", PackageName = "Hội viên Tiêu chuẩn", Amount = 1267000, PaymentMethod = "VNPAY QR", CreatedAt = DateTime.UtcNow.AddDays(-3), IsRetail = false },
+        new PackageTransaction { TransactionCode = "PAY-2025", UserName = "Đinh Gia Huy (Chủ liền kề)", UserEmail = "huy.dinhgia@gmail.com", PackageId = "push_owner_10", PackageName = "Gói Chính chủ 10 lượt (Vĩnh viễn)", Amount = 99000, PaymentMethod = "Ví MoMo", CreatedAt = DateTime.UtcNow.AddDays(-3).AddHours(-10), IsRetail = true },
+        new PackageTransaction { TransactionCode = "PAY-2020", UserName = "Nguyễn Minh Châu", UserEmail = "chau.nguyen@vinhomes.vn", PackageId = "premium", PackageName = "Hội viên Cao cấp", Amount = 2200000, PaymentMethod = "Chuyển khoản VietQR", CreatedAt = DateTime.UtcNow.AddDays(-4), IsRetail = false },
+        new PackageTransaction { TransactionCode = "PAY-2015", UserName = "Đỗ Đức Toàn", UserEmail = "toan.doduc@gmail.com", PackageId = "push_single", PackageName = "Đẩy tin lẻ 1 lượt", Amount = 15000, PaymentMethod = "Chuyển khoản VietQR", CreatedAt = DateTime.UtcNow.AddDays(-4).AddHours(-5), IsRetail = true },
+        new PackageTransaction { TransactionCode = "PAY-2010", UserName = "Bùi Thu Trang", UserEmail = "trang.buithu@gmail.com", PackageId = "push_single", PackageName = "Đẩy tin lẻ 1 lượt", Amount = 15000, PaymentMethod = "Ví MoMo", CreatedAt = DateTime.UtcNow.AddDays(-5), IsRetail = true },
+        new PackageTransaction { TransactionCode = "PAY-2005", UserName = "Võ Thành Đạt", UserEmail = "dat.vothanh@gmail.com", PackageId = "basic", PackageName = "Hội viên Cơ bản", Amount = 467000, PaymentMethod = "VNPAY QR", CreatedAt = DateTime.UtcNow.AddDays(-6), IsRetail = false }
+    };
+
     public SubscriptionsController(AppDbContext context)
     {
         _context = context;
@@ -145,112 +179,182 @@ public class SubscriptionsController : ControllerBase
 
         int addedPushes = 0;
         string packageName = "";
+        long packagePrice = 0;
+        bool isRetail = false;
 
         switch (request.PackageId?.ToLower())
         {
+            // Các gói lẻ & gói combo chính chủ (1-2 lần/năm, không giới hạn thời gian)
+            case "push_single":
+                addedPushes = 1;
+                packagePrice = 15000;
+                packageName = "Đẩy tin lẻ 1 lượt";
+                isRetail = true;
+                break;
+            case "push_quick_3":
+                addedPushes = 3;
+                packagePrice = 39000;
+                packageName = "Combo Bán nhanh 3 lượt";
+                isRetail = true;
+                break;
+            case "push_weekend":
+                addedPushes = 4;
+                packagePrice = 49000;
+                packageName = "Gói Cuối tuần vàng (4 lượt)";
+                isRetail = true;
+                break;
+            case "push_owner_10":
+                addedPushes = 10;
+                packagePrice = 99000;
+                packageName = "Gói Chính chủ 10 lượt (Vĩnh viễn)";
+                isRetail = true;
+                break;
+
+            // Các gói hội viên theo tháng (Dành cho môi giới có nhiều căn)
             case "basic":
                 addedPushes = 15;
+                packagePrice = 467000;
                 packageName = "Hội viên Cơ bản";
                 break;
             case "standard":
                 addedPushes = 30;
+                packagePrice = 1267000;
                 packageName = "Hội viên Tiêu chuẩn";
                 break;
             case "premium":
                 addedPushes = 50;
+                packagePrice = 2200000;
                 packageName = "Hội viên Cao cấp";
                 break;
             default:
                 return BadRequest(new { message = "Gói dịch vụ không hợp lệ" });
         }
 
-        // Mô phỏng quy trình thanh toán thành công
-        user.CurrentPackage = packageName;
+        // Cập nhật lượt đẩy tin và gói dịch vụ người dùng
+        if (!isRetail || user.CurrentPackage == "Thành viên thường" || string.IsNullOrEmpty(user.CurrentPackage))
+        {
+            user.CurrentPackage = packageName;
+        }
         user.RemainingPushes += addedPushes;
         await _context.SaveChangesAsync();
+
+        // Ghi nhận giao dịch vào hệ thống doanh thu Admin
+        var paymentMethod = request.PaymentMethod ?? "VNPAY QR";
+        var txnCode = $"PAY-{DateTime.UtcNow:MMddHHmm}{new Random().Next(10, 99)}";
+        lock (_transactions)
+        {
+            _transactions.Insert(0, new PackageTransaction
+            {
+                TransactionCode = txnCode,
+                UserName = user.FullName,
+                UserEmail = user.Email,
+                PackageId = request.PackageId?.ToLower() ?? "",
+                PackageName = packageName,
+                Amount = packagePrice,
+                PaymentMethod = paymentMethod,
+                CreatedAt = DateTime.UtcNow,
+                IsRetail = isRetail,
+                Status = "Thành công"
+            });
+        }
+
+        var successMsg = isRetail
+            ? $"Thanh toán thành công qua {paymentMethod}! Bạn đã được cộng thêm {addedPushes} lượt đẩy tin ({packageName}). Các lượt đẩy tin này không giới hạn thời gian sử dụng."
+            : $"Thanh toán thành công qua {paymentMethod}! Bạn đã được nâng cấp lên gói '{packageName}' và cộng thêm {addedPushes} lượt đẩy tin.";
 
         return Ok(new
         {
             success = true,
-            message = $"Thanh toán thành công qua {request.PaymentMethod ?? "Cổng thanh toán"}! Bạn đã được nâng cấp lên gói '{packageName}' và cộng thêm {addedPushes} lượt đẩy tin.",
+            message = successMsg,
             currentPackage = user.CurrentPackage,
             remainingPushes = user.RemainingPushes
         });
     }
 
-    // 4. [ADMIN] Thống kê doanh thu và lịch sử thanh toán gói dịch vụ hội viên
+    // 4. [ADMIN] Thống kê doanh thu và lịch sử thanh toán gói dịch vụ hội viên & gói đẩy tin lẻ
     [HttpGet("admin-revenue")]
     [Authorize]
-    public async Task<IActionResult> GetAdminRevenue()
+    public IActionResult GetAdminRevenue()
     {
         var role = User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value 
                 ?? User.FindFirst("role")?.Value;
         if (role != "Admin")
             return StatusCode(403, new { message = "Chỉ Quản trị viên mới có quyền xem doanh thu hệ thống" });
 
-        // Lấy danh sách thành viên thực tế đã mua gói dịch vụ
-        var usersWithPackages = await _context.Users
-            .Where(u => !string.IsNullOrEmpty(u.CurrentPackage) && u.CurrentPackage != "Thành viên thường" && u.Role != Role.Admin)
-            .OrderByDescending(u => u.CreatedAt)
-            .ToListAsync();
-
         long basicRevenue = 0, standardRevenue = 0, premiumRevenue = 0;
         int basicCount = 0, standardCount = 0, premiumCount = 0;
 
-        var transactions = new List<object>();
+        long pushSingleRevenue = 0, pushQuick3Revenue = 0, pushWeekendRevenue = 0, pushOwner10Revenue = 0;
+        int pushSingleCount = 0, pushQuick3Count = 0, pushWeekendCount = 0, pushOwner10Count = 0;
 
-        foreach (var u in usersWithPackages)
+        List<PackageTransaction> txnsCopy;
+        lock (_transactions)
         {
-            long price = 0;
-            string method = (u.Id % 2 == 0) ? "VNPAY QR" : (u.Id % 3 == 0 ? "Ví MoMo" : "Chuyển khoản Ngân hàng (VietQR)");
-            if (u.CurrentPackage.Contains("Cơ bản"))
-            {
-                price = 467000;
-                basicRevenue += price;
-                basicCount++;
-            }
-            else if (u.CurrentPackage.Contains("Tiêu chuẩn"))
-            {
-                price = 770000;
-                standardRevenue += price;
-                standardCount++;
-            }
-            else if (u.CurrentPackage.Contains("Cao cấp"))
-            {
-                price = 1170000;
-                premiumRevenue += price;
-                premiumCount++;
-            }
+            txnsCopy = _transactions.ToList();
+        }
 
-            if (price > 0)
+        foreach (var t in txnsCopy)
+        {
+            switch (t.PackageId.ToLower())
             {
-                transactions.Add(new
-                {
-                    TransactionCode = $"PAY-{(u.Id * 37 + 1024)}",
-                    UserName = u.FullName,
-                    UserEmail = u.Email,
-                    PackageName = u.CurrentPackage,
-                    Amount = price,
-                    PaymentMethod = method,
-                    CreatedAt = u.CreatedAt,
-                    Status = "Thành công"
-                });
+                case "basic":
+                    basicRevenue += t.Amount;
+                    basicCount++;
+                    break;
+                case "standard":
+                    standardRevenue += t.Amount;
+                    standardCount++;
+                    break;
+                case "premium":
+                    premiumRevenue += t.Amount;
+                    premiumCount++;
+                    break;
+                case "push_single":
+                    pushSingleRevenue += t.Amount;
+                    pushSingleCount++;
+                    break;
+                case "push_quick_3":
+                    pushQuick3Revenue += t.Amount;
+                    pushQuick3Count++;
+                    break;
+                case "push_weekend":
+                    pushWeekendRevenue += t.Amount;
+                    pushWeekendCount++;
+                    break;
+                case "push_owner_10":
+                    pushOwner10Revenue += t.Amount;
+                    pushOwner10Count++;
+                    break;
             }
         }
 
-        long totalRevenue = basicRevenue + standardRevenue + premiumRevenue;
+        long monthlyRevenue = basicRevenue + standardRevenue + premiumRevenue;
+        int monthlyCount = basicCount + standardCount + premiumCount;
+
+        long retailRevenue = pushSingleRevenue + pushQuick3Revenue + pushWeekendRevenue + pushOwner10Revenue;
+        int retailCount = pushSingleCount + pushQuick3Count + pushWeekendCount + pushOwner10Count;
+
+        long totalRevenue = monthlyRevenue + retailRevenue;
 
         return Ok(new
         {
             totalRevenue,
-            totalTransactions = transactions.Count,
+            totalTransactions = txnsCopy.Count,
+            monthlyRevenue,
+            monthlyCount,
+            retailRevenue,
+            retailCount,
             packages = new
             {
                 basic = new { name = "Hội viên Cơ bản", count = basicCount, revenue = basicRevenue, price = 467000 },
-                standard = new { name = "Hội viên Tiêu chuẩn", count = standardCount, revenue = standardRevenue, price = 770000 },
-                premium = new { name = "Hội viên Cao cấp", count = premiumCount, revenue = premiumRevenue, price = 1170000 }
+                standard = new { name = "Hội viên Tiêu chuẩn", count = standardCount, revenue = standardRevenue, price = 1267000 },
+                premium = new { name = "Hội viên Cao cấp", count = premiumCount, revenue = premiumRevenue, price = 2200000 },
+                pushSingle = new { name = "Đẩy lẻ 1 lượt", count = pushSingleCount, revenue = pushSingleRevenue, price = 15000 },
+                pushQuick3 = new { name = "Bán nhanh 3 lượt", count = pushQuick3Count, revenue = pushQuick3Revenue, price = 39000 },
+                pushWeekend = new { name = "Cuối tuần vàng", count = pushWeekendCount, revenue = pushWeekendRevenue, price = 49000 },
+                pushOwner10 = new { name = "Chính chủ vĩnh viễn", count = pushOwner10Count, revenue = pushOwner10Revenue, price = 99000 },
             },
-            transactions
+            transactions = txnsCopy
         });
     }
 

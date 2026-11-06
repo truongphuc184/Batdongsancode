@@ -96,6 +96,10 @@
         class="px-5 py-2.5 rounded-xl font-semibold text-xs bg-white text-gray-600 hover:bg-gray-50 border border-gray-200 flex items-center gap-1.5 transition-all">
         <span class="material-symbols-outlined text-base text-red-500">flag</span> Báo cáo vi phạm (<span id="tabCountReports">0</span>)
       </button>
+      <button onclick="switchAdminTab('kyc')" id="tabBtnKyc" 
+        class="px-5 py-2.5 rounded-xl font-semibold text-xs bg-white text-gray-600 hover:bg-gray-50 border border-gray-200 flex items-center gap-1.5 transition-all">
+        <span class="material-symbols-outlined text-base text-teal-600">verified_user</span> Xác minh KYC (<span id="tabCountKyc">0</span>)
+      </button>
       <button onclick="switchAdminTab('users')" id="tabBtnUsers" 
         class="px-5 py-2.5 rounded-xl font-semibold text-xs bg-white text-gray-600 hover:bg-gray-50 border border-gray-200 flex items-center gap-1.5 transition-all">
         <span class="material-symbols-outlined text-base text-blue-600">group</span> Người dùng, Danh mục & Dự án
@@ -295,9 +299,11 @@
         <!-- Khung tổng thu -->
         <div class="grid grid-cols-1 sm:grid-cols-4 gap-3 mb-4">
           <div class="p-4 bg-gradient-to-br from-emerald-600 to-teal-700 rounded-2xl text-white shadow-sm sm:col-span-2">
-            <span class="text-xs font-black uppercase text-emerald-100">💰 Tổng tiền thu về từ gói dịch vụ</span>
+            <span class="text-xs font-black uppercase text-emerald-100">💰 Tổng tiền thu về từ các gói</span>
             <div class="text-3xl font-black mt-1" id="secRevTotal">0 đ</div>
-            <p class="text-xs text-emerald-100 mt-1" id="secRevCount">Dữ liệu doanh thu thực tế từ các thành viên</p>
+            <p class="text-xs text-emerald-100 mt-1" id="secRevCount">
+              Gói tháng: <span id="secRevMonthly" class="font-bold">0 đ</span> • Gói đẩy lẻ: <span id="secRevRetail" class="font-bold">0 đ</span>
+            </p>
           </div>
           <div class="p-4 bg-white rounded-2xl border border-gray-200 shadow-sm">
             <span class="text-xs font-bold text-gray-500 uppercase">Gói bán nhiều nhất</span>
@@ -311,34 +317,86 @@
           </div>
         </div>
 
-        <!-- 3 Thẻ Gói hội viên -->
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-          <div class="p-4 bg-indigo-50/50 rounded-xl border border-indigo-100">
-            <div class="flex items-center justify-between">
-              <span class="text-xs font-bold text-indigo-700 uppercase">Hội viên Cơ bản</span>
-              <span id="countPkgBasic" class="px-2 py-0.5 bg-indigo-100 text-indigo-800 text-[10px] font-black rounded-full">0 lượt</span>
-            </div>
-            <div class="text-2xl font-black text-indigo-900 mt-1">467.000 đ</div>
-            <div class="text-xs text-indigo-600 font-bold mt-1">Đã thu: <span id="revPkgBasic">0 đ</span></div>
-            <p class="text-[11px] text-gray-500 mt-1">15 lượt đẩy tin + 15 voucher đăng</p>
+        <!-- PHÂN HỆ 1: DOANH SỐ GÓI HỘI VIÊN THEO THÁNG (MÔI GIỚI) -->
+        <div class="mb-4">
+          <div class="text-xs font-bold text-gray-700 uppercase mb-2 flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-indigo-600 text-sm">workspace_premium</span>
+            <span>Doanh số Gói Hội Viên Tháng (Dành cho Môi giới)</span>
           </div>
-          <div class="p-4 bg-amber-50/50 rounded-xl border border-amber-200">
-            <div class="flex items-center justify-between">
-              <span class="text-xs font-bold text-amber-700 uppercase">Hội viên Tiêu chuẩn</span>
-              <span id="countPkgStandard" class="px-2 py-0.5 bg-amber-100 text-amber-800 text-[10px] font-black rounded-full">0 lượt</span>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div class="p-4 bg-indigo-50/50 rounded-xl border border-indigo-100">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-indigo-700 uppercase">Hội viên Cơ bản</span>
+                <span id="countPkgBasic" class="px-2 py-0.5 bg-indigo-100 text-indigo-800 text-[10px] font-black rounded-full">0 lượt</span>
+              </div>
+              <div class="text-2xl font-black text-indigo-900 mt-1">467.000 đ</div>
+              <div class="text-xs text-indigo-600 font-bold mt-1">Đã thu: <span id="revPkgBasic">0 đ</span></div>
+              <p class="text-[11px] text-gray-500 mt-1">15 lượt đẩy tin + 15 voucher đăng</p>
             </div>
-            <div class="text-2xl font-black text-amber-900 mt-1">770.000 đ</div>
-            <div class="text-xs text-amber-600 font-bold mt-1">Đã thu: <span id="revPkgStandard">0 đ</span></div>
-            <p class="text-[11px] text-gray-500 mt-1">30 lượt đẩy tin + 1 tin VIP</p>
+            <div class="p-4 bg-amber-50/50 rounded-xl border border-amber-200">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-amber-700 uppercase">Hội viên Tiêu chuẩn</span>
+                <span id="countPkgStandard" class="px-2 py-0.5 bg-amber-100 text-amber-800 text-[10px] font-black rounded-full">0 lượt</span>
+              </div>
+              <div class="text-2xl font-black text-amber-900 mt-1">1.267.000 đ</div>
+              <div class="text-xs text-amber-600 font-bold mt-1">Đã thu: <span id="revPkgStandard">0 đ</span></div>
+              <p class="text-[11px] text-gray-500 mt-1">30 lượt đẩy tin + 1 tin VIP</p>
+            </div>
+            <div class="p-4 bg-purple-50/50 rounded-xl border border-purple-100">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-purple-700 uppercase">Hội viên Cao cấp</span>
+                <span id="countPkgPremium" class="px-2 py-0.5 bg-purple-100 text-purple-800 text-[10px] font-black rounded-full">0 lượt</span>
+              </div>
+              <div class="text-2xl font-black text-purple-900 mt-1">2.200.000 đ</div>
+              <div class="text-xs text-purple-600 font-bold mt-1">Đã thu: <span id="revPkgPremium">0 đ</span></div>
+              <p class="text-[11px] text-gray-500 mt-1">50 lượt đẩy tin + 3 tin VIP</p>
+            </div>
           </div>
-          <div class="p-4 bg-purple-50/50 rounded-xl border border-purple-100">
-            <div class="flex items-center justify-between">
-              <span class="text-xs font-bold text-purple-700 uppercase">Hội viên Cao cấp</span>
-              <span id="countPkgPremium" class="px-2 py-0.5 bg-purple-100 text-purple-800 text-[10px] font-black rounded-full">0 lượt</span>
+        </div>
+
+        <!-- PHÂN HỆ 2: DOANH SỐ CÁC GÓI ĐẨY TIN LẺ & CHÍNH CHỦ (1-2 LẦN/NĂM) -->
+        <div class="mb-4">
+          <div class="text-xs font-bold text-teal-800 uppercase mb-2 flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-teal-600 text-sm">bolt</span>
+            <span>Doanh số Gói Đẩy Tin Lẻ & Chính Chủ (1-2 lần/năm)</span>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+            <div class="p-3.5 bg-teal-50/50 rounded-xl border border-teal-200">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-teal-800 uppercase">Đẩy lẻ 1 lượt</span>
+                <span id="countPkgSingle" class="px-2 py-0.5 bg-teal-100 text-teal-900 text-[10px] font-black rounded-full">0 lượt</span>
+              </div>
+              <div class="text-xl font-black text-teal-900 mt-1">15.000 đ</div>
+              <div class="text-xs text-teal-700 font-bold mt-1">Đã thu: <span id="revPkgSingle">0 đ</span></div>
+              <p class="text-[11px] text-gray-500 mt-1">+1 lượt đẩy lên đầu trang</p>
             </div>
-            <div class="text-2xl font-black text-purple-900 mt-1">1.170.000 đ</div>
-            <div class="text-xs text-purple-600 font-bold mt-1">Đã thu: <span id="revPkgPremium">0 đ</span></div>
-            <p class="text-[11px] text-gray-500 mt-1">50 lượt đẩy tin + 3 tin VIP</p>
+            <div class="p-3.5 bg-teal-50/50 rounded-xl border border-teal-200">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-teal-800 uppercase">Bán nhanh 3 lượt</span>
+                <span id="countPkgQuick3" class="px-2 py-0.5 bg-teal-100 text-teal-900 text-[10px] font-black rounded-full">0 lượt</span>
+              </div>
+              <div class="text-xl font-black text-teal-900 mt-1">39.000 đ</div>
+              <div class="text-xs text-teal-700 font-bold mt-1">Đã thu: <span id="revPkgQuick3">0 đ</span></div>
+              <p class="text-[11px] text-gray-500 mt-1">+3 lượt đẩy tự chọn linh hoạt</p>
+            </div>
+            <div class="p-3.5 bg-orange-50/50 rounded-xl border border-orange-200">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-orange-800 uppercase">Cuối tuần vàng</span>
+                <span id="countPkgWeekend" class="px-2 py-0.5 bg-orange-100 text-orange-900 text-[10px] font-black rounded-full">0 lượt</span>
+              </div>
+              <div class="text-xl font-black text-orange-900 mt-1">49.000 đ</div>
+              <div class="text-xs text-orange-700 font-bold mt-1">Đã thu: <span id="revPkgWeekend">0 đ</span></div>
+              <p class="text-[11px] text-gray-500 mt-1">+4 lượt đẩy T7 & Chủ Nhật</p>
+            </div>
+            <div class="p-3.5 bg-amber-50/60 rounded-xl border-2 border-amber-400">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-black text-amber-900 uppercase">Chính chủ vĩnh viễn</span>
+                <span id="countPkgOwner10" class="px-2 py-0.5 bg-amber-500 text-white text-[10px] font-black rounded-full">0 lượt</span>
+              </div>
+              <div class="text-xl font-black text-amber-800 mt-1">99.000 đ</div>
+              <div class="text-xs text-amber-700 font-bold mt-1">Đã thu: <span id="revPkgOwner10">0 đ</span></div>
+              <p class="text-[11px] text-gray-600 mt-1">+10 lượt không bao giờ hết hạn</p>
+            </div>
           </div>
         </div>
       </div>
@@ -483,6 +541,68 @@
             </tbody>
           </table>
         </div>
+      </div>
+    </div>
+
+    <!-- Phân hệ KYC: Xác minh danh tính người bán / môi giới -->
+    <div id="sectionKyc" class="hidden bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
+      <div class="flex flex-col md:flex-row md:items-center justify-between pb-4 border-b border-gray-100 mb-5 gap-3">
+        <div>
+          <h2 class="text-base font-bold text-gray-900 flex items-center gap-2">
+            <span class="material-symbols-outlined text-teal-600">verified_user</span>
+            Quản lý & Duyệt hồ sơ Xác minh KYC
+          </h2>
+          <p class="text-xs text-gray-500 mt-0.5">Kiểm duyệt CCCD 2 mặt, SĐT (OTP), Mã số thuế và Chứng chỉ hành nghề trước khi cấp quyền Đăng tin BĐS</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <button onclick="loadAdminKycList()" class="px-3.5 py-1.5 bg-gray-100 hover:bg-gray-200 rounded-xl text-xs font-semibold text-gray-700 flex items-center gap-1 transition-all">
+            <span class="material-symbols-outlined text-sm">refresh</span> Làm mới
+          </button>
+        </div>
+      </div>
+
+      <!-- Thống kê nhanh KYC -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-5">
+        <div class="p-3.5 bg-gray-50 rounded-xl border border-gray-100">
+          <div class="text-[11px] font-bold text-gray-400 uppercase tracking-wider">Tổng hồ sơ KYC</div>
+          <div class="text-xl font-black text-gray-900 mt-1" id="kycStatTotal">0</div>
+        </div>
+        <div class="p-3.5 bg-amber-50 rounded-xl border border-amber-200">
+          <div class="text-[11px] font-bold text-amber-700 uppercase tracking-wider flex items-center gap-1">
+            <span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span> Chờ duyệt
+          </div>
+          <div class="text-xl font-black text-amber-900 mt-1" id="kycStatPending">0</div>
+        </div>
+        <div class="p-3.5 bg-emerald-50 rounded-xl border border-emerald-200">
+          <div class="text-[11px] font-bold text-emerald-700 uppercase tracking-wider">Đã duyệt (Verified)</div>
+          <div class="text-xl font-black text-emerald-900 mt-1" id="kycStatApproved">0</div>
+        </div>
+        <div class="p-3.5 bg-rose-50 rounded-xl border border-rose-200">
+          <div class="text-[11px] font-bold text-rose-700 uppercase tracking-wider">Bị từ chối</div>
+          <div class="text-xl font-black text-rose-900 mt-1" id="kycStatRejected">0</div>
+        </div>
+      </div>
+
+      <!-- Bộ lọc trạng thái -->
+      <div class="flex items-center gap-2 mb-4 overflow-x-auto pb-1">
+        <span class="text-xs font-bold text-gray-500 mr-1">Bộ lọc:</span>
+        <button onclick="filterAdminKyc('PENDING')" id="btnFilterKycPending" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-amber-600 text-white shadow-sm transition-all">
+          ⏳ Chờ duyệt (<span id="filterCountPending">0</span>)
+        </button>
+        <button onclick="filterAdminKyc('ALL')" id="btnFilterKycAll" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-gray-100 text-gray-600 hover:bg-gray-200 transition-all">
+          Tất cả (<span id="filterCountAll">0</span>)
+        </button>
+        <button onclick="filterAdminKyc('APPROVED')" id="btnFilterKycApproved" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-gray-100 text-gray-600 hover:bg-gray-200 transition-all">
+          ✅ Đã duyệt (<span id="filterCountApproved">0</span>)
+        </button>
+        <button onclick="filterAdminKyc('REJECTED')" id="btnFilterKycRejected" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-gray-100 text-gray-600 hover:bg-gray-200 transition-all">
+          ❌ Bị từ chối (<span id="filterCountRejected">0</span>)
+        </button>
+      </div>
+
+      <!-- Danh sách thẻ hồ sơ KYC -->
+      <div id="adminKycListContainer" class="flex flex-col gap-4">
+        <!-- JS render -->
       </div>
     </div>
   </main>
@@ -647,6 +767,7 @@
       const btnP = document.getElementById('tabBtnPending');
       const btnA = document.getElementById('tabBtnApproved');
       const btnR = document.getElementById('tabBtnReports');
+      const btnK = document.getElementById('tabBtnKyc');
       const btnU = document.getElementById('tabBtnUsers');
       const btnArt = document.getElementById('tabBtnArticles');
       const btnT = document.getElementById('tabBtnTrends');
@@ -654,6 +775,7 @@
       const secP = document.getElementById('sectionPending');
       const secA = document.getElementById('sectionApproved');
       const secR = document.getElementById('sectionReports');
+      const secK = document.getElementById('sectionKyc');
       const secU = document.getElementById('sectionUsers');
       const secArt = document.getElementById('sectionArticles');
       const secT = document.getElementById('sectionTrends');
@@ -664,6 +786,7 @@
       if (btnP) btnP.className = inactiveClass;
       if (btnA) btnA.className = inactiveClass;
       if (btnR) btnR.className = inactiveClass;
+      if (btnK) btnK.className = inactiveClass;
       if (btnU) btnU.className = inactiveClass;
       if (btnArt) btnArt.className = inactiveClass;
       if (btnT) btnT.className = inactiveClass;
@@ -671,6 +794,7 @@
       if (secP) secP.classList.add('hidden');
       if (secA) secA.classList.add('hidden');
       if (secR) secR.classList.add('hidden');
+      if (secK) secK.classList.add('hidden');
       if (secU) secU.classList.add('hidden');
       if (secArt) secArt.classList.add('hidden');
       if (secT) secT.classList.add('hidden');
@@ -687,6 +811,10 @@
         if (btnR) btnR.className = activeClass;
         if (secR) secR.classList.remove('hidden');
         loadReports();
+      } else if (tab === 'kyc') {
+        if (btnK) btnK.className = activeClass;
+        if (secK) secK.classList.remove('hidden');
+        loadAdminKycList();
       } else if (tab === 'users') {
         if (btnU) btnU.className = activeClass;
         if (secU) secU.classList.remove('hidden');
@@ -831,12 +959,18 @@
         const secCountEl = document.getElementById('secRevCount');
         if (secCountEl) secCountEl.textContent = `Đã thu từ ${data.totalTransactions || 0} thành viên đã kích hoạt gói`;
 
-        // 3. Cập nhật chi tiết 3 gói và tự động tính Gói bán nhiều nhất
+        // 3. Cập nhật chi tiết các gói tháng & gói đẩy lẻ và tính Gói bán nhiều nhất
         if (data.packages) {
           const bCount = data.packages.basic?.count || 0;
           const sCount = data.packages.standard?.count || 0;
           const pCount = data.packages.premium?.count || 0;
 
+          const singleCount = data.packages.pushSingle?.count || 0;
+          const quick3Count = data.packages.pushQuick3?.count || 0;
+          const weekendCount = data.packages.pushWeekend?.count || 0;
+          const owner10Count = data.packages.pushOwner10?.count || 0;
+
+          // Doanh số Gói tháng
           if (document.getElementById('countPkgBasic')) document.getElementById('countPkgBasic').textContent = bCount + ' lượt';
           if (document.getElementById('revPkgBasic')) document.getElementById('revPkgBasic').textContent = (data.packages.basic?.revenue || 0).toLocaleString('vi-VN') + ' đ';
 
@@ -846,22 +980,42 @@
           if (document.getElementById('countPkgPremium')) document.getElementById('countPkgPremium').textContent = pCount + ' lượt';
           if (document.getElementById('revPkgPremium')) document.getElementById('revPkgPremium').textContent = (data.packages.premium?.revenue || 0).toLocaleString('vi-VN') + ' đ';
 
-          // Tự động tìm gói có số lượt mua nhiều nhất từ dữ liệu thực
+          // Doanh số Gói đẩy lẻ
+          if (document.getElementById('countPkgSingle')) document.getElementById('countPkgSingle').textContent = singleCount + ' lượt';
+          if (document.getElementById('revPkgSingle')) document.getElementById('revPkgSingle').textContent = (data.packages.pushSingle?.revenue || 0).toLocaleString('vi-VN') + ' đ';
+
+          if (document.getElementById('countPkgQuick3')) document.getElementById('countPkgQuick3').textContent = quick3Count + ' lượt';
+          if (document.getElementById('revPkgQuick3')) document.getElementById('revPkgQuick3').textContent = (data.packages.pushQuick3?.revenue || 0).toLocaleString('vi-VN') + ' đ';
+
+          if (document.getElementById('countPkgWeekend')) document.getElementById('countPkgWeekend').textContent = weekendCount + ' lượt';
+          if (document.getElementById('revPkgWeekend')) document.getElementById('revPkgWeekend').textContent = (data.packages.pushWeekend?.revenue || 0).toLocaleString('vi-VN') + ' đ';
+
+          if (document.getElementById('countPkgOwner10')) document.getElementById('countPkgOwner10').textContent = owner10Count + ' lượt';
+          if (document.getElementById('revPkgOwner10')) document.getElementById('revPkgOwner10').textContent = (data.packages.pushOwner10?.revenue || 0).toLocaleString('vi-VN') + ' đ';
+
+          // Cập nhật phân chia doanh thu
+          if (document.getElementById('secRevMonthly')) document.getElementById('secRevMonthly').textContent = (data.monthlyRevenue || 0).toLocaleString('vi-VN') + ' đ';
+          if (document.getElementById('secRevRetail')) document.getElementById('secRevRetail').textContent = (data.retailRevenue || 0).toLocaleString('vi-VN') + ' đ';
+
+          // Tự động tìm gói có số lượt mua nhiều nhất từ tất cả các gói
+          const allPkgs = [
+            { name: 'Hội viên Tiêu chuẩn', count: sCount, rev: data.packages.standard?.revenue || 0 },
+            { name: 'Hội viên Cao cấp', count: pCount, rev: data.packages.premium?.revenue || 0 },
+            { name: 'Hội viên Cơ bản', count: bCount, rev: data.packages.basic?.revenue || 0 },
+            { name: 'Chính chủ vĩnh viễn (10 lượt)', count: owner10Count, rev: data.packages.pushOwner10?.revenue || 0 },
+            { name: 'Cuối tuần vàng (4 lượt)', count: weekendCount, rev: data.packages.pushWeekend?.revenue || 0 },
+            { name: 'Bán nhanh 3 lượt', count: quick3Count, rev: data.packages.pushQuick3?.revenue || 0 },
+            { name: 'Đẩy lẻ 1 lượt', count: singleCount, rev: data.packages.pushSingle?.revenue || 0 }
+          ];
+
+          allPkgs.sort((a, b) => b.count - a.count);
+          const topPkg = allPkgs[0];
           const topPkgEl = document.getElementById('topPackageName');
           const topDescEl = document.getElementById('topPackageDesc');
-          const maxCount = Math.max(bCount, sCount, pCount);
 
-          if (maxCount > 0) {
-            if (pCount === maxCount) {
-              if (topPkgEl) topPkgEl.textContent = 'Hội viên Cao cấp';
-              if (topDescEl) topDescEl.textContent = `${pCount} lượt mua (${(data.packages.premium?.revenue || 0).toLocaleString('vi-VN')} đ)`;
-            } else if (sCount === maxCount) {
-              if (topPkgEl) topPkgEl.textContent = 'Hội viên Tiêu chuẩn';
-              if (topDescEl) topDescEl.textContent = `${sCount} lượt mua (${(data.packages.standard?.revenue || 0).toLocaleString('vi-VN')} đ)`;
-            } else if (bCount === maxCount) {
-              if (topPkgEl) topPkgEl.textContent = 'Hội viên Cơ bản';
-              if (topDescEl) topDescEl.textContent = `${bCount} lượt mua (${(data.packages.basic?.revenue || 0).toLocaleString('vi-VN')} đ)`;
-            }
+          if (topPkg && topPkg.count > 0) {
+            if (topPkgEl) topPkgEl.textContent = topPkg.name;
+            if (topDescEl) topDescEl.textContent = `${topPkg.count} lượt mua (${topPkg.rev.toLocaleString('vi-VN')} đ)`;
           } else {
             if (topPkgEl) topPkgEl.textContent = 'Chưa có dữ liệu';
             if (topDescEl) topDescEl.textContent = 'Chưa có gói nào được mua';
@@ -876,9 +1030,13 @@
           } else {
             tbody.innerHTML = data.transactions.map(t => {
               let badgeColor = 'bg-gray-100 text-gray-700';
-              if (t.packageName.includes('Cao cấp')) badgeColor = 'bg-purple-100 text-purple-700';
-              else if (t.packageName.includes('Tiêu chuẩn')) badgeColor = 'bg-amber-100 text-amber-700';
-              else if (t.packageName.includes('Cơ bản')) badgeColor = 'bg-indigo-100 text-indigo-700';
+              if (t.packageName.includes('Cao cấp')) badgeColor = 'bg-purple-100 text-purple-700 border border-purple-200';
+              else if (t.packageName.includes('Tiêu chuẩn')) badgeColor = 'bg-amber-100 text-amber-700 border border-amber-200';
+              else if (t.packageName.includes('Cơ bản')) badgeColor = 'bg-indigo-100 text-indigo-700 border border-indigo-200';
+              else if (t.packageName.includes('Chính chủ') || t.packageName.includes('vĩnh viễn')) badgeColor = 'bg-amber-100 text-amber-800 border border-amber-300 font-bold';
+              else if (t.packageName.includes('Cuối tuần')) badgeColor = 'bg-orange-100 text-orange-800 border border-orange-200';
+              else if (t.packageName.includes('Bán nhanh')) badgeColor = 'bg-teal-100 text-teal-800 border border-teal-200';
+              else if (t.packageName.includes('lẻ') || t.packageName.includes('1 lượt')) badgeColor = 'bg-blue-100 text-blue-800 border border-blue-200';
 
               return `
                 <tr class="hover:bg-gray-50/60 transition-colors">
@@ -1142,10 +1300,330 @@
       }
     }
 
+    // ==========================================
+    // PHÂN HỆ QUẢN LÝ XÁC MINH KYC
+    // ==========================================
+    let currentKycList = [];
+    let currentKycFilter = 'PENDING';
+    let rejectTargetKycId = null;
+
+    async function loadAdminKycList() {
+      try {
+        const res = await fetch('/api/kyc/all', {
+          headers: { 'Authorization': 'Bearer ' + token }
+        });
+        if (!res.ok) return;
+        const data = await res.json();
+        currentKycList = Array.isArray(data) ? data : [];
+
+        // Đếm số lượng
+        const total = currentKycList.length;
+        const pending = currentKycList.filter(k => (k.status || '').toUpperCase() === 'PENDING').length;
+        const approved = currentKycList.filter(k => (k.status || '').toUpperCase() === 'APPROVED').length;
+        const rejected = currentKycList.filter(k => (k.status || '').toUpperCase() === 'REJECTED').length;
+
+        // Cập nhật huy hiệu trên thanh tab
+        const tabCount = document.getElementById('tabCountKyc');
+        if (tabCount) tabCount.textContent = pending;
+
+        // Cập nhật KPI
+        if (document.getElementById('kycStatTotal')) document.getElementById('kycStatTotal').textContent = total;
+        if (document.getElementById('kycStatPending')) document.getElementById('kycStatPending').textContent = pending;
+        if (document.getElementById('kycStatApproved')) document.getElementById('kycStatApproved').textContent = approved;
+        if (document.getElementById('kycStatRejected')) document.getElementById('kycStatRejected').textContent = rejected;
+
+        if (document.getElementById('filterCountAll')) document.getElementById('filterCountAll').textContent = total;
+        if (document.getElementById('filterCountPending')) document.getElementById('filterCountPending').textContent = pending;
+        if (document.getElementById('filterCountApproved')) document.getElementById('filterCountApproved').textContent = approved;
+        if (document.getElementById('filterCountRejected')) document.getElementById('filterCountRejected').textContent = rejected;
+
+        renderAdminKycList();
+      } catch (err) {
+        console.error('Lỗi tải danh sách KYC:', err);
+      }
+    }
+
+    function filterAdminKyc(status) {
+      currentKycFilter = status;
+      const btnP = document.getElementById('btnFilterKycPending');
+      const btnAll = document.getElementById('btnFilterKycAll');
+      const btnA = document.getElementById('btnFilterKycApproved');
+      const btnR = document.getElementById('btnFilterKycRejected');
+
+      const activeClass = 'px-3 py-1.5 rounded-lg text-xs font-bold text-white shadow-sm transition-all ';
+      const inactiveClass = 'px-3 py-1.5 rounded-lg text-xs font-semibold bg-gray-100 text-gray-600 hover:bg-gray-200 transition-all';
+
+      if (btnP) btnP.className = inactiveClass;
+      if (btnAll) btnAll.className = inactiveClass;
+      if (btnA) btnA.className = inactiveClass;
+      if (btnR) btnR.className = inactiveClass;
+
+      if (status === 'PENDING' && btnP) btnP.className = activeClass + 'bg-amber-600';
+      if (status === 'ALL' && btnAll) btnAll.className = activeClass + 'bg-indigo-600';
+      if (status === 'APPROVED' && btnA) btnA.className = activeClass + 'bg-emerald-600';
+      if (status === 'REJECTED' && btnR) btnR.className = activeClass + 'bg-rose-600';
+
+      renderAdminKycList();
+    }
+
+    function formatKycRoleBadge(roleStr) {
+      if (!roleStr) return '<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-gray-100 text-gray-700">Người bán</span>';
+      const parts = roleStr.split(',');
+      return parts.map(r => {
+        const tr = r.trim().toLowerCase();
+        if (tr === 'seller') return '<span class="px-2 py-0.5 rounded-md text-[11px] font-bold bg-blue-100 text-blue-800">🏷️ Người bán</span>';
+        if (tr === 'landlord') return '<span class="px-2 py-0.5 rounded-md text-[11px] font-bold bg-purple-100 text-purple-800">🔑 Cho thuê</span>';
+        if (tr === 'agent') return '<span class="px-2 py-0.5 rounded-md text-[11px] font-bold bg-amber-100 text-amber-800">💼 Môi giới</span>';
+        return `<span class="px-2 py-0.5 rounded-md text-[11px] font-bold bg-gray-100 text-gray-700">${r}</span>`;
+      }).join(' ');
+    }
+
+    function renderAdminKycList() {
+      const container = document.getElementById('adminKycListContainer');
+      if (!container) return;
+
+      let items = currentKycList;
+      if (currentKycFilter !== 'ALL') {
+        items = currentKycList.filter(k => (k.status || '').toUpperCase() === currentKycFilter);
+      }
+
+      if (items.length === 0) {
+        container.innerHTML = `
+          <div class="text-center py-12 text-gray-400 bg-gray-50 rounded-2xl border border-dashed border-gray-200">
+            <span class="material-symbols-outlined text-4xl text-gray-300 mb-2">assignment_turned_in</span>
+            <p class="font-bold text-gray-700">Không có hồ sơ nào trong mục này</p>
+            <p class="text-xs text-gray-400 mt-1">Danh sách hồ sơ xác minh KYC hiện đang trống.</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = items.map(k => {
+        const st = (k.status || 'PENDING').toUpperCase();
+        let badgeHtml = '';
+        if (st === 'PENDING') {
+          badgeHtml = '<span class="px-3 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-800 border border-amber-300 flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span> Chờ duyệt</span>';
+        } else if (st === 'APPROVED') {
+          badgeHtml = '<span class="px-3 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-300 flex items-center gap-1">✅ Đã xác minh</span>';
+        } else {
+          badgeHtml = '<span class="px-3 py-1 rounded-full text-xs font-bold bg-rose-100 text-rose-800 border border-rose-300 flex items-center gap-1">❌ Bị từ chối</span>';
+        }
+
+        const dateStr = k.createdAt ? new Date(k.createdAt).toLocaleString('vi-VN') : 'Mới đây';
+        const safeName = (k.fullName || 'Người dùng').replace(/'/g, "\\'");
+
+        return `
+          <div class="border border-gray-200 rounded-2xl p-5 hover:border-teal-300 hover:shadow-sm transition-all bg-white flex flex-col gap-4">
+            <!-- Header thông tin người dùng -->
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-gray-100">
+              <div class="flex items-center gap-3">
+                <div class="w-12 h-12 rounded-full bg-teal-100 text-teal-700 font-black text-lg flex items-center justify-center shrink-0">
+                  ${(k.fullName || 'U').charAt(0).toUpperCase()}
+                </div>
+                <div>
+                  <div class="flex items-center gap-2 flex-wrap">
+                    <h3 class="font-black text-sm text-gray-900">${k.fullName || 'Chưa đặt tên'}</h3>
+                    <span class="text-[11px] text-gray-400">ID: #${k.userId}</span>
+                  </div>
+                  <div class="text-xs text-gray-500 flex items-center gap-3 mt-0.5 flex-wrap">
+                    <span class="flex items-center gap-1"><span class="material-symbols-outlined text-[13px] text-gray-400">mail</span> ${k.userEmail || 'Chưa có email'}</span>
+                    <span class="flex items-center gap-1 text-teal-700 font-semibold"><span class="material-symbols-outlined text-[13px] text-teal-600">verified</span> SĐT: ${k.phone || 'Chưa cập nhật'} (OTP đã xác thực)</span>
+                  </div>
+                </div>
+              </div>
+              <div class="flex items-center gap-2 self-start sm:self-auto">
+                ${badgeHtml}
+                <span class="text-[11px] text-gray-400">${dateStr}</span>
+              </div>
+            </div>
+
+            <!-- Nội dung chi tiết hồ sơ KYC -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+              <!-- Cột 1: Quyền yêu cầu & Mã số thuế -->
+              <div class="p-3 bg-gray-50 rounded-xl space-y-2 border border-gray-100">
+                <div>
+                  <span class="text-[10px] uppercase font-bold text-gray-400 block mb-1">Vai trò đăng ký cấp phép:</span>
+                  <div class="flex flex-wrap gap-1">
+                    ${formatKycRoleBadge(k.requestedRole)}
+                  </div>
+                </div>
+                <div class="pt-1.5 border-t border-gray-200">
+                  <span class="text-[10px] uppercase font-bold text-gray-400 block">Kê khai thuế:</span>
+                  <div class="font-semibold text-gray-800 mt-0.5">
+                    ${k.taxCode ? `<span class="text-gray-900 font-bold">${k.taxCode}</span> <span class="text-[11px] text-gray-500">(${k.taxType || 'Cá nhân'})</span>` : '<span class="text-gray-400 italic">Không kê khai MST</span>'}
+                  </div>
+                </div>
+                ${k.brokerLicenseNumber ? `
+                  <div class="pt-1.5 border-t border-gray-200">
+                    <span class="text-[10px] uppercase font-bold text-amber-700 block">Chứng chỉ hành nghề môi giới:</span>
+                    <div class="font-bold text-amber-900 mt-0.5">Số: ${k.brokerLicenseNumber}</div>
+                    ${k.brokerLicenseImage ? `
+                      <button type="button" onclick="zoomKycPhoto('${k.brokerLicenseImage}', 'Chứng chỉ hành nghề - ${safeName}')" class="mt-1 text-[11px] text-teal-600 hover:text-teal-800 font-bold flex items-center gap-0.5">
+                        <span class="material-symbols-outlined text-xs">image</span> Xem ảnh CCHN
+                      </button>
+                    ` : ''}
+                  </div>
+                ` : ''}
+              </div>
+
+              <!-- Cột 2 & 3: Ảnh Căn cước công dân (Mặt trước / Mặt sau) -->
+              <div class="md:col-span-2 p-3 bg-gray-50 rounded-xl border border-gray-100 flex flex-col justify-between">
+                <div>
+                  <div class="flex items-center justify-between mb-2">
+                    <span class="text-[10px] uppercase font-bold text-gray-400">Số CCCD / Định danh:</span>
+                    <span class="text-xs font-black text-indigo-700 tracking-wider">${k.idCardNumber || 'Chưa cung cấp'}</span>
+                  </div>
+                  <div class="grid grid-cols-2 gap-3">
+                    <div>
+                      <span class="text-[10px] text-gray-500 font-medium block mb-1">Mặt trước CCCD:</span>
+                      <div class="h-28 bg-gray-200 rounded-lg overflow-hidden border border-gray-300 relative group cursor-pointer" onclick="zoomKycPhoto('${k.idCardFront || ''}', 'Mặt trước CCCD - ${safeName}')">
+                        ${k.idCardFront ? `
+                          <img src="${k.idCardFront}" alt="Mặt trước CCCD" class="w-full h-full object-cover group-hover:scale-105 transition-all duration-300" />
+                          <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white text-[11px] font-bold gap-1">
+                            <span class="material-symbols-outlined text-base">zoom_in</span> Xem to
+                          </div>
+                        ` : `
+                          <div class="w-full h-full flex flex-col items-center justify-center text-gray-400 text-xs">
+                            <span class="material-symbols-outlined text-2xl">image_not_supported</span>
+                            <span>Thiếu ảnh</span>
+                          </div>
+                        `}
+                      </div>
+                    </div>
+                    <div>
+                      <span class="text-[10px] text-gray-500 font-medium block mb-1">Mặt sau CCCD:</span>
+                      <div class="h-28 bg-gray-200 rounded-lg overflow-hidden border border-gray-300 relative group cursor-pointer" onclick="zoomKycPhoto('${k.idCardBack || ''}', 'Mặt sau CCCD - ${safeName}')">
+                        ${k.idCardBack ? `
+                          <img src="${k.idCardBack}" alt="Mặt sau CCCD" class="w-full h-full object-cover group-hover:scale-105 transition-all duration-300" />
+                          <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white text-[11px] font-bold gap-1">
+                            <span class="material-symbols-outlined text-base">zoom_in</span> Xem to
+                          </div>
+                        ` : `
+                          <div class="w-full h-full flex flex-col items-center justify-center text-gray-400 text-xs">
+                            <span class="material-symbols-outlined text-2xl">image_not_supported</span>
+                            <span>Thiếu ảnh</span>
+                          </div>
+                        `}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Nếu bị từ chối: hiển thị lý do -->
+            ${k.rejectReason ? `
+              <div class="p-3 bg-rose-50 border border-rose-200 rounded-xl text-xs text-rose-800 flex items-start gap-2">
+                <span class="material-symbols-outlined text-base text-rose-600 shrink-0">info</span>
+                <div>
+                  <span class="font-bold">Lý do từ chối:</span> ${k.rejectReason}
+                </div>
+              </div>
+            ` : ''}
+
+            <!-- Thao tác duyệt / từ chối -->
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-3 pt-3 border-t border-gray-100 mt-1">
+              <div class="text-[11px] text-gray-500">
+                ${st === 'APPROVED' ? '✨ Tài khoản đã được cấp quyền Đăng tin BĐS và hiển thị tích xanh Đã xác minh.' : st === 'REJECTED' ? '⚠️ Hồ sơ đã bị từ chối. Người dùng có thể nộp lại hồ sơ KYC mới.' : '💡 Nhấp vào ảnh để kiểm tra rõ số CCCD và khuôn mặt trước khi duyệt.'}
+              </div>
+              <div class="flex items-center gap-2 self-end sm:self-auto shrink-0">
+                ${st === 'PENDING' ? `
+                  <button onclick="openKycRejectModal(${k.id}, '${safeName}')" class="px-4 py-2 bg-rose-50 hover:bg-rose-100 text-rose-700 rounded-xl text-xs font-bold border border-rose-200 transition-all flex items-center gap-1">
+                    <span class="material-symbols-outlined text-sm">close</span> Từ chối
+                  </button>
+                  <button onclick="approveKyc(${k.id})" class="px-5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold shadow transition-all flex items-center gap-1">
+                    <span class="material-symbols-outlined text-sm">check_circle</span> Phê duyệt & Cấp quyền
+                  </button>
+                ` : st === 'REJECTED' ? `
+                  <button onclick="approveKyc(${k.id})" class="px-4 py-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 rounded-xl text-xs font-bold border border-emerald-200 transition-all flex items-center gap-1">
+                    <span class="material-symbols-outlined text-sm">refresh</span> Xem xét lại & Duyệt
+                  </button>
+                ` : `
+                  <button onclick="openKycRejectModal(${k.id}, '${safeName}')" class="px-3.5 py-1.5 bg-gray-50 hover:bg-rose-50 text-gray-500 hover:text-rose-700 rounded-lg text-xs font-semibold border transition-all">
+                    Thu hồi quyền KYC
+                  </button>
+                `}
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    async function approveKyc(id) {
+      if (!confirm('Xác nhận duyệt hồ sơ KYC này? Hệ thống sẽ mở khóa quyền Đăng tin BĐS và gắn tích xanh xác minh cho người dùng.')) return;
+      try {
+        const res = await fetch(`/api/kyc/${id}/approve`, {
+          method: 'PUT',
+          headers: { 'Authorization': 'Bearer ' + token }
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.message || 'Lỗi khi duyệt');
+        alert(data.message || 'Đã phê duyệt KYC thành công!');
+        loadAdminKycList();
+      } catch (err) {
+        alert(err.message || 'Không thể phê duyệt KYC');
+      }
+    }
+
+    function openKycRejectModal(id, name) {
+      rejectTargetKycId = id;
+      document.getElementById('adminRejectKycUserName').textContent = name;
+      document.getElementById('adminKycRejectReasonInput').value = '';
+      document.getElementById('adminKycRejectModal').classList.remove('hidden');
+    }
+
+    function closeKycRejectModal() {
+      document.getElementById('adminKycRejectModal').classList.add('hidden');
+      rejectTargetKycId = null;
+    }
+
+    function setKycRejectReason(reason) {
+      document.getElementById('adminKycRejectReasonInput').value = reason;
+    }
+
+    async function confirmSubmitKycReject() {
+      if (!rejectTargetKycId) return;
+      const reason = document.getElementById('adminKycRejectReasonInput').value.trim();
+      const btn = document.getElementById('btnConfirmKycReject');
+      try {
+        if (btn) btn.disabled = true;
+        const res = await fetch(`/api/kyc/${rejectTargetKycId}/reject`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
+          },
+          body: JSON.stringify({ reason: reason || 'Hồ sơ KYC chưa đáp ứng đủ tiêu chuẩn xác minh của sàn.' })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.message || 'Lỗi từ chối hồ sơ');
+        alert(data.message || 'Đã từ chối hồ sơ KYC');
+        closeKycRejectModal();
+        loadAdminKycList();
+      } catch (err) {
+        alert(err.message || 'Không thể từ chối hồ sơ KYC');
+      } finally {
+        if (btn) btn.disabled = false;
+      }
+    }
+
+    function zoomKycPhoto(url, title) {
+      if (!url) return;
+      document.getElementById('adminKycZoomImg').src = url;
+      document.getElementById('adminKycZoomTitle').innerHTML = `<span class="material-symbols-outlined text-teal-400">badge</span> ${title || 'Ảnh giấy tờ'}`;
+      document.getElementById('adminKycZoomModal').classList.remove('hidden');
+    }
+
+    function closeKycZoomModal() {
+      document.getElementById('adminKycZoomModal').classList.add('hidden');
+    }
+
     loadPendingListings();
     loadApprovedListings();
     loadReports();
     loadAdminRevenue();
+    loadAdminKycList();
   </script>
   <!-- MODAL TỪ CHỐI TIN ĐĂNG DÀNH CHO ADMIN -->
   <div id="adminRejectModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
@@ -1195,6 +1673,76 @@
         </button>
         <button onclick="confirmSubmitReject()" id="btnConfirmRejectSubmit" class="px-5 py-2 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded-xl shadow transition-all flex items-center gap-1">
           <span class="material-symbols-outlined text-sm">check</span> Xác nhận từ chối
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL XEM ẢNH CCCD / CHỨNG CHỈ PHÓNG TO DÀNH CHO ADMIN -->
+  <div id="adminKycZoomModal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden" onclick="closeKycZoomModal()">
+    <div class="bg-gray-900 rounded-2xl max-w-2xl w-full p-4 shadow-2xl relative border border-gray-700" onclick="event.stopPropagation()">
+      <div class="flex items-center justify-between pb-3 border-b border-gray-700 mb-3">
+        <h4 id="adminKycZoomTitle" class="font-bold text-white text-sm flex items-center gap-2">
+          <span class="material-symbols-outlined text-teal-400">badge</span> Ảnh giấy tờ xác minh
+        </h4>
+        <button onclick="closeKycZoomModal()" class="text-gray-400 hover:text-white font-bold text-lg px-2">✕</button>
+      </div>
+      <div class="w-full flex items-center justify-center bg-black/60 rounded-xl overflow-hidden p-2 min-h-[300px]">
+        <img id="adminKycZoomImg" src="" alt="Ảnh giấy tờ" class="max-h-[75vh] w-auto max-w-full object-contain rounded-lg shadow-lg" />
+      </div>
+      <div class="flex justify-end mt-3">
+        <button onclick="closeKycZoomModal()" class="px-4 py-1.5 bg-gray-700 hover:bg-gray-600 text-white rounded-lg text-xs font-semibold">Đóng</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL TỪ CHỐI HỒ SƠ KYC DÀNH CHO ADMIN -->
+  <div id="adminKycRejectModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl relative">
+      <div class="flex items-center justify-between pb-3 border-b mb-4">
+        <div class="flex items-center gap-2">
+          <div class="w-10 h-10 rounded-full bg-rose-100 text-rose-600 flex items-center justify-center">
+            <span class="material-symbols-outlined text-xl">person_cancel</span>
+          </div>
+          <div>
+            <h3 class="font-black text-gray-900 text-base">Từ chối hồ sơ xác minh KYC</h3>
+            <p class="text-[11px] text-gray-400">Thông báo lý do từ chối để người dùng tải lại hồ sơ hợp lệ</p>
+          </div>
+        </div>
+        <button onclick="closeKycRejectModal()" class="text-gray-400 hover:text-gray-600 font-bold text-lg">✕</button>
+      </div>
+
+      <div class="space-y-3.5">
+        <div class="p-3 bg-gray-50 rounded-xl border border-gray-200">
+          <span class="text-[10px] text-gray-400 uppercase font-bold">Người dùng nộp đơn:</span>
+          <div id="adminRejectKycUserName" class="text-xs font-bold text-gray-800 mt-0.5">--</div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-gray-700 uppercase mb-1.5">Gợi ý lý do từ chối nhanh (Bấm để chọn):</label>
+          <div class="flex flex-wrap gap-1.5 text-xs">
+            <button type="button" onclick="setKycRejectReason(this.innerText)" class="px-2.5 py-1 bg-gray-100 hover:bg-rose-50 hover:text-rose-700 rounded-lg text-[11px] font-semibold text-gray-700 border transition-all">Ảnh CCCD bị mờ, lóa sáng hoặc mất góc</button>
+            <button type="button" onclick="setKycRejectReason(this.innerText)" class="px-2.5 py-1 bg-gray-100 hover:bg-rose-50 hover:text-rose-700 rounded-lg text-[11px] font-semibold text-gray-700 border transition-all">Số CCCD không trùng khớp với ảnh chụp giấy tờ</button>
+            <button type="button" onclick="setKycRejectReason(this.innerText)" class="px-2.5 py-1 bg-gray-100 hover:bg-rose-50 hover:text-rose-700 rounded-lg text-[11px] font-semibold text-gray-700 border transition-all">Họ và tên không khớp với họ tên trên CCCD</button>
+            <button type="button" onclick="setKycRejectReason(this.innerText)" class="px-2.5 py-1 bg-gray-100 hover:bg-rose-50 hover:text-rose-700 rounded-lg text-[11px] font-semibold text-gray-700 border transition-all">Chứng chỉ hành nghề môi giới không hợp lệ / hết hạn</button>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-gray-700 uppercase mb-1">
+            Lý do từ chối cụ thể:
+          </label>
+          <textarea id="adminKycRejectReasonInput" rows="3" placeholder="Nhập lý do chi tiết từ chối hồ sơ..." 
+            class="w-full px-3.5 py-2.5 bg-gray-50 border border-gray-300 rounded-xl outline-none text-xs text-gray-800 focus:ring-2 focus:ring-rose-500 font-medium"></textarea>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-end gap-2 mt-5 pt-3 border-t">
+        <button onclick="closeKycRejectModal()" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-semibold rounded-xl transition-all">
+          Hủy bỏ
+        </button>
+        <button onclick="confirmSubmitKycReject()" id="btnConfirmKycReject" class="px-5 py-2 bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold rounded-xl shadow transition-all flex items-center gap-1">
+          <span class="material-symbols-outlined text-sm">block</span> Xác nhận từ chối
         </button>
       </div>
     </div>

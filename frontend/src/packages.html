@@ -42,194 +42,397 @@
 
   <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
     <!-- Tiêu đề lớn & Giới thiệu -->
-    <div class="text-center max-w-2xl mx-auto mb-10">
+    <div class="text-center max-w-2xl mx-auto mb-8">
       <div class="inline-flex items-center gap-2 mb-2">
-        <span class="text-2xl sm:text-3xl font-black text-gray-900">Gói Hội viên</span>
+        <span class="text-2xl sm:text-3xl font-black text-gray-900">Bảng Giá Gói Dịch Vụ & Đẩy Tin</span>
         <span class="text-xs font-bold text-red-600 bg-red-50 border border-red-200 px-2.5 py-1 rounded-full">Tiết kiệm đến 39%</span>
       </div>
-      <h2 class="text-2xl sm:text-3xl font-extrabold text-gray-900 tracking-tight">Đầu tư đúng gói. Tối ưu từng tin đăng</h2>
-      
-      <!-- 3 Tiêu chí -->
-      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-left mt-8 text-xs text-gray-600">
-        <div class="bg-white p-3.5 rounded-xl border border-gray-200 shadow-sm">
-          <strong class="text-indigo-600 block text-sm font-black mb-1">01</strong>
-          Ba gói phù hợp từ giỏ hàng nhỏ đến ngân sách quảng cáo lớn
+      <h2 class="text-xl sm:text-2xl font-extrabold text-gray-900 tracking-tight">Tối ưu từng tin đăng • Đầu tư đúng nhu cầu thực tế</h2>
+      <p class="text-xs text-gray-500 mt-1.5">Lựa chọn linh hoạt giữa Gói Đẩy Tin Lẻ / Chính Chủ (dành cho người 1-2 năm mới đăng tin) và Gói Hội Viên Tháng (dành cho môi giới chuyên nghiệp).</p>
+    </div>
+
+    <!-- THANH CHUYỂN ĐỔI: TẤT CẢ VS GÓI THÁNG VS GÓI ĐẨY LẺ -->
+    <div class="flex items-center justify-center gap-2 sm:gap-3 mb-8 flex-wrap">
+      <button type="button" id="tabBtnAll" onclick="switchPackageTab('all')" class="px-5 sm:px-6 py-3 rounded-2xl font-black text-xs sm:text-sm bg-gray-900 text-white shadow-md flex items-center gap-2 transition-all cursor-pointer">
+        <span class="material-symbols-outlined text-base">dashboard</span>
+        <span>Tất Cả Các Gói</span>
+      </button>
+      <button type="button" id="tabBtnMonthly" onclick="switchPackageTab('monthly')" class="px-5 sm:px-6 py-3 rounded-2xl font-bold text-xs sm:text-sm bg-white text-gray-600 hover:bg-gray-50 border border-gray-200 flex items-center gap-2 transition-all cursor-pointer shadow-xs">
+        <span class="material-symbols-outlined text-base text-amber-500">workspace_premium</span>
+        <span>Gói Hội Viên Tháng (Môi giới)</span>
+      </button>
+      <button type="button" id="tabBtnRetail" onclick="switchPackageTab('retail')" class="px-5 sm:px-6 py-3 rounded-2xl font-bold text-xs sm:text-sm bg-white text-gray-600 hover:bg-gray-50 border border-gray-200 flex items-center gap-2 transition-all cursor-pointer shadow-xs">
+        <span class="material-symbols-outlined text-base text-teal-600">bolt</span>
+        <span>Gói Đẩy Tin Lẻ & Chính Chủ (1-2 lần/năm)</span>
+      </button>
+    </div>
+
+    <!-- PHÂN HỆ 1: BẢNG 3 GÓI HỘI VIÊN THEO THÁNG (DÀNH CHO MÔI GIỚI CÓ NHIỀU CĂN) -->
+    <div id="sectionMonthlyPackages" class="space-y-6 mb-12">
+      <div class="flex items-center gap-3 pb-2 border-b border-gray-100">
+        <div class="w-10 h-10 rounded-2xl bg-indigo-100 text-indigo-700 flex items-center justify-center shrink-0">
+          <span class="material-symbols-outlined text-xl">workspace_premium</span>
         </div>
-        <div class="bg-white p-3.5 rounded-xl border border-gray-200 shadow-sm">
-          <strong class="text-indigo-600 block text-sm font-black mb-1">02</strong>
-          Quyền lợi voucher tự động làm mới sau mỗi chu kỳ 30 ngày trong thời hạn gói
+        <div>
+          <h3 class="text-base sm:text-lg font-black text-gray-900">Gói Hội Viên Theo Tháng</h3>
+          <p class="text-xs text-gray-500">Dành cho Môi giới & Nhà đầu tư có nhiều BĐS cần đăng tin thường xuyên</p>
         </div>
-        <div class="bg-white p-3.5 rounded-xl border border-gray-200 shadow-sm">
-          <strong class="text-indigo-600 block text-sm font-black mb-1">03</strong>
-          Gói Tiêu chuẩn và Cao cấp gồm 4 quyền lợi Hội viên chuyên nghiệp
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
+        <!-- 1. Gói Cơ bản -->
+        <div class="bg-white rounded-3xl p-6 sm:p-7 border border-gray-200 shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow relative">
+          <div>
+            <div class="flex items-start justify-between">
+              <div>
+                <h3 class="text-lg font-bold text-gray-900">Hội viên Cơ bản</h3>
+                <p class="text-xs text-gray-500 mt-1">Phù hợp với môi giới mới hoặc giỏ hàng nhỏ</p>
+              </div>
+              <div class="text-3xl">⛺</div>
+            </div>
+
+            <div class="mt-6 mb-4">
+              <div class="flex items-baseline gap-1">
+                <span class="text-xs text-gray-500">Từ</span>
+                <span class="text-3xl font-black text-gray-900">467.000</span>
+                <span class="text-xs text-gray-500">đ/tháng</span>
+              </div>
+              <div class="flex items-center gap-2 mt-1">
+                <span class="text-[11px] font-bold text-red-600 bg-red-50 px-2 py-0.5 rounded">Giảm đến 31%</span>
+                <span class="text-[11px] text-gray-400">Tiết kiệm đến 208.000 đ/tháng</span>
+              </div>
+            </div>
+
+            <button onclick="openPaymentModal('basic', 'Hội viên Cơ bản', 467000, 15)" 
+              class="w-full py-3 border border-gray-300 hover:border-gray-900 hover:bg-gray-900 hover:text-white rounded-2xl font-bold text-sm text-gray-800 transition-all shadow-sm my-4">
+              Mua gói Cơ bản
+            </button>
+
+            <div class="pt-4 border-t border-gray-100">
+              <span class="text-xs font-bold text-gray-800 uppercase block mb-3">Ưu đãi voucher 30 ngày</span>
+              <ul class="space-y-2.5 text-xs text-gray-600">
+                <li class="flex items-center justify-between">
+                  <span class="flex items-center gap-1.5"><span class="text-emerald-500 font-bold">✓</span> Giảm 35.000 đ/lần Đăng Tin Thường</span>
+                  <span class="font-bold text-gray-900 bg-gray-100 px-2 py-0.5 rounded">x 15</span>
+                </li>
+                <li class="flex items-center justify-between">
+                  <span class="flex items-center gap-1.5"><span class="text-emerald-500 font-bold">✓</span> Giảm 10.000 đ/lần Đẩy Tin Thường</span>
+                  <span class="font-bold text-gray-900 bg-gray-100 px-2 py-0.5 rounded">x 15</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. Gói Tiêu chuẩn (Bán chạy nhất) -->
+        <div class="bg-white rounded-3xl p-6 sm:p-7 border-2 border-red-500 shadow-xl flex flex-col justify-between relative transform md:-translate-y-2">
+          <div class="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-gradient-to-r from-red-600 to-purple-600 text-white text-[11px] font-black px-4 py-1 rounded-full shadow-md uppercase tracking-wider flex items-center gap-1">
+            👑 Bán chạy nhất
+          </div>
+
+          <div>
+            <div class="flex items-start justify-between mt-2">
+              <div>
+                <h3 class="text-lg font-bold text-gray-900">Hội viên Tiêu chuẩn</h3>
+                <p class="text-xs text-gray-500 mt-1">Phù hợp với môi giới chuyên nghiệp có giỏ hàng từ 10 BĐS</p>
+              </div>
+              <div class="text-3xl">🏠</div>
+            </div>
+
+            <div class="mt-6 mb-4">
+              <div class="flex items-baseline gap-1">
+                <span class="text-xs text-gray-500">Từ</span>
+                <span class="text-3xl font-black text-red-600">1.267.000</span>
+                <span class="text-xs text-gray-500">đ/tháng</span>
+              </div>
+              <div class="flex items-center gap-2 mt-1">
+                <span class="text-[11px] font-bold text-red-600 bg-red-50 px-2 py-0.5 rounded">Giảm đến 33%</span>
+                <span class="text-[11px] text-gray-400">Tiết kiệm đến 623.000 đ/tháng</span>
+              </div>
+            </div>
+
+            <button onclick="openPaymentModal('standard', 'Hội viên Tiêu chuẩn', 1267000, 30)" 
+              class="w-full py-3 bg-red-600 hover:bg-red-700 text-white rounded-2xl font-bold text-sm shadow-md shadow-red-500/25 transition-all my-4">
+              Mua gói Tiêu chuẩn
+            </button>
+
+            <div class="pt-4 border-t border-gray-100">
+              <span class="text-xs font-bold text-gray-800 uppercase block mb-3">Ưu đãi voucher 30 ngày</span>
+              <ul class="space-y-2.5 text-xs text-gray-600">
+                <li class="flex items-center justify-between">
+                  <span class="flex items-center gap-1.5"><span class="text-emerald-500 font-bold">✓</span> Giảm 35.000 đ/lần Đăng Tin Thường</span>
+                  <span class="font-bold text-gray-900 bg-gray-100 px-2 py-0.5 rounded">x 30</span>
+                </li>
+                <li class="flex items-center justify-between">
+                  <span class="flex items-center gap-1.5"><span class="text-emerald-500 font-bold">✓</span> Giảm 10.000 đ/lần Đẩy Tin Thường</span>
+                  <span class="font-bold text-gray-900 bg-gray-100 px-2 py-0.5 rounded">x 30</span>
+                </li>
+                <li class="flex items-center justify-between">
+                  <span class="flex items-center gap-1.5"><span class="text-purple-600 font-bold">★</span> Giảm 200.000 đ/lần Đăng Tin VIP</span>
+                  <span class="font-bold text-purple-700 bg-purple-50 px-2 py-0.5 rounded">x 1</span>
+                </li>
+              </ul>
+
+              <span class="text-xs font-bold text-gray-800 uppercase block mt-5 mb-2.5">Quyền lợi Hội viên</span>
+              <ul class="space-y-1.5 text-xs text-gray-600">
+                <li class="flex items-center gap-1.5"><span class="text-emerald-500 font-bold">✓</span> Bản quyền ảnh</li>
+                <li class="flex items-center gap-1.5"><span class="text-emerald-500 font-bold">✓</span> Hẹn giờ đăng tin</li>
+                <li class="flex items-center gap-1.5"><span class="text-emerald-500 font-bold">✓</span> Báo cáo hiệu suất</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. Gói Cao cấp -->
+        <div class="bg-white rounded-3xl p-6 sm:p-7 border border-gray-200 shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow relative">
+          <div>
+            <div class="flex items-start justify-between">
+              <div>
+                <h3 class="text-lg font-bold text-gray-900">Hội viên Cao cấp</h3>
+                <p class="text-xs text-gray-500 mt-1">Dành cho sàn giao dịch, môi giới giỏ hàng lớn</p>
+              </div>
+              <div class="text-3xl">🏢</div>
+            </div>
+
+            <div class="mt-6 mb-4">
+              <div class="flex items-baseline gap-1">
+                <span class="text-xs text-gray-500">Từ</span>
+                <span class="text-3xl font-black text-gray-900">2.200.000</span>
+                <span class="text-xs text-gray-500">đ/tháng</span>
+              </div>
+              <div class="flex items-center gap-2 mt-1">
+                <span class="text-[11px] font-bold text-red-600 bg-red-50 px-2 py-0.5 rounded">Giảm đến 39%</span>
+                <span class="text-[11px] text-gray-400">Tiết kiệm đến 1.390.000 đ/tháng</span>
+              </div>
+            </div>
+
+            <button onclick="openPaymentModal('premium', 'Hội viên Cao cấp', 2200000, 50)" 
+              class="w-full py-3 border border-gray-300 hover:border-gray-900 hover:bg-gray-900 hover:text-white rounded-2xl font-bold text-sm text-gray-800 transition-all shadow-sm my-4">
+              Mua gói Cao cấp
+            </button>
+
+            <div class="pt-4 border-t border-gray-100">
+              <span class="text-xs font-bold text-gray-800 uppercase block mb-3">Ưu đãi voucher 30 ngày</span>
+              <ul class="space-y-2.5 text-xs text-gray-600">
+                <li class="flex items-center justify-between">
+                  <span class="flex items-center gap-1.5"><span class="text-emerald-500 font-bold">✓</span> Giảm 35.000 đ/lần Đăng Tin Thường</span>
+                  <span class="font-bold text-gray-900 bg-gray-100 px-2 py-0.5 rounded">x 50</span>
+                </li>
+                <li class="flex items-center justify-between">
+                  <span class="flex items-center gap-1.5"><span class="text-emerald-500 font-bold">✓</span> Giảm 10.000 đ/lần Đẩy Tin Thường</span>
+                  <span class="font-bold text-gray-900 bg-gray-100 px-2 py-0.5 rounded">x 50</span>
+                </li>
+                <li class="flex items-center justify-between">
+                  <span class="flex items-center gap-1.5"><span class="text-purple-600 font-bold">★</span> Giảm 400.000 đ/lần Đăng Tin VIP</span>
+                  <span class="font-bold text-purple-700 bg-purple-50 px-2 py-0.5 rounded">x 3</span>
+                </li>
+              </ul>
+
+              <span class="text-xs font-bold text-gray-800 uppercase block mt-5 mb-2.5">Quyền lợi Hội viên</span>
+              <ul class="space-y-1.5 text-xs text-gray-600">
+                <li class="flex items-center gap-1.5"><span class="text-emerald-500 font-bold">✓</span> Bản quyền ảnh</li>
+                <li class="flex items-center gap-1.5"><span class="text-emerald-500 font-bold">✓</span> Hẹn giờ đăng tin</li>
+                <li class="flex items-center gap-1.5"><span class="text-emerald-500 font-bold">✓</span> Báo cáo hiệu suất</li>
+                <li class="flex items-center gap-1.5"><span class="text-emerald-500 font-bold">✓</span> Báo cáo thị trường</li>
+              </ul>
+            </div>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- Bảng 3 gói dịch vụ -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
-      
-      <!-- 1. Gói Cơ bản -->
-      <div class="bg-white rounded-3xl p-6 sm:p-7 border border-gray-200 shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow relative">
+    <!-- PHÂN HỆ 2: CÁC GÓI ĐẨY TIN LẺ & CHÍNH CHỦ (DÀNH CHO NGƯỜI 1-2 NĂM MỚI ĐĂNG 1 TIN) -->
+    <div id="sectionRetailPackages" class="space-y-6 pt-6 border-t border-gray-200">
+      <div class="flex items-center gap-3 pb-2">
+        <div class="w-10 h-10 rounded-2xl bg-teal-100 text-teal-700 flex items-center justify-center shrink-0">
+          <span class="material-symbols-outlined text-xl">bolt</span>
+        </div>
         <div>
-          <div class="flex items-start justify-between">
-            <div>
-              <h3 class="text-lg font-bold text-gray-900">Hội viên Cơ bản</h3>
-              <p class="text-xs text-gray-500 mt-1">Phù hợp với môi giới mới hoặc giỏ hàng nhỏ</p>
-            </div>
-            <div class="text-3xl">⛺</div>
-          </div>
-
-          <div class="mt-6 mb-4">
-            <div class="flex items-baseline gap-1">
-              <span class="text-xs text-gray-500">Từ</span>
-              <span class="text-3xl font-black text-gray-900">467.000</span>
-              <span class="text-xs text-gray-500">đ/tháng</span>
-            </div>
-            <div class="flex items-center gap-2 mt-1">
-              <span class="text-[11px] font-bold text-red-600 bg-red-50 px-2 py-0.5 rounded">Giảm đến 31%</span>
-              <span class="text-[11px] text-gray-400">Tiết kiệm đến 208.000 đ/tháng</span>
-            </div>
-          </div>
-
-          <button onclick="openPaymentModal('basic', 'Hội viên Cơ bản', 467000, 15)" 
-            class="w-full py-3 border border-gray-300 hover:border-gray-900 hover:bg-gray-900 hover:text-white rounded-2xl font-bold text-sm text-gray-800 transition-all shadow-sm my-4">
-            Mua gói Cơ bản
-          </button>
-
-          <div class="pt-4 border-t border-gray-100">
-            <span class="text-xs font-bold text-gray-800 uppercase block mb-3">Ưu đãi voucher 30 ngày</span>
-            <ul class="space-y-2.5 text-xs text-gray-600">
-              <li class="flex items-center justify-between">
-                <span class="flex items-center gap-1.5"><span class="text-emerald-500 font-bold">✓</span> Giảm 35.000 đ/lần Đăng Tin Thường</span>
-                <span class="font-bold text-gray-900 bg-gray-100 px-2 py-0.5 rounded">x 15</span>
-              </li>
-              <li class="flex items-center justify-between">
-                <span class="flex items-center gap-1.5"><span class="text-emerald-500 font-bold">✓</span> Giảm 10.000 đ/lần Đẩy Tin Thường</span>
-                <span class="font-bold text-gray-900 bg-gray-100 px-2 py-0.5 rounded">x 15</span>
-              </li>
-            </ul>
-          </div>
+          <h3 class="text-base sm:text-lg font-black text-gray-900">Gói Đẩy Tin Lẻ & Chính Chủ</h3>
+          <p class="text-xs text-gray-500">Dành cho Chủ nhà & Người ít đăng tin (1-2 lần/năm) • Hạn dùng vĩnh viễn, không hết hạn</p>
         </div>
       </div>
 
-      <!-- 2. Gói Tiêu chuẩn (Bán chạy nhất) -->
-      <div class="bg-white rounded-3xl p-6 sm:p-7 border-2 border-red-500 shadow-xl flex flex-col justify-between relative transform md:-translate-y-2">
-        <div class="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-gradient-to-r from-red-600 to-purple-600 text-white text-[11px] font-black px-4 py-1 rounded-full shadow-md uppercase tracking-wider flex items-center gap-1">
-          👑 Bán chạy nhất
-        </div>
-
-        <div>
-          <div class="flex items-start justify-between mt-2">
-            <div>
-              <h3 class="text-lg font-bold text-gray-900">Hội viên Tiêu chuẩn</h3>
-              <p class="text-xs text-gray-500 mt-1">Phù hợp với môi giới chuyên nghiệp có giỏ hàng từ 10 BĐS</p>
-            </div>
-            <div class="text-3xl">🏠</div>
-          </div>
-
-          <div class="mt-6 mb-4">
-            <div class="flex items-baseline gap-1">
-              <span class="text-xs text-gray-500">Từ</span>
-              <span class="text-3xl font-black text-red-600">1.267.000</span>
-              <span class="text-xs text-gray-500">đ/tháng</span>
-            </div>
-            <div class="flex items-center gap-2 mt-1">
-              <span class="text-[11px] font-bold text-red-600 bg-red-50 px-2 py-0.5 rounded">Giảm đến 33%</span>
-              <span class="text-[11px] text-gray-400">Tiết kiệm đến 623.000 đ/tháng</span>
-            </div>
-          </div>
-
-          <button onclick="openPaymentModal('standard', 'Hội viên Tiêu chuẩn', 1267000, 30)" 
-            class="w-full py-3.5 bg-red-600 hover:bg-red-700 text-white rounded-2xl font-black text-sm shadow-md transition-all my-4">
-            Mua gói Tiêu chuẩn
-          </button>
-
-          <div class="pt-4 border-t border-gray-100">
-            <span class="text-xs font-bold text-gray-800 uppercase block mb-3">Ưu đãi voucher 30 ngày</span>
-            <ul class="space-y-2.5 text-xs text-gray-600">
-              <li class="flex items-center justify-between">
-                <span class="flex items-center gap-1.5"><span class="text-emerald-500 font-bold">✓</span> Giảm 35.000 đ/lần Đăng Tin Thường</span>
-                <span class="font-bold text-gray-900 bg-gray-100 px-2 py-0.5 rounded">x 30</span>
-              </li>
-              <li class="flex items-center justify-between">
-                <span class="flex items-center gap-1.5"><span class="text-emerald-500 font-bold">✓</span> Giảm 10.000 đ/lần Đẩy Tin Thường</span>
-                <span class="font-bold text-gray-900 bg-gray-100 px-2 py-0.5 rounded">x 30</span>
-              </li>
-              <li class="flex items-center justify-between">
-                <span class="flex items-center gap-1.5"><span class="text-purple-600 font-bold">★</span> Giảm 400.000 đ/lần Đăng Tin VIP</span>
-                <span class="font-bold text-purple-700 bg-purple-50 px-2 py-0.5 rounded">x 1</span>
-              </li>
-            </ul>
-
-            <span class="text-xs font-bold text-gray-800 uppercase block mt-5 mb-2.5">Quyền lợi Hội viên</span>
-            <ul class="space-y-1.5 text-xs text-gray-600">
-              <li class="flex items-center gap-1.5"><span class="text-emerald-500 font-bold">✓</span> Bản quyền ảnh</li>
-              <li class="flex items-center gap-1.5"><span class="text-emerald-500 font-bold">✓</span> Hẹn giờ đăng tin</li>
-              <li class="flex items-center gap-1.5"><span class="text-emerald-500 font-bold">✓</span> Báo cáo hiệu suất</li>
-              <li class="flex items-center gap-1.5"><span class="text-emerald-500 font-bold">✓</span> Báo cáo thị trường</li>
-            </ul>
-          </div>
+      <div class="p-4 bg-teal-50/70 border border-teal-200 rounded-2xl flex items-center justify-between flex-wrap gap-2 text-xs">
+        <div class="flex items-center gap-2 text-teal-900 font-semibold">
+          <span class="material-symbols-outlined text-teal-600 text-lg">verified</span>
+          <span>Phù hợp với Chủ nhà & Người bán cá nhân: <strong>Dùng bao nhiêu trả bấy nhiêu, lượt đẩy KHÔNG BAO GIỜ HẾT HẠN</strong> (năm nay dùng 2 lượt, năm sau dùng tiếp).</span>
         </div>
       </div>
 
-      <!-- 3. Gói Cao cấp -->
-      <div class="bg-white rounded-3xl p-6 sm:p-7 border border-gray-200 shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow relative">
-        <div>
-          <div class="flex items-start justify-between">
-            <div>
-              <h3 class="text-lg font-bold text-gray-900">Hội viên Cao cấp</h3>
-              <p class="text-xs text-gray-500 mt-1">Phù hợp với môi giới có giỏ hàng và ngân sách quảng cáo lớn</p>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 items-stretch">
+        
+        <!-- 1. Gói Đẩy Lẻ 1 Lượt -->
+        <div class="bg-white rounded-3xl p-5 border border-gray-200 shadow-sm flex flex-col justify-between hover:border-teal-400 hover:shadow-md transition-all">
+          <div>
+            <div class="flex items-start justify-between">
+              <div>
+                <h3 class="text-base font-bold text-gray-900">Đẩy Lẻ 1 Lượt</h3>
+                <p class="text-[11px] text-gray-500 mt-0.5">Dùng thử hoặc đẩy ngay tức thì</p>
+              </div>
+              <div class="text-2xl">⚡</div>
             </div>
-            <div class="text-3xl">🏢</div>
+
+            <div class="mt-4 mb-3">
+              <div class="flex items-baseline gap-1">
+                <span class="text-2xl font-black text-gray-900">15.000</span>
+                <span class="text-xs text-gray-500">đ/lượt</span>
+              </div>
+              <span class="text-[10px] text-gray-400 block mt-0.5">Thanh toán 1 lần quét QR</span>
+            </div>
+
+            <div class="py-3 border-t border-gray-100 text-xs text-gray-600 space-y-2">
+              <div class="flex items-center gap-1.5 font-bold text-teal-800">
+                <span class="material-symbols-outlined text-sm text-teal-600">check</span>
+                <span>+1 Lượt đẩy tin lên đầu trang</span>
+              </div>
+              <div class="flex items-center gap-1.5">
+                <span class="material-symbols-outlined text-sm text-teal-600">check</span>
+                <span>Có hiệu lực tức thì</span>
+              </div>
+              <div class="flex items-center gap-1.5 text-gray-500 text-[11px]">
+                <span class="material-symbols-outlined text-sm text-gray-400">schedule</span>
+                <span>Không giới hạn ngày hết hạn</span>
+              </div>
+            </div>
           </div>
 
-          <div class="mt-6 mb-4">
-            <div class="flex items-baseline gap-1">
-              <span class="text-xs text-gray-500">Từ</span>
-              <span class="text-3xl font-black text-gray-900">2.200.000</span>
-              <span class="text-xs text-gray-500">đ/tháng</span>
-            </div>
-            <div class="flex items-center gap-2 mt-1">
-              <span class="text-[11px] font-bold text-red-600 bg-red-50 px-2 py-0.5 rounded">Giảm đến 39%</span>
-              <span class="text-[11px] text-gray-400">Tiết kiệm đến 1.390.000 đ/tháng</span>
-            </div>
-          </div>
-
-          <button onclick="openPaymentModal('premium', 'Hội viên Cao cấp', 2200000, 50)" 
-            class="w-full py-3 border border-gray-300 hover:border-gray-900 hover:bg-gray-900 hover:text-white rounded-2xl font-bold text-sm text-gray-800 transition-all shadow-sm my-4">
-            Mua gói Cao cấp
+          <button onclick="openPaymentModal('push_single', 'Đẩy tin lẻ 1 lượt', 15000, 1)" 
+            class="w-full py-2.5 mt-2 bg-gray-50 hover:bg-teal-600 hover:text-white text-gray-800 border border-gray-200 hover:border-teal-600 rounded-xl font-bold text-xs transition-all shadow-xs cursor-pointer">
+            Mua 1 lượt • 15.000 đ
           </button>
-
-          <div class="pt-4 border-t border-gray-100">
-            <span class="text-xs font-bold text-gray-800 uppercase block mb-3">Ưu đãi voucher 30 ngày</span>
-            <ul class="space-y-2.5 text-xs text-gray-600">
-              <li class="flex items-center justify-between">
-                <span class="flex items-center gap-1.5"><span class="text-emerald-500 font-bold">✓</span> Giảm 35.000 đ/lần Đăng Tin Thường</span>
-                <span class="font-bold text-gray-900 bg-gray-100 px-2 py-0.5 rounded">x 50</span>
-              </li>
-              <li class="flex items-center justify-between">
-                <span class="flex items-center gap-1.5"><span class="text-emerald-500 font-bold">✓</span> Giảm 10.000 đ/lần Đẩy Tin Thường</span>
-                <span class="font-bold text-gray-900 bg-gray-100 px-2 py-0.5 rounded">x 50</span>
-              </li>
-              <li class="flex items-center justify-between">
-                <span class="flex items-center gap-1.5"><span class="text-purple-600 font-bold">★</span> Giảm 400.000 đ/lần Đăng Tin VIP</span>
-                <span class="font-bold text-purple-700 bg-purple-50 px-2 py-0.5 rounded">x 3</span>
-              </li>
-            </ul>
-
-            <span class="text-xs font-bold text-gray-800 uppercase block mt-5 mb-2.5">Quyền lợi Hội viên</span>
-            <ul class="space-y-1.5 text-xs text-gray-600">
-              <li class="flex items-center gap-1.5"><span class="text-emerald-500 font-bold">✓</span> Bản quyền ảnh</li>
-              <li class="flex items-center gap-1.5"><span class="text-emerald-500 font-bold">✓</span> Hẹn giờ đăng tin</li>
-              <li class="flex items-center gap-1.5"><span class="text-emerald-500 font-bold">✓</span> Báo cáo hiệu suất</li>
-              <li class="flex items-center gap-1.5"><span class="text-emerald-500 font-bold">✓</span> Báo cáo thị trường</li>
-            </ul>
-          </div>
         </div>
-      </div>
 
+        <!-- 2. Combo Bán Nhanh 3 Lượt -->
+        <div class="bg-white rounded-3xl p-5 border border-gray-200 shadow-sm flex flex-col justify-between hover:border-teal-400 hover:shadow-md transition-all">
+          <div>
+            <div class="flex items-start justify-between">
+              <div>
+                <h3 class="text-base font-bold text-gray-900">Combo Bán Nhanh</h3>
+                <p class="text-[11px] text-gray-500 mt-0.5">3 lượt đẩy tối ưu trong tuần</p>
+              </div>
+              <div class="text-2xl">🚀</div>
+            </div>
+
+            <div class="mt-4 mb-3">
+              <div class="flex items-baseline gap-1">
+                <span class="text-2xl font-black text-gray-900">39.000</span>
+                <span class="text-xs text-gray-500">đ/combo</span>
+              </div>
+              <span class="text-[10px] text-emerald-700 font-bold bg-emerald-50 px-1.5 py-0.5 rounded">Tiết kiệm 13% (13k/lượt)</span>
+            </div>
+
+            <div class="py-3 border-t border-gray-100 text-xs text-gray-600 space-y-2">
+              <div class="flex items-center gap-1.5 font-bold text-teal-800">
+                <span class="material-symbols-outlined text-sm text-teal-600">check</span>
+                <span>+3 Lượt đẩy tin linh hoạt</span>
+              </div>
+              <div class="flex items-center gap-1.5">
+                <span class="material-symbols-outlined text-sm text-teal-600">check</span>
+                <span>Tùy chọn thời điểm đẩy</span>
+              </div>
+              <div class="flex items-center gap-1.5 text-emerald-700 font-semibold text-[11px]">
+                <span class="material-symbols-outlined text-sm text-emerald-600">all_inclusive</span>
+                <span>Lượt đẩy vĩnh viễn (No Expiry)</span>
+              </div>
+            </div>
+          </div>
+
+          <button onclick="openPaymentModal('push_quick_3', 'Combo Bán nhanh 3 lượt', 39000, 3)" 
+            class="w-full py-2.5 mt-2 bg-gray-50 hover:bg-teal-600 hover:text-white text-gray-800 border border-gray-200 hover:border-teal-600 rounded-xl font-bold text-xs transition-all shadow-xs cursor-pointer">
+            Mua 3 lượt • 39.000 đ
+          </button>
+        </div>
+
+        <!-- 3. Gói Chính Chủ Thư Thả (10 Lượt Vĩnh Viễn) - BEST SELLER CHO CHỦ NHÀ -->
+        <div class="bg-gradient-to-b from-amber-500/10 via-white to-white rounded-3xl p-5 border-2 border-amber-400 shadow-md flex flex-col justify-between relative hover:shadow-lg transition-all scale-100 sm:scale-105">
+          <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-gradient-to-r from-amber-500 to-orange-500 text-white text-[10px] font-black uppercase px-3 py-1 rounded-full shadow-sm tracking-wider shrink-0 whitespace-nowrap">
+            👑 Khuyên dùng cho Chủ nhà
+          </div>
+
+          <div>
+            <div class="flex items-start justify-between mt-1">
+              <div>
+                <h3 class="text-base font-black text-gray-900">Gói Chính Chủ 10 Lượt</h3>
+                <p class="text-[11px] text-amber-800 font-semibold mt-0.5">1-2 năm đăng tin 1 lần cực kỳ tiết kiệm</p>
+              </div>
+              <div class="text-2xl">🏠</div>
+            </div>
+
+            <div class="mt-4 mb-3">
+              <div class="flex items-baseline gap-1">
+                <span class="text-2xl sm:text-3xl font-black text-amber-900">99.000</span>
+                <span class="text-xs text-gray-500">đ</span>
+              </div>
+              <span class="text-[10px] text-amber-950 font-extrabold bg-amber-100 px-2 py-0.5 rounded">Tiết kiệm 34% (Chỉ 9.9k/lượt)</span>
+            </div>
+
+            <div class="py-3 border-t border-amber-200/60 text-xs text-gray-700 space-y-2">
+              <div class="flex items-center gap-1.5 font-black text-amber-950">
+                <span class="material-symbols-outlined text-sm text-amber-600">check_circle</span>
+                <span>+10 Lượt đẩy tin lên top</span>
+              </div>
+              <div class="flex items-center gap-1.5 font-bold text-emerald-800">
+                <span class="material-symbols-outlined text-sm text-emerald-600">all_inclusive</span>
+                <span>Vĩnh viễn không hết hạn</span>
+              </div>
+              <div class="flex items-center gap-1.5 text-gray-600 text-[11px]">
+                <span class="material-symbols-outlined text-sm text-amber-600">verified</span>
+                <span>Bán xong thừa lượt, năm sau dùng tiếp</span>
+              </div>
+            </div>
+          </div>
+
+          <button onclick="openPaymentModal('push_owner_10', 'Gói Chính chủ 10 lượt (Vĩnh viễn)', 99000, 10)" 
+            class="w-full py-3 mt-2 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white rounded-xl font-black text-xs shadow-md transition-all cursor-pointer">
+            Mua Gói Chính Chủ • 99.000 đ
+          </button>
+        </div>
+
+        <!-- 4. Gói Cuối Tuần Vàng (Weekend Flash Boost) -->
+        <div class="bg-white rounded-3xl p-5 border border-gray-200 shadow-sm flex flex-col justify-between hover:border-teal-400 hover:shadow-md transition-all">
+          <div>
+            <div class="flex items-start justify-between">
+              <div>
+                <h3 class="text-base font-bold text-gray-900">Cuối Tuần Vàng</h3>
+                <p class="text-[11px] text-gray-500 mt-0.5">Tự động đón khách Thứ 7 & CN</p>
+              </div>
+              <div class="text-2xl">📅</div>
+            </div>
+
+            <div class="mt-4 mb-3">
+              <div class="flex items-baseline gap-1">
+                <span class="text-2xl font-black text-gray-900">49.000</span>
+                <span class="text-xs text-gray-500">đ/gói</span>
+              </div>
+              <span class="text-[10px] text-blue-700 font-bold bg-blue-50 px-1.5 py-0.5 rounded">Tự động đẩy theo giờ vàng</span>
+            </div>
+
+            <div class="py-3 border-t border-gray-100 text-xs text-gray-600 space-y-2">
+              <div class="flex items-center gap-1.5 font-bold text-teal-800">
+                <span class="material-symbols-outlined text-sm text-teal-600">check</span>
+                <span>+4 Lượt đẩy tự động</span>
+              </div>
+              <div class="flex items-center gap-1.5 text-gray-600 text-[11px]">
+                <span class="material-symbols-outlined text-sm text-teal-600">check</span>
+                <span>Khung 9h sáng & 15h chiều T7, CN</span>
+              </div>
+              <div class="flex items-center gap-1.5 text-gray-500 text-[11px]">
+                <span class="material-symbols-outlined text-sm text-gray-400">smart_toy</span>
+                <span>Không cần canh giờ vào đẩy</span>
+              </div>
+            </div>
+          </div>
+
+          <button onclick="openPaymentModal('push_weekend', 'Gói Cuối tuần vàng (4 lượt)', 49000, 4)" 
+            class="w-full py-2.5 mt-2 bg-gray-50 hover:bg-teal-600 hover:text-white text-gray-800 border border-gray-200 hover:border-teal-600 rounded-xl font-bold text-xs transition-all shadow-xs cursor-pointer">
+            Mua Gói Cuối Tuần • 49.000 đ
+          </button>
+        </div>
+
+      </div>
     </div>
+
   </main>
 
   <!-- Modal Thanh Toán Gói Dịch Vụ -->
@@ -332,6 +535,51 @@
         document.getElementById('currentPkgName').textContent = data.currentPackage || 'Thành viên thường';
         document.getElementById('remainingPushesDisplay').textContent = `${data.remainingPushes || 0} lượt đẩy`;
       } catch (err) {}
+    }
+
+    function switchPackageTab(tab) {
+      const secRetail = document.getElementById('sectionRetailPackages');
+      const secMonthly = document.getElementById('sectionMonthlyPackages');
+      const btnAll = document.getElementById('tabBtnAll');
+      const btnMonthly = document.getElementById('tabBtnMonthly');
+      const btnRetail = document.getElementById('tabBtnRetail');
+
+      const activeAll = 'px-5 sm:px-6 py-3 rounded-2xl font-black text-xs sm:text-sm bg-gray-900 text-white shadow-md flex items-center gap-2 transition-all cursor-pointer';
+      const activeMonthly = 'px-5 sm:px-6 py-3 rounded-2xl font-black text-xs sm:text-sm bg-gradient-to-r from-indigo-600 to-blue-600 text-white shadow-md shadow-indigo-500/25 flex items-center gap-2 transition-all cursor-pointer';
+      const activeRetail = 'px-5 sm:px-6 py-3 rounded-2xl font-black text-xs sm:text-sm bg-gradient-to-r from-teal-600 to-emerald-600 text-white shadow-md shadow-teal-500/25 flex items-center gap-2 transition-all cursor-pointer';
+      const inactive = 'px-5 sm:px-6 py-3 rounded-2xl font-bold text-xs sm:text-sm bg-white text-gray-600 hover:bg-gray-50 border border-gray-200 flex items-center gap-2 transition-all cursor-pointer shadow-xs';
+
+      if (tab === 'monthly') {
+        secMonthly?.classList.remove('hidden');
+        secRetail?.classList.add('hidden');
+        if (btnAll) btnAll.className = inactive;
+        if (btnMonthly) btnMonthly.className = activeMonthly;
+        if (btnRetail) btnRetail.className = inactive;
+      } else if (tab === 'retail') {
+        secMonthly?.classList.add('hidden');
+        secRetail?.classList.remove('hidden');
+        if (btnAll) btnAll.className = inactive;
+        if (btnMonthly) btnMonthly.className = inactive;
+        if (btnRetail) btnRetail.className = activeRetail;
+      } else {
+        // all: cả 2 phân hệ đều hiển thị trực quan trên cùng 1 trang
+        secMonthly?.classList.remove('hidden');
+        secRetail?.classList.remove('hidden');
+        if (btnAll) btnAll.className = activeAll;
+        if (btnMonthly) btnMonthly.className = inactive;
+        if (btnRetail) btnRetail.className = inactive;
+      }
+    }
+
+    // Nhận diện tab từ URL hoặc mặc định hiển thị cả 2
+    const urlParams = new URLSearchParams(window.location.search);
+    const hash = window.location.hash;
+    if (urlParams.get('tab') === 'retail' || hash === '#retail') {
+      switchPackageTab('retail');
+    } else if (urlParams.get('tab') === 'monthly' || hash === '#monthly') {
+      switchPackageTab('monthly');
+    } else {
+      switchPackageTab('all');
     }
 
     function openPaymentModal(pkgId, pkgName, price, pushes) {

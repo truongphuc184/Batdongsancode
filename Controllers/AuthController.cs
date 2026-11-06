@@ -37,7 +37,7 @@ public class AuthController : ControllerBase
 
     [HttpGet("me")]
     [Authorize]
-    public async Task<IActionResult> Me()
+    public async Task<IActionResult> Me([FromServices] Batdongsancode.Data.AppDbContext context)
     {
         var subClaim = User.FindFirst("sub")?.Value 
             ?? User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
@@ -45,10 +45,26 @@ public class AuthController : ControllerBase
         if (string.IsNullOrEmpty(subClaim) || !int.TryParse(subClaim, out var userId))
             return Unauthorized();
 
-        var user = await _userService.GetByIdAsync(userId);
+        var user = await context.Users.FindAsync(userId);
         if (user == null)
             return NotFound();
-        return Ok(new { user.Id, user.Email, user.FullName, Role = user.Role.ToString() });
+        return Ok(new 
+        { 
+            user.Id, 
+            user.Email, 
+            user.FullName, 
+            Role = user.Role.ToString(),
+            user.IsVerified,
+            user.KycStatus,
+            user.Phone,
+            user.PhoneVerified,
+            user.TaxCode,
+            user.TaxType,
+            user.PendingRoles,
+            user.KycRejectReason,
+            user.RemainingPushes,
+            user.CurrentPackage
+        });
     }
 
     // Quản lý người dùng dành riêng cho Admin
@@ -74,6 +90,10 @@ public class AuthController : ControllerBase
             u.CurrentPackage,
             u.RemainingPushes,
             u.IsActive,
+            u.IsVerified,
+            u.KycStatus,
+            u.Phone,
+            u.TaxCode,
             u.CreatedAt
         }));
     }
@@ -162,6 +182,70 @@ public class AuthController : ControllerBase
         if (targetRole == Role.None)
             targetRole = Role.Buyer;
 
+        bool wantsPostingRole = selectedRoles.Any(r => 
+            r.Equals("Seller", StringComparison.OrdinalIgnoreCase) || 
+            r.Equals("Landlord", StringComparison.OrdinalIgnoreCase) || 
+            r.Equals("Agent", StringComparison.OrdinalIgnoreCase));
+
+        // 1. Phân quyền: Chuyển tự do giữa Người mua (Buyer) và Người thuê (Tenant) - Trải nghiệm 1-click
+        if (!wantsPostingRole)
+        {
+            user.Role = targetRole;
+            await context.SaveChangesAsync();
+
+            var newToken = Batdongsancode.Helpers.JwtHelper.GenerateToken(user, config);
+            var labelParts = new List<string>();
+            var roleSetLower = new HashSet<string>(selectedRoles, StringComparer.OrdinalIgnoreCase);
+            if (roleSetLower.Contains("Buyer")) labelParts.Add("Người mua");
+            if (roleSetLower.Contains("Tenant")) labelParts.Add("Người thuê");
+
+            string friendlyName = labelParts.Count > 0 ? string.Join(" & ", labelParts) : targetRole.ToString();
+
+            return Ok(new
+            {
+                success = true,
+                requiresKyc = false,
+                message = $"Đã cập nhật vai trò thành '{friendlyName}' thành công!",
+                user = new { user.Id, user.Email, user.FullName, Role = user.Role.ToString(), user.IsVerified, user.KycStatus },
+                roles = selectedRoles,
+                roleLabel = friendlyName,
+                accessToken = newToken,
+                token = newToken
+            });
+        }
+
+        // 2. Vai trò Người bán, Cho thuê, Môi giới: Bắt buộc xác thực danh tính (KYC) trước khi cấp quyền Đăng tin
+        if (!user.IsVerified && user.KycStatus != "Approved")
+        {
+            var postingRoles = selectedRoles.Where(r => 
+                r.Equals("Seller", StringComparison.OrdinalIgnoreCase) || 
+                r.Equals("Landlord", StringComparison.OrdinalIgnoreCase) || 
+                r.Equals("Agent", StringComparison.OrdinalIgnoreCase)).ToList();
+
+            user.PendingRoles = string.Join(",", postingRoles);
+            await context.SaveChangesAsync();
+
+            var postingRoleNames = new List<string>();
+            if (postingRoles.Any(r => r.Equals("Seller", StringComparison.OrdinalIgnoreCase))) postingRoleNames.Add("Người bán (Chủ nhà)");
+            if (postingRoles.Any(r => r.Equals("Landlord", StringComparison.OrdinalIgnoreCase))) postingRoleNames.Add("Người cho thuê");
+            if (postingRoles.Any(r => r.Equals("Agent", StringComparison.OrdinalIgnoreCase))) postingRoleNames.Add("Môi giới chuyên nghiệp");
+
+            string roleNamesStr = string.Join(", ", postingRoleNames);
+
+            return Ok(new
+            {
+                success = false,
+                requiresKyc = true,
+                kycStatus = user.KycStatus,
+                pendingRoles = postingRoles,
+                phone = user.Phone,
+                phoneVerified = user.PhoneVerified,
+                rejectReason = user.KycRejectReason,
+                message = $"Vai trò [{roleNamesStr}] có quyền Đăng tin BĐS nên bắt buộc phải Xác minh danh tính (KYC) CCCD & SĐT trước khi mở khóa tính năng Đăng tin."
+            });
+        }
+
+        // 3. Nếu tài khoản ĐÃ ĐƯỢC XÁC MINH KYC từ trước: Kích hoạt vai trò đăng tin
         user.Role = targetRole;
         bool canPost = targetRole.HasFlag(Role.Seller) || targetRole.HasFlag(Role.Landlord) || targetRole.HasFlag(Role.Agent) || targetRole.HasFlag(Role.Admin);
         if (canPost && user.RemainingPushes <= 0)
@@ -171,30 +255,32 @@ public class AuthController : ControllerBase
         await context.SaveChangesAsync();
 
         // Tạo JWT Token mới mang vai trò đã được nâng cấp
-        var newToken = Batdongsancode.Helpers.JwtHelper.GenerateToken(user, config);
+        var newGrantedToken = Batdongsancode.Helpers.JwtHelper.GenerateToken(user, config);
 
-        var labelParts = new List<string>();
-        var roleSetLower = new HashSet<string>(selectedRoles, StringComparer.OrdinalIgnoreCase);
-        if (roleSetLower.Contains("Buyer")) labelParts.Add("Người mua");
-        if (roleSetLower.Contains("Seller")) labelParts.Add("Người bán");
-        if (roleSetLower.Contains("Tenant")) labelParts.Add("Người thuê");
-        if (roleSetLower.Contains("Landlord")) labelParts.Add("Cho thuê");
-        if (roleSetLower.Contains("Agent")) labelParts.Add("Môi giới");
+        var grantedLabelParts = new List<string>();
+        var grantedRoleSetLower = new HashSet<string>(selectedRoles, StringComparer.OrdinalIgnoreCase);
+        if (grantedRoleSetLower.Contains("Buyer")) grantedLabelParts.Add("Người mua");
+        if (grantedRoleSetLower.Contains("Seller")) grantedLabelParts.Add("Người bán");
+        if (grantedRoleSetLower.Contains("Tenant")) grantedLabelParts.Add("Người thuê");
+        if (grantedRoleSetLower.Contains("Landlord")) grantedLabelParts.Add("Cho thuê");
+        if (grantedRoleSetLower.Contains("Agent")) grantedLabelParts.Add("Môi giới");
 
-        string friendlyRoleName = labelParts.Count > 0 
-            ? string.Join(" & ", labelParts) 
+        string friendlyRoleName = grantedLabelParts.Count > 0 
+            ? string.Join(" & ", grantedLabelParts) 
             : targetRole.ToString();
 
         var friendlyMessage = $"Đã cập nhật vai trò thành '{friendlyRoleName}' thành công!";
 
         return Ok(new
         {
+            success = true,
+            requiresKyc = false,
             message = friendlyMessage,
-            user = new { user.Id, user.Email, user.FullName, Role = user.Role.ToString() },
+            user = new { user.Id, user.Email, user.FullName, Role = user.Role.ToString(), user.IsVerified, user.KycStatus },
             roles = selectedRoles,
             roleLabel = friendlyRoleName,
-            accessToken = newToken,
-            token = newToken
+            accessToken = newGrantedToken,
+            token = newGrantedToken
         });
     }
 }

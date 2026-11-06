@@ -44,7 +44,8 @@ public class UserService : IUserService
                 return (false, "Vai trò không hợp lệ.");
         }
 
-        bool canPost = role.HasFlag(Role.Seller) || role.HasFlag(Role.Landlord) || role.HasFlag(Role.Agent) || role.HasFlag(Role.Admin);
+        bool hasPostingRole = role.HasFlag(Role.Seller) || role.HasFlag(Role.Landlord) || role.HasFlag(Role.Agent);
+        bool canPost = hasPostingRole || role.HasFlag(Role.Admin);
 
         var user = new User
         {
@@ -55,6 +56,10 @@ public class UserService : IUserService
             IsActive = true,
             RemainingPushes = canPost ? 5 : 0,
             CurrentPackage = "Thành viên thường",
+            // Phân quyền & Rào chắn KYC: Các tài khoản mới có vai trò Người bán / Cho thuê / Môi giới khởi tạo kyc_status = 'Unverified'
+            IsVerified = false,
+            KycStatus = hasPostingRole ? "Unverified" : "None",
+            PendingRoles = hasPostingRole ? role.ToString() : null,
             CreatedAt = DateTime.UtcNow
         };
 
